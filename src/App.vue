@@ -1,6 +1,7 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
   <h1>HOLA</h1>
+  <h2>Prueba</h2>
 </template>
 
 <script>
