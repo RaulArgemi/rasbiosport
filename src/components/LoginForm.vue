@@ -1,9 +1,11 @@
 <template>
   <div class="container-fluid login">
     <div class="row">
-      <div class="col-md-6 offset-md-3 gray-bg container-lg mt-5 mb-5 ">
-        <h2>Iniciar Sesión</h2>
-        <form class="">
+      <div class="col-md-6 offset-md-3 gray-bg container-lg mt-5 mb-5">
+        <div class="d-flex justify-content-center">
+          <h2>Iniciar Sesión</h2>
+        </div>
+        <form>
           <div class="form-group">
             <label for="email">Correo Electrónico</label>
             <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo electrónico" required>
@@ -12,12 +14,21 @@
             <label for="password">Contraseña</label>
             <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
           </div>
-          <button type="submit" class="btn btn-primary m-2">Iniciar Sesión</button>
+          <br>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+          </div>
+          <div class="d-flex justify-content-center">
+            <p>No tienes cuenta? <a href="/registro">Regístrate</a></p>
+          </div>
         </form>
       </div>
     </div>
   </div>
 </template>
+
+
+
 <script>
  export default {
     name: 'LoginComponent',
