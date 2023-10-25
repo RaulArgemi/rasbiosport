@@ -19,7 +19,7 @@
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
           </div>
           <div class="d-flex justify-content-center">
-            <p>No tienes cuenta? <a href="/registro">Regístrate</a></p>
+            <p>No tienes cuenta? <a href="/register">Regístrate</a></p>
           </div>
         </form>
       </div>
