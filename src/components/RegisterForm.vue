@@ -1,35 +1,56 @@
 <template>
-    <div class="container-fluid login">
-      <div class="row">
-        <div class="col-md-6 offset-md-3 gray-bg container-lg mt-5 mb-5">
+  <div class="container-fluid login">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 gray-bg container-lg mt-5 mb-5">
+        <div class="d-flex justify-content-center">
           <h2>Registrarse</h2>
-          <form>
-            <div class="form-group">
-              <label for="nombreCompleto">Nombre Completo</label>
-              <input type="text" class="form-control" id="nombreCompleto" placeholder="Ingresa tu nombre completo" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Correo Electrónico</label>
-              <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo electrónico" required>
-            </div>
-            <div class="form-group">
-              <label for="password">Contraseña</label>
-              <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
-            </div>
-            <div class="form-group">
-              <label for="repeatPassword">Repetir Contraseña</label>
-              <input type="password" class="form-control" id="repeatPassword" placeholder="Repite tu contraseña" required>
-            </div>
-            <div class="form-group">
-              <label for="telefono">Número de Teléfono</label>
-              <input type="tel" class="form-control" id="telefono" placeholder="Ingresa tu número de teléfono" required>
-            </div>
-            <button type="submit" class="btn btn-primary m-2">Registrarse</button>
-          </form>
         </div>
+        <form>
+          <div class="form-group">
+            <label for="nombreCompleto">Nombre Completo</label>
+            <input type="text" class="form-control" id="nombreCompleto" placeholder="Ingresa tu nombre completo" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo electrónico" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+          </div>
+          <div class="form-group">
+            <label for="repeatPassword">Repetir Contraseña</label>
+            <input type="password" class="form-control" id="repeatPassword" placeholder="Repite tu contraseña" required>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Número de Teléfono</label>
+            <input type="tel" class="form-control" id="telefono" placeholder="Ingresa tu número de teléfono" required>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="aceptarTerminos" required>
+            <label class="form-check-label" for="aceptarTerminos">Acepto los términos y condiciones</label>
+          </div>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="recibirCorreos">
+            <label class="form-check-label" for="recibirCorreos">Deseo recibir correos con los productos</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+          </div>
+          <div class="d-flex justify-content-center">
+            <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+          </div>
+
+
+        </form>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
+
+
+
   <script>
   export default {
     name: 'RegisterForm',
