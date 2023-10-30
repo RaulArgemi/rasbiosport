@@ -1,28 +1,34 @@
 <template>
   <div>
-    <h1>Datos desde el servidor</h1>
+    <h1>Usuarios</h1>
     <ul>
-      <li v-for="user in datos" :key="user._id">{{ user.id_user }}</li>
+      <li v-for="user in users" :key="user.id_user">
+        <div>ID: {{ user.id_user }}</div>
+        <div>Nombre: {{ user.name_user }}</div>
+        <div>Correo: {{ user.user_email }}</div>
+        <div>Dirección: {{ user.user_address }}</div>
+        <!-- Agrega más campos según sea necesario -->
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'mierdonVue',
   data() {
     return {
-      datos: [],
+      users: [],
     };
   },
   mounted() {
+    // Realiza una solicitud HTTP GET para obtener datos de usuarios desde tu servidor Node.js
     fetch('http://localhost:3000/api/users')
       .then((response) => response.json())
       .then((data) => {
-        this.datos = data;
+        this.users = data;
       })
       .catch((error) => {
-        console.error('Error al cargar los datos:', error);
+        console.error('Error al cargar los datos de usuarios:', error);
       });
   },
 };
