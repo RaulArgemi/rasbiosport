@@ -21,8 +21,8 @@
 <style>
 
 img{
-    width: 50px;
-    height: 50px;
+    width: 3rem;
+    height: 3rem;
 }
 
 </style>

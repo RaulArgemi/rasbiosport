@@ -1,7 +1,9 @@
 <template>
     <NavComponent></NavComponent>
     <h1>HOLA</h1>
+    <mierdonVue></mierdonVue>
     <FooterVue></FooterVue>
+
 </template>
 <style scoped>
 
@@ -9,11 +11,13 @@
 <script>
 import NavComponent from '../components/NavComponent.vue'
 import FooterVue from '@/components/FooterVue.vue';
+import mierdonVue from '@/components/mierdonVue.vue';
  export default {
     name: 'HomeView',
     components: {
         NavComponent,
-        FooterVue
+        FooterVue,
+        mierdonVue
     }
   };
 </script>
