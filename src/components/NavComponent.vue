@@ -1,18 +1,44 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav>
     <router-link to="/"><img class="logo" src="../assets/rasbiosport.png"></router-link>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link"><img class="header-photo" src="../assets/login.png"></router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link"><img class="header-photo" src="../assets/register.png"></router-link>
-        </li>
-      </ul>
+    <input type="text" placeholder="Buscar..." class="search-input">
+    <div>
+      <router-link to="/login" class="icon"><img class="header-photo" src="../assets/login.png"></router-link>
+      <router-link to="/register" class="icon"><img class="header-photo" src="../assets/register.png"></router-link>
     </div>
   </nav>
 </template>
+
+<style scoped>
+nav{
+  background-color: #222296;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+div{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-right: 40px;
+}
+.logo{
+  margin-left: 50px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 100px;
+  width: 200px;
+  display: flex;
+  align-items: center;
+}
+.search-input{
+  width: 900px;
+  height: 50px;
+  border-radius: 15px;
+}
+.header-photo{
+  height: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+</style>
