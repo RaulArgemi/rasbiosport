@@ -2,8 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Register from '../views/RegisterView.vue'; // Importa los componentes correctos
 import Login from '../views/LoginView.vue';
 import Inicio from '../views/HomeView.vue';
+import Privacidad from '../views/PrivacyPolicyView.vue';
 
 const routes = [
+  { path: '/privacy', component: Privacidad},
   { path: '/', component: Inicio },
   { path: '/register', component: Register }, // Utiliza el componente Register
   { path: '/login', component: Login }, // Utiliza el componente Login
