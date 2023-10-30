@@ -1,28 +1,40 @@
 <template>
-  <footer class="bg-dark text-light py-3">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-4">
-          <p class="mb-0 text-center">RASBIOSPORT®</p>
-        </div>
-        <div class="col-md-4 text-center">
-          <router-link to="/privacy">
-            <p class="mb-0">Política de Privacidad</p>
-          </router-link>
-        </div>
-        <div class="col-md-4 d-flex justify-content-end align-items-center">
-          <img src="../assets/logo.png" class="text-light me-3">
-          <img src="../assets/logo.png" class="text-light me-3">
-          <img src="../assets/logo.png" class="text-light">
-        </div>
+  <footer>
+      <router-link to="/" class="text">
+        <p>RASBIOSPORT®</p>
+      </router-link>
+      <router-link  to="/privacy" class="text">
+        <p>Política de Privacidad</p>
+      </router-link>
+      <div class="rrss">
+        <a href="https://www.tiktok.com" target="_blank"><img src="../assets/instagram.png"></a>
+        <a href="https://www.tiktok.com" target="_blank"><img src="../assets/facebook.png"></a>
+        <a href="https://www.tiktok.com" target="_blank"><img src="../assets/twitter.png"></a>
+        <a href="https://www.tiktok.com" target="_blank"><img src="../assets/tik-tok.png"></a>
       </div>
-    </div>
   </footer>
 </template>
 <style>
+footer{
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  height: 100px;
+  align-items: center;
+}
+.text{
+  color: white;
+  text-decoration: none;
+}
+p{
+  margin-left: 50px;
+}
 img {
   width: 50px;
   height: 50px;
+}
+.rrss{
+  margin-right: 50px;
 }
 </style>
   
