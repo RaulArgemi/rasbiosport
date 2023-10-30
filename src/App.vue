@@ -1,6 +1,6 @@
 <template>
-  <mierdonVue></mierdonVue>
   <router-view></router-view>
+  <mierdonVue></mierdonVue>
 </template>
 
 
