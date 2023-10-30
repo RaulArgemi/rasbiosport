@@ -37,12 +37,12 @@
 <style>
   .login {
     background-image: url(https://www.spain.info/.content/imagenes/cabeceras-grandes/cataluna/camp-nou-barcelona-c-fcbarcelona.jpg);
-    background-size: cover;
+    background-size: auto;
     width: auto;
     height: auto;
   }
   .gray-bg {
-    background-color: #f2f2f2; /* Cambia el color de fondo a gris (#f2f2f2) o el que prefieras */
-    padding: 20px; /* Agrega relleno para que el fondo gris sea visible alrededor del formulario */
+    background-color: #f2f2f2;
+    padding: 20px; 
   }
 </style>
