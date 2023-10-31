@@ -21,7 +21,6 @@ export default {
     };
   },
   mounted() {
-    // Realiza una solicitud HTTP GET para obtener datos de usuarios desde tu servidor Node.js
     fetch('http://localhost:3000/api/users')
       .then((response) => response.json())
       .then((data) => {

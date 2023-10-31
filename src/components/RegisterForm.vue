@@ -64,8 +64,8 @@
     height: auto;
   }
   .gray-bg {
-    background-color: #f2f2f2; /* Cambia el color de fondo a gris (#f2f2f2) o el que prefieras */
-    padding: 20px; /* Agrega relleno para que el fondo gris sea visible alrededor del formulario */
+    background-color: #f2f2f2; 
+    padding: 20px; 
   }
 </style>
 
