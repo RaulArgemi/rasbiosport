@@ -1,7 +1,7 @@
 <template>
     <NavComponent></NavComponent>
     <div class="container mt-4">
-      <h1 class="mb-4">Política de Privacidad de [Nombre de Tu Sitio Web]</h1>
+      <h1 class="mb-4">Política de Privacidad de RasbioSport</h1>
   
       <p>
         <strong>Fecha de Entrada en Vigor:</strong> [Fecha]
@@ -12,13 +12,13 @@
       </p>
   
       <p>
-        En [Nombre de Tu Sitio Web], la privacidad de nuestros visitantes es de suma importancia para nosotros. Esta política de privacidad describe la información que recopilamos, cómo la utilizamos y protegemos. Al utilizar [Nombre de Tu Sitio Web], usted acepta los términos y condiciones de esta política.
+        En RasbioSport, la privacidad de nuestros visitantes es de suma importancia para nosotros. Esta política de privacidad describe la información que recopilamos, cómo la utilizamos y protegemos. Al utilizar RasbioSport, usted acepta los términos y condiciones de esta política.
       </p>
   
       <h2 class="mt-4">Recopilación de Información Personal</h2>
   
       <p>
-        Cuando visita [Nombre de Tu Sitio Web], podemos recopilar cierta información personal que usted proporciona de forma voluntaria. Esta información puede incluir su nombre, dirección de correo electrónico, información de contacto y cualquier otra información que elija proporcionarnos.
+        Cuando visita RasbioSport, podemos recopilar cierta información personal que usted proporciona de forma voluntaria. Esta información puede incluir su nombre, dirección de correo electrónico, información de contacto y cualquier otra información que elija proporcionarnos.
       </p>
   
       <p>
@@ -47,7 +47,7 @@
       <ul>
         <li><strong>Proveedores de Servicios:</strong> Podemos compartir su información con proveedores de servicios que trabajan en nuestro nombre para proporcionar los servicios que solicitó.</li>
         <li><strong>Requerimientos Legales:</strong> Podemos divulgar su información en respuesta a una orden judicial u otros procesos legales.</li>
-        <li><strong>Seguridad y Protección:</strong> Podemos divulgar su información cuando creamos que es necesario para proteger la seguridad y los derechos de [Nombre de Tu Sitio Web], nuestros visitantes o terceros.</li>
+        <li><strong>Seguridad y Protección:</strong> Podemos divulgar su información cuando creamos que es necesario para proteger la seguridad y los derechos de RasbioSport, nuestros visitantes o terceros.</li>
       </ul>
   
       <h2 class="mt-4">Protección de Datos</h2>
@@ -74,7 +74,7 @@
       <h2 class="mt-4">Cambios en la Política de Privacidad</h2>
   
       <p>
-        Nos reservamos el derecho de actualizar o modificar esta política de privacidad en cualquier momento. Cualquier cambio entrará en vigencia inmediatamente después de su publicación en [Nombre de Tu Sitio Web]. Le recomendamos que revise esta política regularmente para mantenerse informado sobre cómo protegemos su información.
+        Nos reservamos el derecho de actualizar o modificar esta política de privacidad en cualquier momento. Cualquier cambio entrará en vigencia inmediatamente después de su publicación en RasbioSport. Le recomendamos que revise esta política regularmente para mantenerse informado sobre cómo protegemos su información.
       </p>
   
       <h2 class="mt-4">Contacto</h2>
