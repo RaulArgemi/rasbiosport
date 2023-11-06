@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import 'bootstrap/dist/css/bootstrap.css';
-import router from './router/router'; // Importa el enrutador
+import router from './router/router'; 
 
 createApp(App)
-  .use(router) // Usa el enrutador
+  .use(router) 
   .mount('#app');

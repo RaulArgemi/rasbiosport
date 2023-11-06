@@ -50,3 +50,24 @@ export default {
   },
 };
 </script>
+
+<style>
+.login {
+  background-image: url(https://www.spain.info/.content/imagenes/cabeceras-grandes/cataluna/camp-nou-barcelona-c-fcbarcelona.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  width: 100%;
+  height: 90vh;
+}
+
+.background-container {
+  width: 100%;
+  height: 100%;
+}
+
+.gray-bg {
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+</style>
