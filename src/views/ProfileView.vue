@@ -7,7 +7,6 @@
                 <div>Nombre: {{ user.name_user }}</div>
                 <div>Correo: {{ user.user_email }}</div>
                 <div>Dirección: {{ user.user_address }}</div>
-                <!-- Agrega más campos según sea necesario -->
             </li>
         </ul>
     </div>

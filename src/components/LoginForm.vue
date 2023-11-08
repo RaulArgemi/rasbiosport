@@ -22,13 +22,11 @@ export default {
           contraseña: this.contraseña,
         };
 
-        // Validación de campos
         if (!formData.correo || !formData.contraseña) {
           console.error('Correo y contraseña son obligatorios');
           return;
         }
 
-        // Realiza la solicitud HTTP
         const response = await fetch('http://localhost:3000/api/login', {
           method: 'POST',
           headers: {
@@ -37,7 +35,6 @@ export default {
           body: JSON.stringify(formData),
         });
 
-        // Verifica el estado de la respuesta
         if (response.status === 200) {
           console.log('Inicio de sesión exitoso');
         } else {
