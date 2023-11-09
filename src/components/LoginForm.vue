@@ -1,9 +1,18 @@
 <template>
   <div class="login d-flex justify-content-center align-items-center">
     <div class="gray-bg p-4 border border-dark rounded">
-      <input v-model="correo" placeholder="Correo" class="form-control mb-2">
-      <input v-model="contraseña" placeholder="Contraseña" type="password" class="form-control mb-2">
-      <button @click="login" class="btn btn-primary">Iniciar sesión</button>
+      <h3 class="mb-4">Inicia sesión</h3>
+      <div class="mb-3">
+        <label for="correo" class="form-label">Correo</label>
+        <input v-model="correo" type="text" class="form-control" id="correo" placeholder="Correo">
+      </div>
+      <div class="mb-3">
+        <label for="contraseña" class="form-label">Contraseña</label>
+        <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="Contraseña">
+      </div>
+      <button @click="login" class="btn btn-primary mb-3">Iniciar sesión</button>
+      <!-- Nuevo contenedor para alinear elementos -->
+      <p class="text-center">No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
     </div>
   </div>
 </template>
@@ -51,6 +60,7 @@ export default {
 </script>
 
 <style>
+/* Resto de estilos... */
 .login {
   background-image: url(https://www.spain.info/.content/imagenes/cabeceras-grandes/cataluna/camp-nou-barcelona-c-fcbarcelona.jpg);
   background-size: cover;

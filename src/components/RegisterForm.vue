@@ -1,12 +1,42 @@
 <template>
   <div class="login d-flex justify-content-center align-items-center">
-    <div class="gray-bg p-4 border border-dark rounded">
-      <input v-model="nombre" placeholder="Nombre" class="form-control mb-2">
-      <input v-model="telefono" placeholder="Número de Teléfono" class="form-control mb-2">
-      <input v-model="correo" placeholder="Email" class="form-control mb-2">
-      <input v-model="contraseña" placeholder="Contraseña" type="password" class="form-control mb-2">
-      <input v-model="confirmarContraseña" placeholder="Confirmar Contraseña" type="password" class="form-control mb-2">
-      <button @click="register" class="btn btn-primary">Registrarse</button>
+    <div class="gray-bg p-4 border border-dark rounded col-md-6">
+      <h3 class="mb-4">Regístrate</h3>
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre completo</label>
+        <input v-model="nombre" type="text" class="form-control" id="nombre" placeholder="Ej: Leo Messi">
+      </div>
+      <div class="mb-3">
+        <label for="correo" class="form-label">Correo electrónico</label>
+        <input v-model="correo" type="email" class="form-control" id="correo" placeholder="Ej: leomessi@gmail.com">
+      </div>
+      <div class="mb-3">
+        <label for="contraseña" class="form-label">Contraseña</label>
+        <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="·······">
+      </div>
+      <div class="mb-3">
+        <label for="confirmarContraseña" class="form-label">Confirmar contraseña</label>
+        <input v-model="confirmarContraseña" type="password" class="form-control" id="confirmarContraseña" placeholder="········">
+      </div>
+      <div class="mb-3">
+        <label for="telefono" class="form-label">Número de teléfono</label>
+        <input v-model="telefono" type="tel" class="form-control" id="telefono" placeholder="Ej: +34 675239884">
+      </div>
+      <div class="mb-3">
+        <div class="form-check">
+          <input type="radio" class="form-check-input" id="terminos" required>
+          <label class="form-check-label" for="terminos">Acepto los <router-link to="/privacy">Términos y condiciones</router-link></label>
+        </div>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="correos">
+        <label class="form-check-label" for="correos">Acepto recibir correos promocionales</label>
+      </div>
+      
+      <div class="d-flex justify-content-between align-items-center">
+        <button @click="register" class="btn btn-primary">Registrarse</button>
+        <p>Ya tienes cuenta? <router-link to="login">Inicia sesión</router-link></p>
+      </div>
     </div>
   </div>
 </template>
@@ -67,17 +97,7 @@ export default {
 };
 </script>
 <style>
-.login {
-  background-image: url(https://www.spain.info/.content/imagenes/cabeceras-grandes/cataluna/camp-nou-barcelona-c-fcbarcelona.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  width: 100%;
-  height: 90vh;
-  margin: 0;
-  padding: 0;
-}
-
+/* Resto de estilos... */
 .gray-bg {
   background-color: #f2f2f2;
   padding: 20px;
