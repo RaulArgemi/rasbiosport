@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <input v-model="correo" placeholder="Correo">
-    <input v-model="contraseña" placeholder="Contraseña" type="password">
-    <button @click="login">Iniciar sesión</button>
+  <div class="login d-flex justify-content-center align-items-center">
+    <div class="gray-bg p-4 border border-dark rounded">
+      <input v-model="correo" placeholder="Correo" class="form-control mb-2">
+      <input v-model="contraseña" placeholder="Contraseña" type="password" class="form-control mb-2">
+      <button @click="login" class="btn btn-primary">Iniciar sesión</button>
+    </div>
   </div>
 </template>
 
@@ -56,11 +58,8 @@ export default {
   background-attachment: fixed;
   width: 100%;
   height: 90vh;
-}
-
-.background-container {
-  width: 100%;
-  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .gray-bg {
@@ -68,3 +67,4 @@ export default {
   padding: 20px;
 }
 </style>
+
