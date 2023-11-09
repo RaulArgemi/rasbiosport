@@ -2,9 +2,7 @@
   <div>
     <NavComponent></NavComponent>
     <NavMenu></NavMenu>
-    <div class="jumbotron text-center">
-      <img src="@/assets/camp-nou-barcelona-c-fcbarcelona.avif" alt="Imagen Grande" class="img-fluid">
-    </div>
+    <CustomSection></CustomSection>
 
     <div class="container mt-4">
       <h2 class="text-center">Destacados</h2>
@@ -57,6 +55,7 @@ import NavComponent from '../components/NavComponent.vue'
 import FooterVue from '../components/FooterVue.vue'
 import ProductCard from '../components/ProductCard.vue'
 import NavMenu from '@/components/NavMenu.vue';
+import CustomSection from '@/components/CustomSection.vue';
 
 export default {
   name: 'HomeView',
@@ -64,7 +63,8 @@ export default {
     NavComponent,
     FooterVue,
     ProductCard,
-    NavMenu
+    NavMenu,
+    CustomSection
 }
 };
 </script>
