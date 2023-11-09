@@ -32,11 +32,9 @@
         <input type="checkbox" class="form-check-input" id="correos">
         <label class="form-check-label" for="correos">Acepto recibir correos promocionales</label>
       </div>
-      
-      <div class="d-flex justify-content-between align-items-center">
         <button @click="register" class="btn btn-primary">Registrarse</button>
-        <p>Ya tienes cuenta? <router-link to="login">Inicia sesión</router-link></p>
-      </div>
+        <br>
+      <p class="texto">Ya tienes cuenta? <router-link to="login">Inicia sesión</router-link></p>
     </div>
   </div>
 </template>
@@ -97,7 +95,15 @@ export default {
 };
 </script>
 <style>
-/* Resto de estilos... */
+
+button{
+  float: right;
+}
+
+.texto{
+  text-align: center;
+}
+
 .gray-bg {
   background-color: #f2f2f2;
   padding: 20px;
