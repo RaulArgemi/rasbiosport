@@ -1,11 +1,13 @@
 <template>
-  <div>
-    <input v-model="nombre" placeholder="Nom">
-    <input v-model="telefono" placeholder="Número de Telèfon">
-    <input v-model="correo" placeholder="Email">
-    <input v-model="contraseña" placeholder="Contrasenya" type="password">
-    <input v-model="confirmarContraseña" placeholder="Confirmar Contrasenya" type="password">
-    <button @click="register">Registrarse</button>
+  <div class="login d-flex justify-content-center align-items-center">
+    <div class="gray-bg p-4 border border-dark rounded">
+      <input v-model="nombre" placeholder="Nombre" class="form-control mb-2">
+      <input v-model="telefono" placeholder="Número de Teléfono" class="form-control mb-2">
+      <input v-model="correo" placeholder="Email" class="form-control mb-2">
+      <input v-model="contraseña" placeholder="Contraseña" type="password" class="form-control mb-2">
+      <input v-model="confirmarContraseña" placeholder="Confirmar Contraseña" type="password" class="form-control mb-2">
+      <button @click="register" class="btn btn-primary">Registrarse</button>
+    </div>
   </div>
 </template>
 
@@ -64,3 +66,20 @@ export default {
   },
 };
 </script>
+<style>
+.login {
+  background-image: url(https://www.spain.info/.content/imagenes/cabeceras-grandes/cataluna/camp-nou-barcelona-c-fcbarcelona.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  width: 100%;
+  height: 90vh;
+  margin: 0;
+  padding: 0;
+}
+
+.gray-bg {
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+</style>
