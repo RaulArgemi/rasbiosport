@@ -51,11 +51,14 @@ export default {
 
         if (response.status === 200) {
           console.log('Registro exitoso');
+        } else if (response.status === 409) {
+          console.error('El correo ya está registrado');
         } else {
           console.error('Error al registrarse');
         }
+
       } catch (error) {
-        console.error('Error al registrarse:', error);
+        console.error('Prueba Error al registrarse:', error);
       }
     },
   },
