@@ -52,7 +52,7 @@ export default {
         localStorage.setItem('token', token);
         console.log('Inicio de sesión exitoso');
 
-        const protectedRouteResponse = await fetch('http://localhost:3000/api/home', {
+        const protectedRouteResponse = await fetch('http://localhost:3000/api/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
