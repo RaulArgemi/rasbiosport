@@ -32,7 +32,7 @@
         <input type="checkbox" class="form-check-input" id="correos">
         <label class="form-check-label" for="correos">Acepto recibir correos promocionales</label>
       </div>
-        <button @click="register" class="btn btn-primary">Registrarse</button>
+        <button @click="register" class="btn btn-primary colorGreen">Registrarse</button>
         <br>
       <p class="texto">Ya tienes cuenta? <router-link to="login">Inicia sesión</router-link></p>
     </div>
@@ -81,6 +81,7 @@ export default {
 
         if (response.status === 200) {
           console.log('Registro exitoso');
+          this.$router.push('/login')
         } else if (response.status === 409) {
           console.error('El correo ya está registrado');
         } else {
@@ -107,5 +108,12 @@ button{
 .gray-bg {
   background-color: #f2f2f2;
   padding: 20px;
+}
+.colorGreen {
+  background-color: #4285f4;
+  
+}
+.colorGreen:hover{
+  background-color: #34A853;
 }
 </style>

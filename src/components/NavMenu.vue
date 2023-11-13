@@ -19,7 +19,7 @@
   
   <style scoped>
   .nav-menu {
-    background-color: #66B3E0;
+    background-color: #FFD600;
     text-align: center; /* Centrar el contenido */
   }
   
@@ -43,7 +43,7 @@
   }
   
   a:hover {
-    background-color: #222296;
+    background-color: #4285F4;
     color: white;
   }
   </style>

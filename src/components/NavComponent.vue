@@ -12,7 +12,7 @@
 
 <style scoped>
 nav{
-  background-color: #222296;
+  background-color: #4285F4;
   display: flex;
   justify-content: space-between;
   align-items: center;

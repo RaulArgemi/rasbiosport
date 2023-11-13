@@ -11,7 +11,7 @@
         <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="Contraseña">
       </div>
       <div class="boton">
-        <button @click="login" class="btn btn-primary mb-3">Iniciar sesión</button>
+        <button @click="login" class="btn btn-primary mb-3 colorGreen">Iniciar sesión</button>
        <p>No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
       </div>
     </div>
@@ -49,6 +49,7 @@ export default {
 
         if (response.status === 200) {
           console.log('Inicio de sesión exitoso');
+          this.$router.push('/')
         } else {
           console.error('Error al iniciar sesión');
         }
@@ -79,6 +80,13 @@ export default {
 .gray-bg {
   background-color: #f2f2f2;
   padding: 20px;
+}
+.colorGreen {
+  background-color: #4285f4;
+  
+}
+.colorGreen:hover{
+  background-color: #34A853;
 }
 </style>
 
