@@ -10,13 +10,13 @@
 <style scoped>
 
 img{
-    height: 400px;
+    height: 250px;
     width: 100%;
 }
 div{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5% 10% 5% 10%;
+    margin: 5% 15% 5% 15%;
 }
 </style>
