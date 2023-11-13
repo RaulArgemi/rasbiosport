@@ -12,7 +12,7 @@
       </div>
       <div class="boton">
         <button @click="login" class="btn btn-primary mb-3 colorGreen">Iniciar sesión</button>
-       <p>No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
+        <p>No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
       </div>
     </div>
   </div>
@@ -27,62 +27,52 @@ export default {
     };
   },
   methods: {
-  async login() {
-    try {
-      const formData = {
-        correo: this.correo,
-        contraseña: this.contraseña,
-      };
+    async login() {
+      try {
+        const formData = {
+          correo: this.correo,
+          contraseña: this.contraseña,
+        };
 
-      if (!formData.correo || !formData.contraseña) {
-        console.error('Correo y contraseña son obligatorios');
-        return;
-      }
-
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.status === 200) {
-        const { token } = await response.json();
-        localStorage.setItem('token', token);
-        console.log('Inicio de sesión exitoso');
-
-        const protectedRouteResponse = await fetch('http://localhost:3000/api/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        if (protectedRouteResponse.status === 200) {
-          console.log('Acceso a la ruta protegida exitoso');
-        } else {
-          console.error('Error al acceder a la ruta protegida');
+        if (!formData.correo || !formData.contraseña) {
+          console.error('Correo y contraseña son obligatorios');
+          return;
         }
 
-        this.$router.push('/home');
-      } else {
-        console.error('Error al iniciar sesión');
+        const response = await fetch('http://localhost:3000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const responseData = await response.json();
+        console.log('Respuesta del servidor:', responseData);
+
+        if (responseData.token) {
+          localStorage.setItem('token', responseData.token);
+          console.log('Inicio de sesión exitoso');
+          this.$router.push('/');
+        } else {
+          console.error('Token no recibido en la respuesta del servidor');
+        }
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
       }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-    }
+    },
   },
-},
-}
+};
+
+
 </script>
 
 <style>
-.boton{
+.boton {
   display: flex;
   flex-direction: column;
 }
+
 .login {
   background-image: url(https://www.spain.info/.content/imagenes/cabeceras-grandes/cataluna/camp-nou-barcelona-c-fcbarcelona.jpg);
   background-size: cover;
@@ -98,11 +88,13 @@ export default {
   background-color: #f2f2f2;
   padding: 20px;
 }
+
 .colorGreen {
   background-color: #4285f4;
-  
+
 }
-.colorGreen:hover{
+
+.colorGreen:hover {
   background-color: #34A853;
 }
 </style>
