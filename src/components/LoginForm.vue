@@ -27,38 +27,55 @@ export default {
     };
   },
   methods: {
-    async login() {
-      try {
-        const formData = {
-          correo: this.correo,
-          contraseña: this.contraseña,
-        };
+  async login() {
+    try {
+      const formData = {
+        correo: this.correo,
+        contraseña: this.contraseña,
+      };
 
-        if (!formData.correo || !formData.contraseña) {
-          console.error('Correo y contraseña son obligatorios');
-          return;
-        }
+      if (!formData.correo || !formData.contraseña) {
+        console.error('Correo y contraseña son obligatorios');
+        return;
+      }
 
-        const response = await fetch('http://localhost:3000/api/login', {
-          method: 'POST',
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.status === 200) {
+        const { token } = await response.json();
+        localStorage.setItem('token', token);
+        console.log('Inicio de sesión exitoso');
+
+        const protectedRouteResponse = await fetch('http://localhost:3000/api/home', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
         });
 
-        if (response.status === 200) {
-          console.log('Inicio de sesión exitoso');
-          this.$router.push('/')
+        if (protectedRouteResponse.status === 200) {
+          console.log('Acceso a la ruta protegida exitoso');
         } else {
-          console.error('Error al iniciar sesión');
+          console.error('Error al acceder a la ruta protegida');
         }
-      } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+
+        this.$router.push('/home');
+      } else {
+        console.error('Error al iniciar sesión');
       }
-    },
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+    }
   },
-};
+},
+
 </script>
 
 <style>
