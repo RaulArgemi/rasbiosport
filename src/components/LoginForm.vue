@@ -15,7 +15,6 @@
         <p v-if="errorMensaje" class="text-danger text-center m-0">{{ errorMensaje }}</p>
 
         <button @click="login" class="btn btn-primary mb-3 colorGreen">Iniciar sesión</button>
-
         <p>No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
       </div>
     </div>
@@ -61,14 +60,19 @@ export default {
           body: JSON.stringify(formData),
         });
 
-        if (response.status === 200) {
+        const responseData = await response.json();
+        console.log('Respuesta del servidor:', responseData);
+
+        if (responseData.token) {
+          localStorage.setItem('token', responseData.token);
           console.log('Inicio de sesión exitoso');
-          this.$router.push('/')
+          this.$router.push('/');
         } else {
           this.errorMensaje = 'Error al iniciar sesión. Verifica tus credenciales.';
           this.$refs.formulario.querySelectorAll('input').forEach((input) => {
             input.classList.add('input-fallido');
           });
+          console.error('Token no recibido en la respuesta del servidor');
 
           console.error('Error al iniciar sesión');
         }
@@ -86,6 +90,8 @@ export default {
     }
   },
 };
+
+
 </script>
 
 <style scoped>
