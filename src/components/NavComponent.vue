@@ -1,3 +1,8 @@
+<script>
+
+
+
+</script>
 <template>
   <nav>
     <router-link to="/"><img class="logo" src="../assets/rasbiosport.png"></router-link>
