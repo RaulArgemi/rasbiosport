@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <router-link to="/"><img class="logo" src="../assets/rasbiosport.png"></router-link>
+    <router-link to="/"><img class="logo" src="../assets/rasbiosport-logo-white.png"></router-link>
     <input type="text" placeholder="Buscar..." class="search-input">
     <router-link to="/profile">Perfil</router-link>
     <div>
