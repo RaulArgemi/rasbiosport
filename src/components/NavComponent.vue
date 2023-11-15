@@ -6,9 +6,20 @@
     <div>
       <router-link to="/login" class="icon"><img class="header-photo" src="../assets/login.png"></router-link>
       <router-link to="/register" class="icon"><img class="header-photo" src="../assets/register.png"></router-link>
+      <LogoutVue></LogoutVue>
     </div>
   </nav>
 </template>
+
+<script>
+import LogoutVue from './LogoutVue.vue';
+export default {
+  name:'NavComponent',
+  components: {
+    LogoutVue, 
+  },
+};
+</script>
 
 <style scoped>
 nav{
