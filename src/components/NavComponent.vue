@@ -2,9 +2,9 @@
   <nav>
     <router-link to="/"><img class="logo" src="../assets/rasbiosport.png"></router-link>
     <input type="text" placeholder="Buscar..." class="search-input">
-    <router-link to="/profile">Perfil</router-link>
+    <router-link to="/profile" class="icon"><userIcon></userIcon></router-link>
     <div>
-      <router-link to="/login" class="icon"><img class="header-photo" src="../assets/login.png"></router-link>
+      <router-link to="/login" class="icon"><logInIcon></logInIcon></router-link>
       <router-link to="/register" class="icon"><img class="header-photo" src="../assets/register.png"></router-link>
       <LogoutVue></LogoutVue>
     </div>
@@ -13,15 +13,22 @@
 
 <script>
 import LogoutVue from './LogoutVue.vue';
+import userIcon from './userIcon.vue';
+import logInIcon from './logInIcon.vue';
 export default {
   name:'NavComponent',
   components: {
     LogoutVue, 
+    userIcon,
+    logInIcon,
   },
 };
 </script>
 
 <style scoped>
+.icon {
+  color: aliceblue;
+}
 nav{
   background-color: #4285F4;
   display: flex;
@@ -49,7 +56,8 @@ div{
   border-radius: 15px;
 }
 .header-photo{
-  height: 50px;
+  height: 2.5em;
+  width: 2.5em  ;
   margin-left: 10px;
   margin-right: 10px;
 }

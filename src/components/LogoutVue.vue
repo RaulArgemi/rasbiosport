@@ -1,12 +1,16 @@
 <template>
     <div>
-      <button @click="logout">Cerrar Sesión</button>
+      <a class="icon" @click="logout"><LogOutIcon></LogOutIcon></a>
     </div>
   </template>
   
   <script>
+  import LogOutIcon from './LogOutIcon.vue';
   export default {
     name:'LogoutVue',
+    components: {
+      LogOutIcon,
+    },
     methods: {
       logout() {
         localStorage.removeItem('token');
@@ -18,4 +22,9 @@
     },
   };
   </script>
+  <style>
+  .icon {
+    color: aliceblue;
+  }
+</style>
   
