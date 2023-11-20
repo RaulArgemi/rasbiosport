@@ -37,7 +37,7 @@
       'Content-Type': 'application/json',
     });
 
-    fetch('http://localhost:3000/api/profile', { headers })
+    fetch('http://localhost:3000/api/users', { headers })
       .then((response) => response.json())
       .then((data) => {
         this.users = data;

@@ -1,4 +1,4 @@
-import jwt_decode from 'jwt-decode';
+// import jwt_decode from 'jwt-decode';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import Register from '../views/RegisterView.vue';
@@ -24,10 +24,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = checkAuthentication();
+  // const token = localStorage.getItem('token');
 
-  const token = localStorage.getItem('token');
+  console.log('isAuthenticated:', isAuthenticated);
 
-  if (to.meta.requiresAuth && !isAuthenticated && !isTokenExpired(token)) {
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Redirecting to login');
     next('/login');
   } else {
     next();
@@ -39,14 +42,14 @@ function checkAuthentication() {
   return token !== null && token !== undefined;
 }
 
-function isTokenExpired(token) {
-  try {
-    const decodedToken = jwt_decode(token);
-    return decodedToken.exp < Date.now() / 1000;
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    return true;
-  }
-}
+// function isTokenExpired(token) {
+//   try {
+//     const decodedToken = jwt_decode(token);
+//     return decodedToken.exp < Date.now() / 1000;
+//   } catch (error) {
+//     console.error('Error decoding token:', error);
+//     return true;
+//   }
+// }
 
 export default router;
