@@ -1,3 +1,4 @@
+import jwt_decode from 'jwt-decode';
 import { createRouter, createWebHistory } from 'vue-router';
 import Register from '../views/RegisterView.vue'; 
 import Login from '../views/LoginView.vue';
@@ -7,13 +8,12 @@ import Perfil from '../views/ProfileView.vue';
 import Ayuda from '../views/HelpView.vue';
 
 const routes = [
-  { path: '/privacy', component: Privacidad},
+  { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
   { path: '/register', component: Register }, 
   { path: '/login', component: Login }, 
-  { path: '/profile', component: Perfil},
-  { path: '/help', component: Ayuda}
-
+  { path: '/profile', component: Perfil, meta: { requiresAuth: true } },
+  { path: '/help', component: Ayuda }
 ];
 
 const router = createRouter({
@@ -21,5 +21,34 @@ const router = createRouter({
   routes,
 });
 
-export default router;
+router.beforeEach((to, from, next) => {
 
+  const isAuthenticated = checkAuthentication();
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login'); 
+  } else {
+    next();
+  }
+});
+
+
+function checkAuthentication() {
+
+  const token = localStorage.getItem('token');
+
+  return token !== null && token !== undefined && !isTokenExpired(token);
+}
+
+
+function isTokenExpired(token) {
+  try {
+    const decodedToken = jwt_decode(token);
+    return decodedToken.exp < Date.now() / 1000;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return true; 
+  }
+}
+
+export default router;
