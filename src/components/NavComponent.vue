@@ -13,8 +13,8 @@
 
 <script>
 import LogoutVue from './LogoutVue.vue';
-import userIcon from './userIcon.vue';
-import logInIcon from './logInIcon.vue';
+import userIcon from './icons/userIcon.vue';
+import logInIcon from './icons/logInIcon.vue';
 export default {
   name:'NavComponent',
   components: {

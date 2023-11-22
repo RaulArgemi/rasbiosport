@@ -1,7 +1,7 @@
 <template>
     <div class="nav-menu">
       <ul>
-        <li><router-link to="/category/futbol">Futbol</router-link></li>
+        <li><router-link to="/category">Futbol</router-link></li>
         <li><router-link to="/category/NBA">NBA</router-link></li>
         <li><router-link to="/category/ofertas">Ofertas</router-link></li>
         <li><router-link to="/help">Ayuda</router-link></li>
