@@ -7,14 +7,16 @@ import Inicio from '../views/HomeView.vue';
 import Privacidad from '../views/PrivacyPolicyView.vue';
 import Perfil from '../views/ProfileView.vue';
 import Ayuda from '../views/HelpView.vue';
-
+import Productos from '../components/CategoryProduct.vue'
 const routes = [
   { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
   { path: '/register', component: Register },
   { path: '/login', component: Login },
   { path: '/profile', component: Perfil, meta: { requiresAuth: true } },
-  { path: '/help', component: Ayuda }
+  { path: '/help', component: Ayuda },
+  { path: '/category', component: Productos }
+
 ];
 
 const router = createRouter({
