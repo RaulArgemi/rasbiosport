@@ -1,5 +1,6 @@
 <template>
     <NavComponent></NavComponent>
+    <NavMenu></NavMenu>
             <div class="row">
                 <div class="card m-2" v-for="product in products" :key="product.product_id">
     
@@ -24,12 +25,14 @@
     
     import NavComponent from '../components/NavComponent.vue'
     import FooterVue from '@/components/FooterVue.vue';
+    import NavMenu from '../components/NavMenu.vue';
     
     export default {
         name: 'CategoryProduct',
         components: {
             NavComponent,
-            FooterVue
+            FooterVue,
+            NavMenu
         },
         data() {
             return {

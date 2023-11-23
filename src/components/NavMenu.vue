@@ -1,16 +1,19 @@
 <template>
     <div class="nav-menu">
       <ul>
-        <li><router-link to="/category">Futbol</router-link></li>
-        <li><router-link to="/category/NBA">NBA</router-link></li>
+        <li><router-link to="/category">Productos</router-link></li>
+        <li><router-link to="/category/Futbol">Futbol</router-link></li>
+        <li><router-link to="/category/Nba">NBA</router-link></li>
         <li><router-link to="/category/ofertas">Ofertas</router-link></li>
         <li><router-link to="/help">Ayuda</router-link></li>
+        
       </ul>
     </div>
   </template>
   
   <script>
   export default {
+    name:'NavMenu',
     data() {
       return {};
     },
