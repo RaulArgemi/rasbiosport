@@ -32,10 +32,10 @@
         <input type="checkbox" class="form-check-input" id="correos">
         <label class="form-check-label" for="correos">Acepto recibir correos promocionales</label>
       </div>
-      <p v-if="errorMensaje" class="text-danger text-center m-0">{{ errorMensaje }}</p>
-        <button @click="register" class="btn btn-primary colorGreen">Registrarse</button>
+      <p v-if="errorMensaje" class="text-danger text-center m-0 botonRegister">{{ errorMensaje }}</p>
+      <button @click="register" class="btn btn-primary colorGreen botonRegister">Registrarse</button>
         <br>
-      <p class="texto">Ya tienes cuenta? <router-link to="login">Inicia sesión</router-link></p>
+      <p class="texto textoRegister">Ya tienes cuenta? <router-link to="login">Inicia sesión</router-link></p>
     </div>
   </div>
 </template>
@@ -122,6 +122,12 @@ export default {
 </script>
 <style scoped>
 
+.textoRegister{
+  margin-left: 35%;
+}
+.botonRegister{
+margin-left: 40%;
+}
 .rebote {
   animation: rebote 0.5s;
 }
