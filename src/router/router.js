@@ -8,6 +8,7 @@ import Privacidad from '../views/PrivacyPolicyView.vue';
 import Perfil from '../views/ProfileView.vue';
 import Ayuda from '../views/HelpView.vue';
 import Productos from '../components/CategoryProduct.vue'
+import CategoryView from '../views/CategoryView.vue'
 const routes = [
   { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
@@ -15,8 +16,8 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/profile', component: Perfil, meta: { requiresAuth: true } },
   { path: '/help', component: Ayuda },
-  { path: '/category', component: Productos }
-
+  { path: '/category', component: Productos },
+  { path: '/category/:category_name', component: CategoryView }
 ];
 
 const router = createRouter({
@@ -44,14 +45,6 @@ function checkAuthentication() {
   return token !== null && token !== undefined;
 }
 
-// function isTokenExpired(token) {
-//   try {
-//     const decodedToken = jwt_decode(token);
-//     return decodedToken.exp < Date.now() / 1000;
-//   } catch (error) {
-//     console.error('Error decoding token:', error);
-//     return true;
-//   }
-// }
+
 
 export default router;

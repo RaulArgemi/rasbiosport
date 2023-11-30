@@ -2,32 +2,55 @@
   <nav>
     <router-link to="/"><img class="logo" src="../assets/rasbiosport-logo-white.png"></router-link>
     <input type="text" placeholder="Buscar..." class="search-input">
-    <router-link to="/profile" class="icon"><userIcon></userIcon></router-link>
     <div>
-      <router-link to="/login" class="icon"><logInIcon></logInIcon></router-link>
-      <router-link to="/register" class="icon"><img class="header-photo" src="../assets/register.png"></router-link>
-      <LogoutVue></LogoutVue>
+    <router-link v-if="itsLogged" to="/profile" class="icon"><userIcon></userIcon></router-link>
+      <router-link v-if="!itsLogged" to="/login" class="icon"><logInIcon></logInIcon></router-link>
+      <router-link v-if="!itsLogged" to="/register" class="icon"><img class="header-photo" src="../assets/register.png"></router-link>
+      <LogoutVue v-if="itsLogged"></LogoutVue>
     </div>
   </nav>
 </template>
 
 <script>
 import LogoutVue from './LogoutVue.vue';
-import userIcon from './userIcon.vue';
-import logInIcon from './logInIcon.vue';
+import userIcon from './icons/userIcon.vue';
+import logInIcon from './icons/logInIcon.vue';
+
 export default {
-  name:'NavComponent',
+  name: 'NavComponent',
   components: {
     LogoutVue, 
     userIcon,
     logInIcon,
   },
+  data() {
+    return {
+      itsLogged: false,
+    };
+  },
+  mounted() {
+    this.checkAuthentication();
+  },
+  methods: {
+    checkAuthentication() {
+      const token = localStorage.getItem('token');
+      if (token !== null && token !== undefined) {
+        this.itsLogged=true
+        console.log('Usuario autenticado');
+      } else {
+        this.itsLogged=false
+        console.log('Usuario no autenticado');
+      }
+    },
+  },
 };
 </script>
+
 
 <style scoped>
 .icon {
   color: aliceblue;
+  margin-right: 2.5rem;
 }
 nav{
   background-color: #4285F4;

@@ -4,11 +4,11 @@
       <h3 class="mb-4 text-center">Inicia sesión</h3>
       <div class="mb-3">
         <label for="correo" class="form-label">Correo</label>
-        <input v-model="correo" type="text" class="form-control" id="correo" placeholder="Correo" @focus="resaltarCampo">
+        <input @keyup.enter="login" v-model="correo" type="text" class="form-control" id="correo" placeholder="Correo" @focus="resaltarCampo">
       </div>
       <div class="mb-3">
-        <label for="contraseña" class="form-label">Contraseña</label>
-        <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="Contraseña"
+        <label  for="contraseña" class="form-label">Contraseña</label>
+        <input @keyup.enter="login" v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="Contraseña"
           @focus="resaltarCampo">
       </div>
       <div class="boton">
