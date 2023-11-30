@@ -13,15 +13,16 @@
       </div>
       <div class="boton">
         <p v-if="errorMensaje" class="text-danger text-center m-0">{{ errorMensaje }}</p>
-
         <button @click="login" class="btn btn-primary mb-3 colorGreen">Iniciar sesión</button>
         <p>No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
       </div>
     </div>
   </div>
 </template>
-
 <script>
+import Usuari from '../classes/userClass';
+import Store from '../store/store'
+
 export default {
   data() {
     return {
@@ -39,17 +40,16 @@ export default {
         };
 
         if (!formData.correo || !formData.contraseña) {
-            console.error('Correo y contraseña son obligatorios');
-            this.errorMensaje = 'Correo y contraseña son obligatorios';
-            this.$refs.formulario.classList.add('rebote');
-            setTimeout(() => {
-              this.$refs.formulario.classList.remove('rebote');
-            }, 500);
-            this.$refs.formulario.querySelectorAll('input').forEach((input) => {
-              input.classList.add('input-fallido');
-            });
-            return;
-          
+          console.error('Correo y contraseña son obligatorios');
+          this.errorMensaje = 'Correo y contraseña son obligatorios';
+          this.$refs.formulario.classList.add('rebote');
+          setTimeout(() => {
+            this.$refs.formulario.classList.remove('rebote');
+          }, 500);
+          this.$refs.formulario.querySelectorAll('input').forEach((input) => {
+            input.classList.add('input-fallido');
+          });
+          return;
         }
 
         const response = await fetch('http://localhost:3000/api/login', {
@@ -61,11 +61,24 @@ export default {
         });
 
         const responseData = await response.json();
-        console.log('Respuesta del servidor:', responseData);
 
         if (responseData.token) {
+
           localStorage.setItem('token', responseData.token);
           console.log('Inicio de sesión exitoso');
+
+          const user = new Usuari(
+            responseData.user.id.id_user,
+            responseData.user.id.name_user,
+            responseData.user.id.user_phone,
+            responseData.user.id.user_email,
+            responseData.user.id.user_address,
+            responseData.user.id.user_role
+          );
+          console.log(user)
+          const store1 = Store
+          store1.dispatch('setUser', user)
+          console.log(store1)
           this.$router.push('/');
         } else {
           this.errorMensaje = 'Error al iniciar sesión. Verifica tus credenciales.';
@@ -73,7 +86,6 @@ export default {
             input.classList.add('input-fallido');
           });
           console.error('Token no recibido en la respuesta del servidor');
-
           console.error('Error al iniciar sesión');
         }
       } catch (error) {
@@ -90,9 +102,8 @@ export default {
     }
   },
 };
-
-
 </script>
+
 
 <style scoped>
 .rebote {
@@ -196,5 +207,6 @@ export default {
     box-shadow: 0 0 8px rgba(244, 107, 66, 0.5);
     border-color: #f31919;
   }
-}</style>
+}
+</style>
 
