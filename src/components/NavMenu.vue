@@ -1,6 +1,7 @@
 <template>
     <div class="nav-menu">
       <ul>
+        <li><router-link to="/products/admin">PruebaAdmin</router-link></li>
         <li><router-link to="/category">Productos</router-link></li>
         <li><router-link to="/category/Futbol">Futbol</router-link></li>
         <li><router-link to="/category/Nba">NBA</router-link></li>

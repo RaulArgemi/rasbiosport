@@ -9,6 +9,7 @@ import Perfil from '../views/ProfileView.vue';
 import Ayuda from '../views/HelpView.vue';
 import Productos from '../components/CategoryProduct.vue'
 import CategoryView from '../views/CategoryView.vue'
+import AdminManageProductsVue from '@/components/AdminManageProducts.vue';
 const routes = [
   { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
@@ -17,7 +18,8 @@ const routes = [
   { path: '/profile', component: Perfil, meta: { requiresAuth: true } },
   { path: '/help', component: Ayuda },
   { path: '/category', component: Productos },
-  { path: '/category/:category_name', component: CategoryView }
+  { path: '/category/:category_name', component: CategoryView },
+  {path: '/products/admin', component:AdminManageProductsVue},
 ];
 
 const router = createRouter({
