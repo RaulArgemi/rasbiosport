@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
 export default createStore({
   state: {
@@ -6,13 +6,20 @@ export default createStore({
   },
   mutations: {
     setUser(state, user) {
-      console.log('Mutation setUser:', user);
       state.user = user;
+    },
+    updateUserField(state, { field, value }) {
+      if (state.user) {
+        state.user[field] = value;
+      }
     }
   },
   actions: {
     setUser({ commit }, user) {
       commit('setUser', user);
+    },
+    updateUserField({ commit }, payload) {
+      commit('updateUserField', payload);
     }
   }
 });
