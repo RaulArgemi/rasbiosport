@@ -5,54 +5,61 @@
         <h3 class="mb-4 ">Añade un nuevo Producto</h3>
       </div>
       <div class="mb-3">
-        <label for="nombreProducto" class="form-label"> Producto</label>
-        <input v-model="nombreProducto" type="text" class="form-control" id="nombreProducto" placeholder="">
+        <label for="product_name" class="form-label"> Producto</label>
+        <input v-model="product_name" type="text" class="form-control" id="product_name" placeholder="">
       </div>
       <div class="mb-3">
-        <label for="categoria" class="form-label">Categoría: </label>
+        <label for="category" class="form-label">Categoría: </label>
         <br>
         <select v-model="categoria">
-          <option v-for="cat in this.categorias" :key="cat.id" :value="cat">{{ cat }}</option>
+          <option v-for="cat in categorias" :key="cat" :value="cat">{{ cat }}</option>
         </select>
       </div>
       <div class="mb-3">
-        <label for="imgProducto" class="form-label">Información del producto</label>
-        <input v-model="imgProducto" type="password" class="form-control" id="imgProducto" placeholder="">
+        <label for="product_info" class="form-label">Información del producto</label>
+        <input v-model="product_info" type="text" class="form-control" id="product_info" placeholder="">
       </div>
       <div class="mb-3">
-        <label for="tagProducto" class="form-label">Imagen del producto</label>
-        <input v-model="tagProducto" type="text" class="form-control" id="tagProducto" placeholder="">
+        <label for="product_image" class="form-label">Imagen del producto</label>
+        <input v-model="product_image" type="text" class="form-control" id="product_image" placeholder="">
       </div>
       <div class="mb-3">
-        <label for="categoria" class="form-label">Tallas: </label><br>
-        <select>
-          <option v-for="talla in this.tallas" :key="talla" :value="talla">{{ talla }}</option>
+        <label for="product_price" class="form-label">Precio del Producto</label>
+        <input v-model="product_price" @input="handleNumericInput" type="text" class="form-control" id="product_price"
+          placeholder="">
+      </div>
+
+      <div class="mb-3">
+        <label for="product_size" class="form-label">Tamaño del producto: </label><br>
+        <select v-model="product_size">
+          <option v-for="size in product_sizes" :key="size" :value="size">{{ size }}</option>
         </select>
       </div>
       <div class="mb-3">
-        <label for="tag" class="form-label">Tag</label>
-        <input type="text" class="form-control" id="tag" placeholder="">
+        <label for="product_tag" class="form-label">Tag</label>
+        <input v-model="product_tag" type="text" class="form-control" id="product_tag" placeholder="">
       </div>
-      <button @click="register" class="btn btn-primary colorGreen botonRegister">Registrarse</button>
+      <button @click="addProduct" class="btn btn-primary colorGreen botonRegister">Registrar</button>
       <br>
     </div>
   </div>
 </template>
-  
+
 <script>
 export default {
   name: 'AdminRegister',
 
   data() {
     return {
-      nombreProducto: '',
+      product_name: '',
+      product_price: '',
       categoria: '',
-      infoProducto: '',
-      imgProducto: '',
-      tagProducto: '',
-      tallaProducto: '',
+      product_info: '',
+      product_image: '',
+      product_tag: '',
+      product_size: '',
       categorias: [],
-      tallas: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
+      product_sizes: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
     };
   },
   mounted() {
@@ -60,6 +67,10 @@ export default {
   },
 
   methods: {
+    handleNumericInput(event) {
+      event.target.value = event.target.value.replace(/[^0-9.]/g, '');
+      this.product_price = event.target.value;
+    },
     async loadCategoryData() {
       try {
         const response = await fetch('http://localhost:3000/api/category');
@@ -82,19 +93,23 @@ export default {
         console.error('Error al cargar los datos de categorías:', error);
       }
     },
-    async register() {
+    async addProduct() {
       try {
         const formData = {
-          nombreProducto: this.nombreProducto,
-          categoria: this.categoria,
-          infoProducto: this.infoProducto,
-          imgProducto: this.imgProducto,
-          tagProducto: this.tagProducto,
+          product_name: JSON.stringify(this.product_name),
+          category: JSON.stringify(this.categoria),
+          product_info: JSON.stringify(this.product_info),
+          product_size: JSON.stringify(this.product_size),
+          product_image: JSON.stringify(this.product_image),
+          product_price: this.product_price,
+          product_tag: JSON.stringify(this.product_tag),
         };
 
-        if (!formData.nombreProducto || !formData.categoria || !formData.infoProducto || !formData.imgProducto || !formData.tagProducto) {
+        console.log(formData)
+        console.log(JSON.stringify(formData))
+        if (!formData.product_name || !formData.category || !formData.product_info || !formData.product_image || !formData.product_tag || !formData.product_price || !formData.product_size) {
+
           console.error('Todos los campos son obligatorios');
-          this.tallaProducto = 'Todos los campos son obligatorios'
           this.$refs.formulario.classList.add('rebote');
           setTimeout(() => {
             this.$refs.formulario.classList.remove('rebote');
@@ -104,7 +119,7 @@ export default {
           });
           return;
         }
-        const response = await fetch('http://localhost:3000/api/register', {
+        const response = await fetch('http://localhost:3000/api/products', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -114,9 +129,9 @@ export default {
 
         if (response.status === 200) {
           console.log('Registro exitoso');
-        }  else {
+        } else {
+          console.error('Error al registrarse:', response.status, await response.text());
           console.error('Error al registrarse');
-          this.tallaProducto = 'Error al registrarse'
           this.$refs.formulario.classList.add('rebote');
           setTimeout(() => {
             this.$refs.formulario.classList.remove('rebote');
@@ -124,12 +139,13 @@ export default {
         }
 
       } catch (error) {
-        console.error('Prueba Error al registrarse:', error);
+        console.error('Error al registrarse:', error);
       }
     },
   },
 };
 </script>
+
 <style scoped>
 .textoRegister {
   margin-left: 35%;

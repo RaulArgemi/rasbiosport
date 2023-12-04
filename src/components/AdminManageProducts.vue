@@ -69,11 +69,25 @@ export default {
             console.error('Error al cargar los productos:', error);
         }
     },
+
     methods: {
         displayRegisterForm() {
             this.showRegister = !this.showRegister
         }
-    }
+    , async deleteProduct(productId) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            this.products = this.products.filter(p => p.product_id !== productId);
+        } catch (error) {
+            console.error('Error al eliminar el producto:', error);
+        }
+    },
+}
 }
 </script>
   
