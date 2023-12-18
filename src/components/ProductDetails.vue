@@ -26,180 +26,75 @@
     </div> 
       </div>
     </div>
-
-    <!-- Productos Relacionados -->
-    <div class="related-products">
-      <h3>Productos Relacionados:</h3>
-      <div class="related-product-list">
-        <div class="product-card-small" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id"
-          @click="goToProductDetails(relatedProduct.product_name)">
-          <img :src="relatedProduct.product_image" alt="Imagen del producto">
-          <div class="product-info2">
-            <p class="texto-relacionado">{{ relatedProduct.product_name }}</p>
-            <p>Precio: {{ relatedProduct.product_price }} €</p>
-          </div>
-        </div>
+  
+    <div class="product-reviews">
+      <h3>Reseñas:</h3>
+      <div v-for="review in productReviews" :key="review.review_id">
+        <p><strong>{{ review.user_name }}</strong> ({{ review.review_date }})</p>
+        <p>Puntuación: {{ review.review_rating }}</p>
+        <p>{{ review.review_info }}</p>
       </div>
     </div>
-  </div>
-
-  <!-- Reseñas del Producto -->
-  <div>
-    <div v-if="productReviews.length > 0" class="product-reviews">
-      <h3 class="mb-4">Reseñas:</h3>
-      <div v-for="review in productReviews" :key="review.review_id" class="card mb-4">
-        <div class="card-body">
-          <div class="review-header">
-            <h5 class="card-title mb-0"><strong>{{ review.user_name }}</strong></h5>
-            <p class="mb-0">{{ formatDate(review.review_date) }}</p>
-          </div>
-          <div class="review-stars">
-            <span v-for="star in parseInt(review.review_rating)" :key="star" class="text-warning">&#9733;</span>
-          </div>
-          <p class="card-text">{{ review.review_info }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-<script>
-import Cookies from 'js-cookie';
-import NavComponent from '../components/NavComponent.vue';
-import NavMenu from '../components/NavMenu.vue';
-
-const url = "http://localhost:3000"
-
-export default {
-  name: 'ProductDetails',
-  components: {
-    NavComponent,
-    NavMenu,
-  },
-  data() {
-    return {
-      productDetails: {},
-      productReviews: [],
-      relatedProducts: [],
-      optionsVisible: false,
-      selectedSize: '',
-      selectedQuantity: 1,
-      sizes: [],
-      quantityLimit: 0,
-    };
-  },
-  async created() {
-    await this.initializeData();
-    console.log(JSON.stringify(this.productDetails))
-  },
-  methods: {
-
-    updateQuantityLimit() {
-      const selectedSizeObject = this.sizes.find(item => item.size === this.selectedSize);
-      if (selectedSizeObject) {
-        this.quantityLimit = selectedSizeObject.stock;
-        if (this.selectedQuantity > this.quantityLimit) {
-          this.selectedQuantity = this.quantityLimit;
+  
+    <FooterVue></FooterVue>
+  </template>
+  
+  <script>
+  import NavComponent from '../components/NavComponent.vue';
+  import FooterVue from '@/components/FooterVue.vue';
+  import NavMenu from '../components/NavMenu.vue';
+  
+  export default {
+    name: 'ProductDetails',
+    components: {
+      NavComponent,
+      FooterVue,
+      NavMenu,
+    },
+    data() {
+      return {
+        productDetails: {},
+        productReviews: [],
+        relatedProducts: [],
+        selectedSize: '',
+      };
+    },
+    created() {
+      this.fetchProductDetails();
+    //   this.fetchProductReviews();
+    //   this.fetchRelatedProducts();
+    },
+    methods: {
+      async fetchProductDetails() {
+        try {
+          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${this.$route.params.product_name}`);
+          console.log(response)
+          const data = await response.json();
+          this.productDetails = data;
+          this.selectedSize = data.availableSizes[0];
+        } catch (error) {
+          console.error('Error al obtener detalles del producto:', error);
         }
-      }
-    },
-
-    showOptions(order) {
-      if (order == 'abrir') {
-        this.optionsVisible = !this.optionsVisible;
-        this.getSizes(this.product_id)
-      } else {
-        this.optionsVisible = !this.optionsVisible;
-
-      }
-    },
-
-    async getSizes() {
-      try {
-        const response = await fetch(`${url}/api/get/tallas/${this.productDetails.product_id}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        const data = await response.json();
-        console.log('Respuesta recibida:', data);
-        this.sizes = data.result.map(item => ({
-          size: item.product_size,
-          stock: item.product_stock,
-        }));
-      } catch (error) {
-        console.error('Error al obtener tallas:', error);
-      }
-    },
-
-
-    async addToCart() {
-      try {
-        const userId = JSON.parse(Cookies.get('userData')).id_user;
-        console.log(userId);
-        console.log(this.productDetails.product_id);
-        console.log(this.selectedSize)
-
-        fetch(`${url}/api/cart/add`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, productId: this.productDetails.product_id, size: this.selectedSize, quantity: this.selectedQuantity}),
-        })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data.message);
-          })
-          .catch(error => console.error('Error al añadir al carrito:', error));
-      } catch (error) {
-        console.error('Error al ejecutar addToCart:', error);
-      }
-    },
-
-    formatDate(dateString) {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString(undefined, options);
-    },
-    async initializeData() {
-      await this.fetchProductDetails();
-      await this.fetchRelatedProducts();
-      await this.fetchProductReviews();
-    },
-    async fetchProductDetails() {
-      try {
-        const response = await fetch(`${url}/api/products/${this.$route.params.product_name}`);
-        const data = await response.json();
-        this.productDetails = data;
-      } catch (error) {
-        console.error('Error al obtener detalles del producto:', error);
-      }
-    },
-    async fetchRelatedProducts() {
-      try {
-        const response = await fetch(`${url}/api/products/related/${this.productDetails.category_id}`);
-        this.relatedProducts = await response.json();
-      } catch (error) {
-        console.error('Error al obtener productos relacionados:', error);
-      }
-    },
-    async fetchProductReviews() {
-      try {
-        const response = await fetch(`${url}/api/products/${this.productDetails.product_id}/reviews`);
-        this.productReviews = await response.json();
-      } catch (error) {
-        console.error('Error al obtener reseñas:', error);
-      }
-    },
-    goToProductDetails(productName) {
-      this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
-    },
-
-  computed: {
-    filteredRelatedProducts() {
-      return this.relatedProducts.filter(product => product.product_id !== this.productDetails.product_id);
-    },
-  },
-  watch: {
-    $route() {
-      this.initializeData();
+      },
+      async fetchProductReviews() {
+        try {
+          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${this.productDetails.product_id}/reviews`);
+          this.productReviews = await response.json();
+        } catch (error) {
+          console.error('Error al obtener reseñas:', error);
+        }
+      },
+      async fetchRelatedProducts() {
+        try {
+          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products?category_name=${this.productDetails.category_name}`);
+          this.relatedProducts = await response.json();
+        } catch (error) {
+          console.error('Error al obtener productos relacionados:', error);
+        }
+      },
+      goToProductDetails(productName) {
+        this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
+      },
     },
   },}};
 </script>

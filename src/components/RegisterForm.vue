@@ -99,7 +99,7 @@ export default {
           return;
         }
 
-        const response = await fetch(`${url}/api/register`, {
+        const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

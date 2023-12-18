@@ -43,7 +43,7 @@ export default {
           this.errorMensaje = 'Correo y contraseña son obligatorios';
           return;
         }
-        const response = await fetch(`${url}/api/login`, {
+        const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),

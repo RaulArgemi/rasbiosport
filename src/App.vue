@@ -22,7 +22,7 @@ export default {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await fetch(`${url}/api/me`, {
+          const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/me', {
             headers: {
               'Authorization': `Bearer ${token}`
             }

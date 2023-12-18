@@ -135,7 +135,7 @@ export default {
         },
         async fetchProducts() {
             try {
-                const response = await fetch(`${url}/api/products`);
+                const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/products');
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -151,7 +151,7 @@ export default {
         async updateProduct() {
             try {
                 console.log(this.editingProduct.product_id)
-                const response = await fetch(`${url}/api/products/${this.editingProduct.product_id}`, {
+                const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${this.editingProduct.product_id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export default {
         },
         async deleteProduct(productId) {
             try {
-                const response = await fetch(`${url}/api/products/${productId}`, {
+                const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${productId}`, {
                     method: 'DELETE'
                 });
                 if (!response.ok) {
