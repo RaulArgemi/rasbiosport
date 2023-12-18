@@ -41,7 +41,7 @@
         },
         async created() {
             try {
-                const response = await fetch('http://localhost:3000/api/products');
+                const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/products');
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }

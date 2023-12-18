@@ -73,7 +73,7 @@ export default {
     },
     async loadCategoryData() {
       try {
-        const response = await fetch('http://localhost:3000/api/category');
+        const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/category');
 
         if (response.status === 404) {
           console.error('Recursos no encontrados');
@@ -119,7 +119,7 @@ export default {
           });
           return;
         }
-        const response = await fetch('http://localhost:3000/api/products', {
+        const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/products', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

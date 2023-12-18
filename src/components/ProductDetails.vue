@@ -57,13 +57,13 @@
     },
     created() {
       this.fetchProductDetails();
-      this.fetchProductReviews();
-      this.fetchRelatedProducts();
+    //   this.fetchProductReviews();
+    //   this.fetchRelatedProducts();
     },
     methods: {
       async fetchProductDetails() {
         try {
-          const response = await fetch(`http://localhost:3000/api/products/${this.$route.params.product_name}`);
+          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${this.$route.params.product_name}`);
           console.log(response)
           const data = await response.json();
           this.productDetails = data;
@@ -74,7 +74,7 @@
       },
       async fetchProductReviews() {
         try {
-          const response = await fetch(`http://localhost:3000/api/products/${this.productDetails.product_id}/reviews`);
+          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${this.productDetails.product_id}/reviews`);
           this.productReviews = await response.json();
         } catch (error) {
           console.error('Error al obtener reseñas:', error);
@@ -82,7 +82,7 @@
       },
       async fetchRelatedProducts() {
         try {
-          const response = await fetch(`http://localhost:3000/api/products?category_name=${this.productDetails.category_name}`);
+          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products?category_name=${this.productDetails.category_name}`);
           this.relatedProducts = await response.json();
         } catch (error) {
           console.error('Error al obtener productos relacionados:', error);
