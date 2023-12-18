@@ -1,13 +1,13 @@
 <template>
-    <NavComponent></NavComponent>
+  <NavComponent></NavComponent>
   <NavMenu></NavMenu>
 
   <div class="container d-flex">
-      <FilterVue></FilterVue>
-    
+    <FilterVue></FilterVue>
+ 
     <div class="col-9">
       <div class="row">
-        <div class="card m-2" v-for="product in products" :key="product.product_id">
+        <div class="card m-2" v-for="product in products" :key="product.product_id" @click="goToProductDetails(product.product_name)">
           <div class="imgBox">
             <img :src="product.product_image" class="mouse" alt="Imagen del Producto" />
           </div>
@@ -19,17 +19,16 @@
         </div>
       </div>
     </div>
-
   </div>
   <FooterVue></FooterVue>
 </template>
-
 
 <script>
 import NavComponent from '../components/NavComponent.vue';
 import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
 import FilterVue from '@/components/FilterVue.vue';
+
 export default {
   name: 'CategoryView',
   components: {
@@ -45,29 +44,28 @@ export default {
     };
   },
   created() {
-    // Obtener el category_name de route.params
     this.category_name = this.$route.params.category_name;
-
-    // Llamar a la API para obtener productos según el category_name
     this.fetchProducts();
   },
   watch: {
-    $route(to, from) {
-      console.log('Ruta anterior:', from);
+    $route(to) {
       this.category_name = to.params.category_name;
       this.fetchProducts();
     },
   },
   methods: {
     async fetchProducts() {
-  console.log('Llamando a fetchProducts con category_name:', this.category_name);
-  try {
-    const response = await fetch(`http://localhost:3000/api/products?category_name=${this.category_name}`);
-    const data = await response.json();
-    this.products = data;
-  } catch (error) {
-    console.error('Error al obtener productos:', error);
-  }
+      try {
+        const response = await fetch(`http://localhost:3000/api/products?category_name=${this.category_name}`);
+        const data = await response.json();
+        this.products = data;
+      } catch (error) {
+        console.error('Error al obtener productos:', error);
+      }
+    },
+    goToProductDetails(productName) {
+  const encodedProductName = encodeURIComponent(productName);
+  this.$router.push({ name: 'ProductDetails', params: { product_name: encodedProductName } });
 },
   },
 };

@@ -10,6 +10,7 @@ import Ayuda from '../views/HelpView.vue';
 import Productos from '../components/CategoryProduct.vue'
 import CategoryView from '../views/CategoryView.vue'
 import AdminManageProductsVue from '@/components/AdminManageProducts.vue';
+import ProductDetailsVue from '@/components/ProductDetails.vue';
 const routes = [
   { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
@@ -20,6 +21,12 @@ const routes = [
   { path: '/category', component: Productos },
   { path: '/category/:category_name', component: CategoryView },
   {path: '/products/admin', component:AdminManageProductsVue},
+  {
+  path: '/products/:product_name',
+  name: 'ProductDetails',
+  component: ProductDetailsVue,
+  props: route => ({ product_name: decodeURIComponent(route.params.product_name) }),
+},
 ];
 
 const router = createRouter({
