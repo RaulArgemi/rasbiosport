@@ -18,32 +18,91 @@
                         <td><img :src="product.product_image" alt="Imagen del Producto" class="product-image" /></td>
                         <td>{{ product.product_name }}</td>
                         <td>{{ product.product_price }} €</td>
-                        <td><button class="buy" @click="deleteProduct(product.product_id)">Eliminar</button></td>
+                        <td>
+                            <button class="edit" @click="editProduct(product)">Editar</button>
+                            <button class="delete" @click="deleteProduct(product.product_id)">Eliminar</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-        </section>
-        <section class="d-flex justify-content-center flex-column">
-            <button v-if="!showRegister" class="btn success" @click="displayRegisterForm">Añadir Producto</button>
-            <div class="d-flex flex-column justify-content-center">
-                <button v-if="showRegister" class="btn success" @click="displayRegisterForm">Eliminar</button>
-                <RegisterForm v-if="showRegister"></RegisterForm>
+ 
+            <div v-if="editingProduct">
+                <h2>Editar Producto</h2>
+                <form @submit.prevent="updateProduct">
+    <div class="form-group">
+      <label for="productId">Id del Producto:</label>
+      <input v-model="editingProduct.product_id" id="productId" placeholder="Id del Producto">
+    </div>
+
+    <div class="form-group">
+      <label for="productName">Nombre del Producto:</label>
+      <input v-model="editingProduct.product_name" id="productName" placeholder="Nombre del producto">
+    </div>
+
+    <div class="form-group">
+      <label for="categoryId">Id de la Categoría:</label>
+      <input v-model="editingProduct.category_id" id="categoryId" placeholder="Id de la categoría">
+    </div>
+
+    <div class="form-group">
+      <label for="productDesc">Descuento:</label>
+      <input v-model="editingProduct.product_desc" id="productDesc" placeholder="Descuento">
+    </div>
+
+    <div class="form-group">
+      <label for="productInfo">Información del Producto:</label>
+      <input v-model="editingProduct.product_info" id="productInfo" placeholder="Información del producto">
+    </div>
+
+    <div class="form-group">
+      <label for="productImage">Imagen del Producto:</label>
+      <input v-model="editingProduct.product_image" id="productImage" placeholder="Imagen del producto">
+    </div>
+
+    <div class="form-group">
+      <label for="productSize">Talla del Producto:</label>
+      <select v-model="editingProduct.product_size" id="productSize">
+        <option v-for="size in productSizes" :key="size" :value="size">{{ size }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="productPrice">Precio del Producto:</label>
+      <input v-model="editingProduct.product_price" id="productPrice" placeholder="Precio del producto">
+    </div>
+
+    <div class="form-group">
+      <label for="productTag">Información del Producto:</label>
+      <input v-model="editingProduct.product_tag" id="productTag" placeholder="Información del producto">
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" :disabled="!isValidProductSize">Guardar Cambios</button>
+      <button @click="cancelEdit">Cancelar</button>
+    </div>
+  </form>
             </div>
         </section>
-
-
+        <section class="d-flex justify-content-center flex-column">
+    <button v-if="!showRegister" class="btn success" @click="displayRegisterForm">Añadir Producto</button>
+    <div class="d-flex flex-column justify-content-center">
+        <button v-if="showRegister" class="btn success" @click="displayRegisterForm">Eliminar</button>
+        <RegisterForm v-if="showRegister"></RegisterForm>
+    </div>
+</section>
+ 
         <FooterVue></FooterVue>
     </div>
-</template>
-  
-<script>
-import NavComponent from '../components/NavComponent.vue';
-import FooterVue from '@/components/FooterVue.vue';
-import NavMenu from '../components/NavMenu.vue';
-import RegisterForm from './RegisterFormAdmin.vue';
-
-export default {
-    name: 'CategoryProduct',
+ </template>
+ 
+ <script>
+ import NavComponent from '../components/NavComponent.vue';
+ import FooterVue from '@/components/FooterVue.vue';
+ import NavMenu from '../components/NavMenu.vue';
+ import RegisterForm from './RegisterFormAdmin.vue';
+ 
+ export default {
+    name: 'AdminManageProducts',
     components: {
         NavComponent,
         FooterVue,
@@ -54,42 +113,78 @@ export default {
         return {
             products: [],
             showRegister: false,
+            editingProduct: null,
+            productSizes: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
         };
     },
+    computed: {
+    isValidProductSize() {
+      return this.productSizes.includes(this.editingProduct.product_size);
+    }
+  },
     async created() {
-        try {
-            const response = await fetch('http://localhost:3000/api/products');
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            this.products = data;
-        } catch (error) {
-            console.error('Error al cargar los productos:', error);
-        }
+        await this.fetchProducts();
     },
-
     methods: {
-        displayRegisterForm() {
-            this.showRegister = !this.showRegister
-        }
-    , async deleteProduct(productId) {
-        try {
-            const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+        async fetchProducts() {
+            try {
+                const response = await fetch('http://localhost:3000/api/products');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                this.products = await response.json();
+            } catch (error) {
+                console.error('Error al cargar los productos:', error);
             }
-            this.products = this.products.filter(p => p.product_id !== productId);
-        } catch (error) {
-            console.error('Error al eliminar el producto:', error);
-        }
+        },
+   
+        editProduct(product) {
+            this.editingProduct = { ...product };
+        },
+        async updateProduct() {
+            try {
+                console.log(this.editingProduct.product_id)
+                const response = await fetch(`http://localhost:3000/api/products/${this.editingProduct.product_id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.editingProduct),
+                });
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                await this.fetchProducts();
+                this.editingProduct = null;
+            } catch (error) {
+                console.error('Error al actualizar el producto:', error);
+            }
+        },
+        displayRegisterForm() {
+    this.showRegister = !this.showRegister
+},
+        async deleteProduct(productId) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                this.products = this.products.filter(p => p.product_id !== productId);
+            } catch (error) {
+                console.error('Error al eliminar el producto:', error);
+            }
+        },
+        cancelEdit() {
+            this.editingProduct = null;
+        },
     },
-}
-}
-</script>
+ }
+ </script>
+ 
+ 
   
       
 
@@ -179,5 +274,30 @@ td {
     font-weight: bold;
     border: none;
 }
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.form-actions {
+  margin-top: 20px;
+}
+
+button {
+  margin-right: 10px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
 </style>
-      
+
