@@ -23,14 +23,28 @@
       </div>
     </div>
   
-    <div class="product-reviews">
-      <h3>Reseñas:</h3>
-      <div v-for="review in productReviews" :key="review.review_id">
-        <p><strong>{{ review.user_name }}</strong> ({{ review.review_date }})</p>
-        <p>Puntuación: {{ review.review_rating }}</p>
-        <p>{{ review.review_info }}</p>
+    <div class="container mt-4">
+  <div class="product-reviews">
+    <h3 class="mb-4">Reseñas:</h3>
+    <div v-for="review in productReviews" :key="review.review_id" class="card mb-4">
+      <div class="card-body">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-between align-items-center mb-2">
+          <div>
+            <h5 class="card-title mb-0"><strong>{{ review.user_name }}</strong></h5>
+            <p class="mb-0">{{ formatDate(review.review_date) }}</p>
+          </div>
+          <span class="mb-0">
+            <span v-for="star in parseInt(review.review_rating)" :key="star" class="text-warning">&#9733;</span>
+          </span>
+        </div>
+        <p class="card-text">{{ review.review_info }}</p>
       </div>
     </div>
+  </div>
+</div>
+
+
+
   
     <FooterVue></FooterVue>
   </template>
@@ -56,11 +70,18 @@
       };
     },
     created() {
-      this.fetchProductDetails();
-      this.fetchProductReviews();
-      this.fetchRelatedProducts();
+      this.initilizeData();
+      //this.fetchRelatedProducts();
     },
     methods: {
+      formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+      async initilizeData(){
+        await this.fetchProductDetails()
+        this.fetchProductReviews()
+      },
       async fetchProductDetails() {
         try {
           const response = await fetch(`http://localhost:3000/api/products/${this.$route.params.product_name}`);
@@ -76,18 +97,19 @@
         try {
           const response = await fetch(`http://localhost:3000/api/products/${this.productDetails.product_id}/reviews`);
           this.productReviews = await response.json();
+          console.log(this.productReviews)
         } catch (error) {
           console.error('Error al obtener reseñas:', error);
         }
       },
-      async fetchRelatedProducts() {
+      /*async fetchRelatedProducts() {
         try {
           const response = await fetch(`http://localhost:3000/api/products?category_name=${this.productDetails.category_name}`);
           this.relatedProducts = await response.json();
         } catch (error) {
           console.error('Error al obtener productos relacionados:', error);
         }
-      },
+      },*/
       goToProductDetails(productName) {
         this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
       },
