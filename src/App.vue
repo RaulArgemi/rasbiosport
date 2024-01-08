@@ -27,7 +27,6 @@ export default {
           }
         } catch (error) {
           console.error('Error al obtener los datos del usuario:', error);
-          // Manejar errores de red, etc.
         }
       }
     }

@@ -21,7 +21,8 @@
 
 <script>
 import Usuari from '../classes/userClass';
-import Store from '../store/store'
+import Store from '../store/store';
+import Cookies from 'js-cookie';
 
 export default {
   data() {
@@ -40,7 +41,6 @@ export default {
         };
         if (!formData.correo || !formData.contraseña) {
           this.errorMensaje = 'Correo y contraseña son obligatorios';
-          // Resto de lógica de error
           return;
         }
         const response = await fetch('http://localhost:3000/api/login', {
@@ -51,6 +51,7 @@ export default {
         const responseData = await response.json();
         if (responseData.token) {
           localStorage.setItem('token', responseData.token);
+
           const user = new Usuari(
             responseData.user.id.id_user,
             responseData.user.id.name_user,
@@ -59,11 +60,18 @@ export default {
             responseData.user.id.user_address,
             responseData.user.id.user_role
           );
-          Store.dispatch('setUser', user)
+
+          localStorage.setItem('user', JSON.stringify(user));
+
+          this.setUserDataCookie(user);
+
+          Store.dispatch('setUser', user);
+
+          localStorage.removeItem('user');
+
           this.$router.push('/');
         } else {
           this.errorMensaje = 'Error al iniciar sesión. Verifica tus credenciales.';
-          // Resto de lógica de error
         }
       } catch (error) {
         this.errorMensaje = 'Error inesperado al intentar iniciar sesión. Inténtalo de nuevo más tarde.';
@@ -76,7 +84,19 @@ export default {
       setTimeout(() => {
         campo.classList.remove('input-resaltado');
       }, 500);
-    }
+    },
+    setUserDataCookie(user) {
+      const userData = {
+        id_user: user.id_user,
+        name_user: user.name_user,
+        user_phone: user.user_phone,
+        user_email: user.user_email,
+        user_address: user.user_address,
+        user_role: user.user_role,
+      };
+
+      Cookies.set('userData', JSON.stringify(userData), { expires: 7 });
+    },
   },
 };
 </script>
