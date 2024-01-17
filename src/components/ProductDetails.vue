@@ -8,46 +8,44 @@
       <img :src="productDetails.product_image" alt="Imagen del producto">
       <p>{{ productDetails.product_desc }}</p>
       <p>Tallas disponibles:
-        <!-- <select v-model="selectedSize">
-          <option v-for="size in productDetails.availableSizes" :key="size">{{ size }}</option>
-        </select> -->
         {{ this.productDetails.product_size }}
       </p>
       <h3>Precio: {{ productDetails.product_price }} €</h3>
     </div>
 
     <div>
-    <h3>Productos Relacionados:</h3>
-    <div class="related-products">
-      <div class="product-card" v-for="relatedProduct in relatedProducts" :key="relatedProduct.product_id" @click="goToProductDetails(relatedProduct.product_name)">
-        <img :src="relatedProduct.product_image" alt="Imagen del producto">
-        <div class="product-info">
-          <p>{{ relatedProduct.product_name }}</p>
-          <p>Precio: {{ relatedProduct.product_price }} €</p>
+      <h3>Productos Relacionados:</h3>
+      <div class="related-products">
+        <div class="product-card" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id"
+          @click="goToProductDetails(relatedProduct.product_name)">
+          <img :src="relatedProduct.product_image" alt="Imagen del producto">
+          <div class="product-info">
+            <p>{{ relatedProduct.product_name }}</p>
+            <p>Precio: {{ relatedProduct.product_price }} €</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
   <div class="container mt-4">
-  <div class="product-reviews">
-    <h3 class="mb-4">Reseñas:</h3>
-    <div v-for="review in productReviews" :key="review.review_id" class="card mb-4">
-      <div class="card-body">
-        <div class="d-grid gap-2 d-md-flex justify-content-md-between align-items-center mb-2">
-          <div>
-            <h5 class="card-title mb-0"><strong>{{ review.user_name }}</strong></h5>
-            <p class="mb-0">{{ formatDate(review.review_date) }}</p>
+    <div v-if="productReviews.length > 0" class="product-reviews">
+      <h3 class="mb-4">Reseñas:</h3>
+      <div v-for="review in productReviews" :key="review.review_id" class="card mb-4">
+        <div class="card-body">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-between align-items-center mb-2">
+            <div>
+              <h5 class="card-title mb-0"><strong>{{ review.user_name }}</strong></h5>
+              <p class="mb-0">{{ formatDate(review.review_date) }}</p>
+            </div>
+            <span class="mb-0">
+              <span v-for="star in parseInt(review.review_rating)" :key="star" class="text-warning">&#9733;</span>
+            </span>
           </div>
-          <span class="mb-0">
-            <span v-for="star in parseInt(review.review_rating)" :key="star" class="text-warning">&#9733;</span>
-          </span>
+          <p class="card-text">{{ review.review_info }}</p>
         </div>
-        <p class="card-text">{{ review.review_info }}</p>
       </div>
     </div>
   </div>
-</div>
 
   <FooterVue></FooterVue>
 </template>
@@ -109,19 +107,23 @@ export default {
       }
     },
     async fetchProductReviews() {
-        try {
-          const response = await fetch(`http://localhost:3000/api/products/${this.productDetails.product_id}/reviews`);
-          this.productReviews = await response.json();
-          console.log(this.productReviews)
-        } catch (error) {
-          console.error('Error al obtener reseñas:', error);
-        }
-      },
+      try {
+        const response = await fetch(`http://localhost:3000/api/products/${this.productDetails.product_id}/reviews`);
+        this.productReviews = await response.json();
+        console.log(this.productReviews)
+      } catch (error) {
+        console.error('Error al obtener reseñas:', error);
+      }
+    },
     goToProductDetails(productName) {
       this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
     },
   },
-
+  computed: {
+    filteredRelatedProducts() {
+      return this.relatedProducts.filter(product => product.product_id !== this.productDetails.product_id);
+    },
+  },
   watch: {
     $route() {
       this.initializeData();
@@ -130,21 +132,73 @@ export default {
 };
 </script>
 <style scoped>
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.product-details-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+.product-details {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+}
+
+.product-details h2 {
+  font-size: 2.8em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.product-details img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-details p {
+  font-size: 1.3em;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.product-details h3 {
+  font-size: 2.2em;
+  color: #007BFF;
+  margin-bottom: 20px;
+}
 
 .related-products {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start; 
-  margin-top: 20px;
+  max-width: 400px;
+  width: 100%;
 }
 
 .product-card {
-  width: 250px; 
-  margin: 10px 1rem; 
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
   transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
 .product-card:hover {
@@ -152,12 +206,40 @@ export default {
 }
 
 .product-card img {
-  width: 100%; 
-  height: auto; 
-  border-radius: 8px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px 12px 0 0;
 }
 
 .product-info {
-  text-align: center;
+  padding: 20px;
 }
+
+.product-info p {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.product-reviews {
+  margin-top: 30px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.card-title {
+  font-size: 1.7em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.text-warning {
+  color: #FFD700;
+}
+
 </style>
