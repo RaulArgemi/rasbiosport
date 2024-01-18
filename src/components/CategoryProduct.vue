@@ -28,6 +28,8 @@
   import FooterVue from '@/components/FooterVue.vue';
   import NavMenu from '../components/NavMenu.vue';
   import FilterVue from '@/components/FilterVue.vue';
+
+  const url = "http://localhost:3000"
   
   export default {
     name: 'CategoryView',
@@ -56,7 +58,7 @@
     methods: {
       async fetchProducts() {
         try {
-          const response = await fetch(`http://localhost:3000/api/products?category`);
+          const response = await fetch(`${url}/api/products?category`);
           const data = await response.json();
           this.products = data;
         } catch (error) {

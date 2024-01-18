@@ -41,6 +41,8 @@
 </template>
 
 <script>
+const url = "http://localhost:3000"
+
 export default {
   data() {
     return {
@@ -86,7 +88,7 @@ export default {
           return;
         }
 
-        const response = await fetch('http://localhost:3000/api/register', {
+        const response = await fetch(`${url}/api/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
