@@ -24,6 +24,8 @@ import Usuari from '../classes/userClass';
 import Store from '../store/store';
 import Cookies from 'js-cookie';
 
+const url = "http://localhost:3000"
+
 export default {
   data() {
     return {
@@ -43,7 +45,7 @@ export default {
           this.errorMensaje = 'Correo y contraseña son obligatorios';
           return;
         }
-        const response = await fetch('http://localhost:3000/api/login', {
+        const response = await fetch(`${url}/api/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),

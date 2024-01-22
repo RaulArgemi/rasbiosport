@@ -4,6 +4,9 @@
 
 
 <script>
+
+const url = "http://localhost:3000"
+
 export default {
   name: 'App', 
   created() {
@@ -14,7 +17,7 @@ export default {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await fetch('http://localhost:3000/api/me', {
+          const response = await fetch(`${url}/api/me`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }

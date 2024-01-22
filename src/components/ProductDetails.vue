@@ -55,6 +55,8 @@ import NavComponent from '../components/NavComponent.vue';
 import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
 
+const url = "http://localhost:3000"
+
 export default {
   name: 'ProductDetails',
   components: {
@@ -87,7 +89,7 @@ export default {
 
     async fetchProductDetails() {
       try {
-        const response = await fetch(`http://localhost:3000/api/products/${this.$route.params.product_name}`);
+        const response = await fetch(`${url}/api/products/${this.$route.params.product_name}`);
         const data = await response.json();
         this.productDetails = data;
         console.log(this.productDetails);
@@ -98,7 +100,7 @@ export default {
 
     async fetchRelatedProducts() {
       try {
-        const response = await fetch(`http://localhost:3000/api/products/related/${this.productDetails.category_id}`);
+        const response = await fetch(`${url}/api/products/related/${this.productDetails.category_id}`);
         console.log(response);
         this.relatedProducts = await response.json();
         console.log(this.relatedProducts);
@@ -108,7 +110,7 @@ export default {
     },
     async fetchProductReviews() {
       try {
-        const response = await fetch(`http://localhost:3000/api/products/${this.productDetails.product_id}/reviews`);
+        const response = await fetch(`${url}/api/products/${this.productDetails.product_id}/reviews`);
         this.productReviews = await response.json();
         console.log(this.productReviews)
       } catch (error) {

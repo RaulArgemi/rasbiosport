@@ -31,6 +31,8 @@ import FooterVue from '@/components/FooterVue.vue';
 import { useStore } from 'vuex';
 import Cookies from 'js-cookie';
 
+const url ="http://localhost:3000"
+
 export default {
   name: 'ProfileView',
   components: {
@@ -94,7 +96,7 @@ export default {
           value: JSON.stringify(value)
         };
 
-        const response = await fetch(`http://localhost:3000/api/me`, {
+        const response = await fetch(`${url}/api/me`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
