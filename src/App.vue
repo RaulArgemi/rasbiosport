@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: 'App', // o el nombre de tu componente principal
+  name: 'App', 
   created() {
     this.checkSessionAndFetchUserData();
   },
@@ -22,9 +22,7 @@ export default {
           const userData = await response.json();
           if (response.ok) {
             this.$store.dispatch('setUser', userData);
-          } else {
-            // Manejar casos como token expirado o usuario no encontrado
-          }
+          } 
         } catch (error) {
           console.error('Error al obtener los datos del usuario:', error);
         }

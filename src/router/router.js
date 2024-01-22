@@ -1,4 +1,3 @@
-// import jwt_decode from 'jwt-decode';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import Register from '../views/RegisterView.vue';
@@ -36,7 +35,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = checkAuthentication();
-  // const token = localStorage.getItem('token');
 
   console.log('isAuthenticated:', isAuthenticated);
 

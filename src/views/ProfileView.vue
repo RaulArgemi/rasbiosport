@@ -4,15 +4,19 @@
     <div class="container mt-4">
       <h2 class="text-center">Perfil</h2>
       <div class="profile-form">
-        <div class="mb-3" v-for="(value, key) in editableUser" :key="key">
-          <label :for="key" class="form-label">{{ key }}</label>
-          <div class="d-flex">
-            <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control"
-              :type="getInputType(key)">
-            <span v-else>{{ user[key] }}</span>
-            <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">✔️</button>
-            <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">❌</button>
-            <button v-else @click="enableEdit(key)" class="btn btn-primary btn-sm">Editar</button>
+        <div v-for="(value, key) in editableUser" :key="key">
+          <div v-if="key !== 'id_user' && key !== 'user_role'" class="mb-3">
+            <label :for="key" class="form-label">{{ key }}</label>
+            <div class="d-flex">
+              <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control"
+                :type="getInputType(key)">
+              <span v-else>{{ user[key] }}</span>
+              <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">✔️</button>
+              <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">❌</button>
+              <button v-else @click="enableEdit(key)" class="btn btn-primary btn-sm" :disabled="isDisabled(key)">
+                Editar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -45,7 +49,8 @@ export default {
       editableUser: {},
     };
   },
-  mounted() {
+  beforeMount() {
+    console.log("Se ha reiniciado")
     this.resetEdit();
     const storedUser = Cookies.get('userData');
     if (storedUser) {
@@ -57,7 +62,8 @@ export default {
     enableEdit(field) {
       this.editMode[field] = true;
       this.editableUser[field] = this.user[field];
-    },
+    }
+    ,
     cancelEdit(field) {
       this.editMode[field] = false;
     },
@@ -65,7 +71,10 @@ export default {
       this.editMode[field] = false;
       await this.updateUserProfile(field, this.editableUser[field]);
       this.$store.dispatch('updateUserField', { field, value: this.editableUser[field] });
+      this.setUserDataCookie();
+      console.log("Usuario actualizado")
     },
+
     getInputType(field) {
       if (field === 'email') return 'email';
       if (field === 'phone') return 'tel';
@@ -115,7 +124,7 @@ export default {
         user_role: this.user.user_role,
       };
 
-      Cookies.set('userData', JSON.stringify(userData), { expires: 7 }); 
+      Cookies.set('userData', JSON.stringify(userData), { expires: 7 });
 
       if (localStorage.getItem('userData')) {
         localStorage.removeItem('userData');
@@ -132,6 +141,9 @@ export default {
         this.itsLogged = false;
         console.log('Usuario no autenticado');
       }
+    },
+    isDisabled(field) {
+      return field === 'user_id' || field === 'user_role';
     },
   },
 };

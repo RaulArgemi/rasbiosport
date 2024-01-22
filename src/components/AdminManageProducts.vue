@@ -193,7 +193,6 @@
 <style scoped>
 button {
     --c: #4285F4;
-    /* the color*/
 
     box-shadow: 0 0 0 .1em inset var(--c);
     --_g: linear-gradient(var(--c) 0 0) no-repeat;

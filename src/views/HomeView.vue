@@ -105,5 +105,4 @@ export default {
   height: auto;
 }
 
-/* Add any additional styling for ProductCard component */
 </style>
