@@ -7,15 +7,14 @@
 
     <div class="col-9">
       <div class="row">
-        <div class="card m-2" v-for="product in products" :key="product.product_id"
-          @click="goToProductDetails(product.product_name)">
-          <div class="imgBox">
+        <div class="card m-2" v-for="product in products" :key="product.product_id" >
+          <div class="imgBox" @click="goToProductDetails(product.product_name)">
             <img :src="product.product_image" class="mouse" alt="Imagen del Producto" />
           </div>
           <div class="contentBox">
             <h3>{{ product.product_name }}</h3>
             <h2 class="price">{{ product.product_price }} €</h2>
-            <router-link @click="addtoCart(product.product_id)" to="/cart" class="buy">Buy Now</router-link>
+            <a href="#" class="buy" v-on:click="addToCart(product.product_id)">Buy Now</a>
           </div>
         </div>
       </div>
@@ -74,6 +73,8 @@ export default {
     },
     addToCart(productId) {
     const userId = JSON.parse(Cookies.get('userData')).id_user;
+    console.log(userId)
+    console.log(productId)
     fetch('http://localhost:3000/api/cart/add', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
