@@ -4,17 +4,18 @@
 
   <div class="container d-flex">
     <FilterVue></FilterVue>
- 
+
     <div class="col-9">
       <div class="row">
-        <div class="card m-2" v-for="product in products" :key="product.product_id" @click="goToProductDetails(product.product_name)">
+        <div class="card m-2" v-for="product in products" :key="product.product_id"
+          @click="goToProductDetails(product.product_name)">
           <div class="imgBox">
             <img :src="product.product_image" class="mouse" alt="Imagen del Producto" />
           </div>
           <div class="contentBox">
             <h3>{{ product.product_name }}</h3>
             <h2 class="price">{{ product.product_price }} €</h2>
-            <a href="#" class="buy">Buy Now</a>
+            <router-link @click="addtoCart(product.product_id)" to="/cart" class="buy">Buy Now</router-link>
           </div>
         </div>
       </div>
@@ -28,8 +29,10 @@ import NavComponent from '../components/NavComponent.vue';
 import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
 import FilterVue from '@/components/FilterVue.vue';
+import Cookies from 'js-cookie';
 
-const url ="http://localhost:3000"
+
+const url = "http://localhost:3000"
 
 export default {
   name: 'CategoryView',
@@ -66,9 +69,20 @@ export default {
       }
     },
     goToProductDetails(productName) {
-  const encodedProductName = encodeURIComponent(productName);
-  this.$router.push({ name: 'ProductDetails', params: { product_name: encodedProductName } });
-},
+      const encodedProductName = encodeURIComponent(productName);
+      this.$router.push({ name: 'ProductDetails', params: { product_name: encodedProductName } });
+    },
+    addToCart(productId) {
+    const userId = JSON.parse(Cookies.get('userData')).id_user;
+    fetch('http://localhost:3000/api/cart/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, productId })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data.message))
+    .catch(error => console.error('Error al añadir al carrito:', error));
+  }
   },
 };
 </script>
@@ -78,111 +92,111 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Istok+Web:wght@400;700&display=swap");
 
 * {
-    margin: 0;
-    padding: 0;
-    font-family: "Istok Web", sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: "Istok Web", sans-serif;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: #212121;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #212121;
 }
 
 .card {
-    position: relative;
-    width: 320px;
-    height: 480px;
-    background: #000000;
-    border-radius: 20px;
-    overflow: hidden;
+  position: relative;
+  width: 320px;
+  height: 480px;
+  background: #000000;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 .card::before {
-    content: "";
-    position: absolute;
-    top: -20%;
-    width: 100%;
-    height: 100%;
-    background: #4285F4;
-    transform: skewY(345deg);
-    transition: 0.5s;
+  content: "";
+  position: absolute;
+  top: -20%;
+  width: 100%;
+  height: 100%;
+  background: #4285F4;
+  transform: skewY(345deg);
+  transition: 0.5s;
 }
 
 .card:hover::before {
-    top: -70%;
-    transform: skewY(390deg);
+  top: -70%;
+  transform: skewY(390deg);
 }
 
 .card::after {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    font-weight: 600;
-    font-size: 6em;
-    color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-weight: 600;
+  font-size: 6em;
+  color: rgba(0, 0, 0, 0.1);
 }
 
 .card .imgBox {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 20px;
-    z-index: 1;
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  z-index: 1;
 }
 
 
 .card .contentBox {
-    position: relative;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 2;
+  position: relative;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 2;
 }
 
 .card .contentBox h3 {
-    font-size: 18px;
-    color: white;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  font-size: 18px;
+  color: white;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .card .contentBox .price {
-    font-size: 24px;
-    color: white;
-    font-weight: 700;
-    letter-spacing: 1px;
+  font-size: 24px;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 .card .contentBox .buy {
-    position: relative;
-    top: 100px;
-    opacity: 0;
-    padding: 10px 30px;
-    margin-top: 15px;
-    color: #000000;
-    text-decoration: none;
-    background: #4285F4;
-    border-radius: 30px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: 0.5s;
+  position: relative;
+  top: 100px;
+  opacity: 0;
+  padding: 10px 30px;
+  margin-top: 15px;
+  color: #000000;
+  text-decoration: none;
+  background: #4285F4;
+  border-radius: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.5s;
 }
 
 .card:hover .contentBox .buy {
-    top: 15px;
-    opacity: 1;
+  top: 15px;
+  opacity: 1;
 }
 
 .mouse {
-    height: 17rem;
-    width: auto;
+  height: 17rem;
+  width: auto;
 }
 </style>
