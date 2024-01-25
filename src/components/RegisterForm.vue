@@ -113,7 +113,7 @@ export default {
             setTimeout(() => {
               this.$refs.formulario.classList.remove('rebote');
             }, 500);
-        }
+        }   
 
       } catch (error) {
         console.error('Prueba Error al registrarse:', error);
