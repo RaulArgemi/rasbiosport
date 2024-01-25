@@ -6,7 +6,6 @@ import Inicio from '../views/HomeView.vue';
 import Privacidad from '../views/PrivacyPolicyView.vue';
 import Perfil from '../views/ProfileView.vue';
 import Ayuda from '../views/HelpView.vue';
-import Productos from '../components/CategoryProduct.vue'
 import CategoryView from '../views/CategoryView.vue'
 import AdminManageProductsVue from '@/components/AdminManageProducts.vue';
 import ProductDetailsVue from '@/components/ProductDetails.vue';
@@ -18,7 +17,6 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/profile', component: Perfil, meta: { requiresAuth: true } },
   { path: '/help', component: Ayuda },
-  { path: '/category', component: Productos },
   { path: '/category/:category_name', component: CategoryView },
   { path: '/products/admin', component: AdminManageProductsVue },
   {
