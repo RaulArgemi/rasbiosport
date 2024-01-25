@@ -1,8 +1,8 @@
 <template>
   <nav>
     <router-link to="/"><img class="logo" src="../assets/rasbiosport-logo-white.png"></router-link>
-    <input type="text" placeholder="Buscar..." class="search-input">
-    <div>
+    <SearchBar></SearchBar>
+        <div>
     <router-link v-if="itsLogged" to="/profile" class="icon"><userIcon></userIcon></router-link>
       <router-link v-if="!itsLogged" to="/login" class="icon"><logInIcon></logInIcon></router-link>
       <router-link v-if="!itsLogged" to="/register" class="icon"><img class="header-photo" src="../assets/register.png"></router-link>
@@ -15,6 +15,7 @@
 import LogoutVue from './LogoutVue.vue';
 import userIcon from './icons/userIcon.vue';
 import logInIcon from './icons/logInIcon.vue';
+import SearchBar from './SearchBar.vue';
 
 export default {
   name: 'NavComponent',
@@ -22,6 +23,7 @@ export default {
     LogoutVue, 
     userIcon,
     logInIcon,
+    SearchBar,
   },
   data() {
     return {
