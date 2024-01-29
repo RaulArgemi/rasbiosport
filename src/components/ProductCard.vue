@@ -7,7 +7,7 @@
       <p class="card-price">{{ price }} €</p>
     </div>
     <router-link to="/cart" class="buy" v-on:click="addToCart(product_id)">Añadir al carrito</router-link>
-    <a @click="goToProductDetails(product_name)" >Ver detalles</a>
+
   </div>
 </template>
 
@@ -50,9 +50,6 @@ export default {
         .then(response => response.json())
         .then(data => console.log(data.message))
         .catch(error => console.error('Error al añadir al carrito:', error));
-    }, goToProductDetails(productName) {
-      const encodedProductName = encodeURIComponent(productName);
-      this.$router.push({ name: 'ProductDetails', params: { product_name: encodedProductName } });
     },
   }
 };
