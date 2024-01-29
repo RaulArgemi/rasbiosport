@@ -44,7 +44,7 @@ import NavComponent from '../components/NavComponent.vue';
 import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
 
-const url = "https://fabioaviador.alwaysdata.net/"
+const url = "https://fabioaviador.alwaysdata.net"
 
 export default {
   name: 'ProductDetails',

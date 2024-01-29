@@ -104,7 +104,7 @@ import NavComponent from '../components/NavComponent.vue';
 import NavMenu from '../components/NavMenu.vue';
 import RegisterForm from './RegisterFormAdmin.vue';
 
- const url = "https://fabioaviador.alwaysdata.net/"
+ const url = "https://fabioaviador.alwaysdata.net"
  
  export default {
     name: 'AdminManageProducts',

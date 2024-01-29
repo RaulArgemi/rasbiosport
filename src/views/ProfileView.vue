@@ -88,7 +88,7 @@ import NavComponent from '../components/NavComponent.vue';
 import { useStore } from 'vuex';
 import Cookies from 'js-cookie';
 
-const url ="https://fabioaviador.alwaysdata.net/"
+const url ="https://fabioaviador.alwaysdata.net"
 
 export default {
   name: 'ProfileView',
