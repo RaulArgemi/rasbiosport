@@ -41,7 +41,7 @@
 </template>
 
 <script>
-const url = "https://fabioaviador.alwaysdata.net/"
+const url = "https://fabioaviador.alwaysdata.net"
 
 export default {
   data() {

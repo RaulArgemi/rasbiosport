@@ -13,7 +13,7 @@
 <script>
 import debounce from "lodash/debounce";
 
-const url = "https://fabioaviador.alwaysdata.net/"
+const url = "https://fabioaviador.alwaysdata.net"
 
 export default {
     name: "SearchBar",
