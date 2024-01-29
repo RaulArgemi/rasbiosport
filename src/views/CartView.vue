@@ -10,7 +10,7 @@
           <div class="details">
             <p class="product-name">{{ item.product_name }}</p>
             <p class="quantity">Cantidad: {{ item.quantity }}</p>
-            <p class="price">Precio unitario: ${{ item.price.toFixed(2) }}</p>
+            <p class="price">Precio: {{ item.product_price * item.quantity }}</p>
           </div>
         </div>
         <div class="buttons">
@@ -20,8 +20,9 @@
         </div>
       </div>
       <div class="total-price">
-        <p>Total: ${{ calculateTotalPrice().toFixed(2) }}</p>
+        <p>Total: {{ calculateTotalPrice().toFixed(2) }}€</p>
       </div>
+
     </div>
     <FooterVue></FooterVue>
   </div>
@@ -55,6 +56,9 @@ export default {
       const userId = JSON.parse(Cookies.get('userData')).id_user;
       fetch(`${url}/api/cart/${userId}`)
         .then(response => response.json())
+        .then(data => {
+          this.cartItems = data;
+        })
         .catch(error => console.error('Error al obtener el carrito:', error));
     },
     addToCart(productId) {
@@ -101,97 +105,97 @@ export default {
         .then(response => response.json())
         .then(data => {
           console.log(data.message);
-          this.fetchCartItems(); 
+          this.fetchCartItems();
         })
         .catch(error => console.error('Error al quitar del carrito:', error));
     },
     calculateTotalPrice() {
-      return this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+      return this.cartItems.reduce((total, item) => total + item.product_price * item.quantity, 0);
     },
   }
 };
 </script>
 
 <style scoped>
-  .cart-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
+.cart-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-  .cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-    transition: all 0.3s ease;
-  }
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
 
-  .product-info {
-    display: flex;
-    align-items: center;
-  }
+.product-info {
+  display: flex;
+  align-items: center;
+}
 
-  .product-image {
-    width: 50px;
-    height: 50px; 
-    margin-right: 15px;
-    border-radius: 8px;
-  }
+.product-image {
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+  border-radius: 8px;
+}
 
-  .details {
-    flex-grow: 1; 
-  }
+.details {
+  flex-grow: 1;
+}
 
-  .product-name {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
+.product-name {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
 
-  .quantity {
-    font-size: 14px;
-    color: #888;
-  }
+.quantity {
+  font-size: 14px;
+  color: #888;
+}
 
-  .price {
-    font-size: 14px;
-    color: #333;
-  }
+.price {
+  font-size: 14px;
+  color: #333;
+}
 
-  .buttons {
-    display: flex;
-    align-items: center;
-  }
+.buttons {
+  display: flex;
+  align-items: center;
+}
 
-  .add-button,
-  .remove-button {
-    padding: 8px 15px;
-    margin-right: 10px;
-    font-size: 14px;
-    cursor: pointer;
-  }
+.add-button,
+.remove-button {
+  padding: 8px 15px;
+  margin-right: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
 
-  .add-button {
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-  }
+.add-button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+}
 
-  .remove-button {
-    background-color: #e74c3c;
-    color: #fff;
-    border: none;
-  }
+.remove-button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+}
 
-  .total-price {
-    margin-top: 20px;
-    text-align: right;
-  }
+.total-price {
+  margin-top: 20px;
+  text-align: right;
+}
 </style>
