@@ -14,6 +14,8 @@
 <script>
 import Cookies from 'js-cookie';
 
+const url = "http://localhost:3000"
+
 export default {
   props: {
     product_id: {
@@ -42,7 +44,7 @@ export default {
       const userId = JSON.parse(Cookies.get('userData')).id_user;
       console.log(userId)
       console.log(productId)
-      fetch('http://localhost:3000/api/cart/add', {
+      fetch(`${url}/api/cart/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId })

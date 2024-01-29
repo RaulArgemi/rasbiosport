@@ -13,6 +13,8 @@
 <script>
 import debounce from "lodash/debounce";
 
+const url = "http://localhost:3000"
+
 export default {
     name: "SearchBar",
     data() {
@@ -32,7 +34,7 @@ export default {
             }
             try {
                 console.log(this.searchTerm)
-                const response = await fetch(`http://localhost:3000/api/products/search?query=${this.searchTerm}`);
+                const response = await fetch(`${url}/api/products/search?query=${this.searchTerm}`);
                 const data = await response.json();
                 console.log(data)
                 this.searchResults = data;
