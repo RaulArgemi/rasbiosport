@@ -17,7 +17,7 @@
 import ProductCard from "@/components/ProductCard.vue";
 
 
-const url = "http://fabioaviador.alwaysdata.net/"
+const url = "https://fabioaviador.alwaysdata.net/"
 
 export default {
   name: 'CategoryProducts',

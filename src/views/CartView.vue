@@ -37,7 +37,7 @@ import NavMenu from '../components/NavMenu.vue';
 import CheckoutModal from '../components/CheckoutModal.vue';
 import Cookies from 'js-cookie';
 
-const url = "http://localhost:3000"
+const url = "https://fabioaviador.alwaysdata.net/"
 
 export default {
   name: 'CategoryView',

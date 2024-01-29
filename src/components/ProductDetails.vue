@@ -39,64 +39,88 @@
     <FooterVue></FooterVue>
   </template>
   
-  <script>
-  import NavComponent from '../components/NavComponent.vue';
-  import FooterVue from '@/components/FooterVue.vue';
-  import NavMenu from '../components/NavMenu.vue';
-  
-  export default {
-    name: 'ProductDetails',
-    components: {
-      NavComponent,
-      FooterVue,
-      NavMenu,
+<script>
+import NavComponent from '../components/NavComponent.vue';
+import FooterVue from '@/components/FooterVue.vue';
+import NavMenu from '../components/NavMenu.vue';
+
+const url = "https://fabioaviador.alwaysdata.net/"
+
+export default {
+  name: 'ProductDetails',
+  components: {
+    NavComponent,
+    FooterVue,
+    NavMenu,
+  },
+  data() {
+    return {
+      productDetails: {},
+      productReviews: [],
+      relatedProducts: [],
+      selectedSize: '',
+    };
+  },
+  async created() {
+    await this.initializeData();
+  },
+  methods: {
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
     },
-    data() {
-      return {
-        productDetails: {},
-        productReviews: [],
-        relatedProducts: [],
-        selectedSize: '',
-      };
+    async initializeData() {
+      await this.fetchProductDetails();
+      await this.fetchRelatedProducts();
+      await this.fetchProductReviews();
+
     },
-    created() {
-      this.fetchProductDetails();
-    //   this.fetchProductReviews();
-    //   this.fetchRelatedProducts();
+
+    async fetchProductDetails() {
+      try {
+        const response = await fetch(`${url}/api/products/${this.$route.params.product_name}`);
+        const data = await response.json();
+        this.productDetails = data;
+        console.log(this.productDetails);
+      } catch (error) {
+        console.error('Error al obtener detalles del producto:', error);
+      }
     },
-    methods: {
-      async fetchProductDetails() {
-        try {
-          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${this.$route.params.product_name}`);
-          console.log(response)
-          const data = await response.json();
-          this.productDetails = data;
-          this.selectedSize = data.availableSizes[0];
-        } catch (error) {
-          console.error('Error al obtener detalles del producto:', error);
-        }
-      },
-      async fetchProductReviews() {
-        try {
-          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products/${this.productDetails.product_id}/reviews`);
-          this.productReviews = await response.json();
-        } catch (error) {
-          console.error('Error al obtener reseñas:', error);
-        }
-      },
-      async fetchRelatedProducts() {
-        try {
-          const response = await fetch(`https://ssh-fabioaviador.alwaysdata.net/api/products?category_name=${this.productDetails.category_name}`);
-          this.relatedProducts = await response.json();
-        } catch (error) {
-          console.error('Error al obtener productos relacionados:', error);
-        }
-      },
-      goToProductDetails(productName) {
-        this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
-      },
+
+    async fetchRelatedProducts() {
+      try {
+        const response = await fetch(`${url}/api/products/related/${this.productDetails.category_id}`);
+        console.log(response);
+        this.relatedProducts = await response.json();
+        console.log(this.relatedProducts);
+      } catch (error) {
+        console.error('Error al obtener productos relacionados:', error);
+      }
     },
-  },}};
+    async fetchProductReviews() {
+      try {
+        const response = await fetch(`${url}/api/products/${this.productDetails.product_id}/reviews`);
+        this.productReviews = await response.json();
+        console.log(this.productReviews)
+      } catch (error) {
+        console.error('Error al obtener reseñas:', error);
+      }
+    },
+    goToProductDetails(productName) {
+      this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
+    },
+  },
+  computed: {
+    filteredRelatedProducts() {
+      return this.relatedProducts.filter(product => product.product_id !== this.productDetails.product_id);
+    },
+  },
+  watch: {
+    $route() {
+      this.initializeData();
+    },
+  },
+};
 </script>
 
 <style scoped>
