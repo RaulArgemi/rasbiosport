@@ -21,17 +21,21 @@
       </div>
       <div class="total-price">
         <p>Total: {{ calculateTotalPrice().toFixed(2) }}€</p>
+        <button @click="openCheckoutModal">Comprar</button>
       </div>
-
+      <CheckoutModal :isModalVisible="checkoutModalVisible" :cartItems="cartItems"
+        :calculateTotalPrice="calculateTotalPrice" @close-modal="closeCheckoutModal"
+        @confirm-purchase="handleConfirmPurchase" />
     </div>
-    <FooterVue></FooterVue>
   </div>
+  <FooterVue></FooterVue>
 </template>
 
 <script>
 import NavComponent from '../components/NavComponent.vue';
 import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
+import CheckoutModal from '../components/CheckoutModal.vue';
 import Cookies from 'js-cookie';
 
 const url = "http://localhost:3000"
@@ -42,10 +46,12 @@ export default {
     NavComponent,
     FooterVue,
     NavMenu,
+    CheckoutModal,
   },
   data() {
     return {
-      cartItems: []
+      cartItems: [],
+      checkoutModalVisible: false,
     };
   },
   created() {
@@ -111,6 +117,18 @@ export default {
     },
     calculateTotalPrice() {
       return this.cartItems.reduce((total, item) => total + item.product_price * item.quantity, 0);
+    },
+    openCheckoutModal() {
+      console.log('Abriendo modal de compra');
+      this.checkoutModalVisible = true;
+    },
+
+    closeCheckoutModal() {
+      this.checkoutModalVisible = false;
+    },
+    handleConfirmPurchase(checkoutDetails) {
+      console.log('Detalles de la compra:', checkoutDetails);
+      this.closeCheckoutModal();
     },
   }
 };
