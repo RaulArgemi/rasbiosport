@@ -101,7 +101,7 @@
  import NavMenu from '../components/NavMenu.vue';
  import RegisterForm from './RegisterFormAdmin.vue';
 
- const url = "http://localhost:3000"
+ const url = "https://fabioaviador.alwaysdata.net/"
  
  export default {
     name: 'AdminManageProducts',

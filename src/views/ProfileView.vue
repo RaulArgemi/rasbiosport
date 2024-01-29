@@ -31,7 +31,7 @@ import FooterVue from '@/components/FooterVue.vue';
 import { useStore } from 'vuex';
 import Cookies from 'js-cookie';
 
-const url ="http://localhost:3000"
+const url ="https://fabioaviador.alwaysdata.net/"
 
 export default {
   name: 'ProfileView',

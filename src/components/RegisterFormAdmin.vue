@@ -47,7 +47,7 @@
 
 <script>
 
-const url = "http://localhost:3000"
+const url = "https://fabioaviador.alwaysdata.net/"
 
 export default {
   name: 'AdminRegister',
