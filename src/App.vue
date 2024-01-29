@@ -4,8 +4,11 @@
 
 
 <script>
+
+const url = "http://localhost:3000"
+
 export default {
-  name: 'App', // o el nombre de tu componente principal
+  name: 'App', 
   created() {
     this.checkSessionAndFetchUserData();
   },
@@ -14,7 +17,7 @@ export default {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/me', {
+          const response = await fetch(`${url}/api/me`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -22,12 +25,9 @@ export default {
           const userData = await response.json();
           if (response.ok) {
             this.$store.dispatch('setUser', userData);
-          } else {
-            // Manejar casos como token expirado o usuario no encontrado
-          }
+          } 
         } catch (error) {
           console.error('Error al obtener los datos del usuario:', error);
-          // Manejar errores de red, etc.
         }
       }
     }

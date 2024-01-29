@@ -3,49 +3,8 @@
     <NavComponent></NavComponent>
     <NavMenu></NavMenu>
     <CustomSection></CustomSection>
-
-    <div class="container mt-4">
-      <h2 class="text-center">Destacados</h2>
-      
-      <div class="row">
-        <div class="col-md-3">
-          <ProductCard
-            imageSrc="https://www.futbolemotion.com/imagesarticulos/205699/grandes/camiseta-nike-fc-barcelona-primera-equipacion-stadium-2023-2024-white-royal-blue-university-red-0.jpg"
-            title="Camiseta FC Barcelona 2023/24"
-            price="99.99€"
-            description="Primera equipación FC Barcelona temporada 2023/24."
-          ></ProductCard>
-        </div>
-
-        <div class="col-md-3">
-          <ProductCard
-            imageSrc="https://e00-marca.uecdn.es/assets/multimedia/imagenes/2023/06/14/16867313137408.jpg"
-            title="Camiseta Real Madrid 2023/24"
-            price="104.95€"
-            description="Primera equipación Real Madrid temporada 2023/24."
-          ></ProductCard>
-        </div>
-
-        <div class="col-md-3">
-          <ProductCard
-            imageSrc="https://images.footballfanatics.com/phoenix-suns/mens-fanatics-branded-kevin-durant-purple-phoenix-suns-fastbreak-jersey-icon-edition_pi5349000_altimages_ff_5349452-06d7fc40c98d8882fbe9alt3_full.jpg?_hv=2&w=900"
-            title="Camiseta Phoenix Suns - Kevin Durant"
-            price="74.95€"
-            description="Camiseta NBA Phoenix Suns. #35 Kevin Durant. Season 2023"
-          ></ProductCard>
-        </div>
-
-        <div class="col-md-3">
-          <ProductCard
-            imageSrc="https://www.deportesapalategui.com/media/catalog/product/cache/1/small_image/580x400/9df78eab33525d08d6e5fb8d27136e95/6/1/618809_044_a_b1.jpg"
-            title="Camiseta Atlético de Madrid 2015/16"
-            price="84.95€"
-            description="Primera equipación Atlético de Madrid temporada 2015/16."
-          ></ProductCard>
-        </div>
-      </div>
-    </div>
-
+    <CategoryProducts
+    :category_prop="'Destacados'"></CategoryProducts>
     <FooterVue></FooterVue>
   </div>
 </template>
@@ -53,18 +12,17 @@
 <script>
 import NavComponent from '../components/NavComponent.vue'
 import FooterVue from '../components/FooterVue.vue'
-import ProductCard from '../components/ProductCard.vue'
 import NavMenu from '@/components/NavMenu.vue';
 import CustomSection from '@/components/CustomSection.vue';
-
+import CategoryProducts from '@/components/CategoryProducts.vue';
 export default {
   name: 'HomeView',
   components: {
     NavComponent,
     FooterVue,
-    ProductCard,
     NavMenu,
-    CustomSection
+    CustomSection,
+    CategoryProducts
 }
 };
 </script>
@@ -105,5 +63,4 @@ export default {
   height: auto;
 }
 
-/* Add any additional styling for ProductCard component */
 </style>

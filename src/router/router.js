@@ -1,4 +1,3 @@
-// import jwt_decode from 'jwt-decode';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import Register from '../views/RegisterView.vue';
@@ -7,10 +6,10 @@ import Inicio from '../views/HomeView.vue';
 import Privacidad from '../views/PrivacyPolicyView.vue';
 import Perfil from '../views/ProfileView.vue';
 import Ayuda from '../views/HelpView.vue';
-import Productos from '../components/CategoryProduct.vue'
 import CategoryView from '../views/CategoryView.vue'
 import AdminManageProductsVue from '@/components/AdminManageProducts.vue';
 import ProductDetailsVue from '@/components/ProductDetails.vue';
+import CartViewVue from '@/views/CartView.vue';
 const routes = [
   { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
@@ -18,15 +17,15 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/profile', component: Perfil, meta: { requiresAuth: true } },
   { path: '/help', component: Ayuda },
-  { path: '/category', component: Productos },
   { path: '/category/:category_name', component: CategoryView },
-  {path: '/products/admin', component:AdminManageProductsVue},
+  { path: '/products/admin', component: AdminManageProductsVue },
   {
-  path: '/products/:product_name',
-  name: 'ProductDetails',
-  component: ProductDetailsVue,
-  props: route => ({ product_name: decodeURIComponent(route.params.product_name) }),
-},
+    path: '/products/:product_name',
+    name: 'ProductDetails',
+    component: ProductDetailsVue,
+    props: route => ({ product_name: decodeURIComponent(route.params.product_name) }),
+  },
+  { path: '/cart', component: CartViewVue}
 ];
 
 const router = createRouter({
@@ -36,7 +35,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = checkAuthentication();
-  // const token = localStorage.getItem('token');
 
   console.log('isAuthenticated:', isAuthenticated);
 
