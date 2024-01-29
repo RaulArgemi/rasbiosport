@@ -4,14 +4,24 @@
     <div class="card-body">
       <h5 class="card-title">{{ title }}</h5>
       <p class="card-text">{{ description }}</p>
-      <p class="card-price">{{ price }}</p>
+      <p class="card-price">{{ price }} €</p>
     </div>
+    <router-link to="/cart" class="buy" v-on:click="addToCart(product_id)">Añadir al carrito</router-link>
+
   </div>
 </template>
 
 <script>
+import Cookies from 'js-cookie';
+
+const url = "http://localhost:3000"
+
 export default {
   props: {
+    product_id: {
+      type: Number,
+      required: true
+    },
     imageSrc: {
       type: String,
       required: true,
@@ -29,6 +39,21 @@ export default {
       required: true,
     },
   },
+  methods: {
+    addToCart(productId) {
+      const userId = JSON.parse(Cookies.get('userData')).id_user;
+      console.log(userId)
+      console.log(productId)
+      fetch(`${url}/api/cart/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, productId })
+      })
+        .then(response => response.json())
+        .then(data => console.log(data.message))
+        .catch(error => console.error('Error al añadir al carrito:', error));
+    },
+  }
 };
 </script>
 
@@ -37,11 +62,21 @@ export default {
   border: 1px solid #dee2e6;
   border-radius: 8px;
   overflow: hidden;
+  width: 100%;
+  /* Ancho total del contenedor padre (se adaptará al ancho de la fila) */
+  max-width: 300px;
+  /* Ancho máximo de la tarjeta */
+  margin: 0 auto;
+  /* Centrar la tarjeta en la fila */
+  box-sizing: border-box;
+  /* Incluir bordes y relleno en el ancho total */
 }
 
 .card-img-top {
   object-fit: cover;
   width: 100%;
+  height: 150px;
+  /* Altura fija para la imagen */
 }
 
 .card-body {
@@ -63,5 +98,4 @@ export default {
   font-size: 1.25rem;
   color: #e44d26;
   font-weight: bold;
-}
-</style>
+}</style>

@@ -41,6 +41,8 @@
 </template>
 
 <script>
+const url = "http://localhost:3000"
+
 export default {
   data() {
     return {
@@ -86,7 +88,7 @@ export default {
           return;
         }
 
-        const response = await fetch('https://ssh-fabioaviador.alwaysdata.net/api/register', {
+        const response = await fetch(`${url}/api/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -111,7 +113,7 @@ export default {
             setTimeout(() => {
               this.$refs.formulario.classList.remove('rebote');
             }, 500);
-        }
+        }   
 
       } catch (error) {
         console.error('Prueba Error al registrarse:', error);

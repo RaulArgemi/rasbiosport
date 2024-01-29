@@ -14,7 +14,7 @@
       </div>
   </footer>
 </template>
-<style>
+<style scoped>
 footer{
   background-color: black;
   display: flex;
