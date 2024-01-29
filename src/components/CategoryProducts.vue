@@ -5,7 +5,7 @@
       <div class="row">
         <ProductCard class="mt-3" v-for="product in products" :key="product.product_id" :imageSrc="product.product_image"
           :title="product.product_name" :description="product.product_description" :price="product.product_price"
-          :product_id="product.product_id"/>
+          :product_id="product.product_id" @click="goToProductDetails(product.product_name)"/>
       </div>
     </div>
   </div>
@@ -65,6 +65,10 @@ export default {
       } catch (error) {
         console.error('Error al obtener productos:', error);
       }
+    },
+    goToProductDetails(product_name) {
+      const encodedProductName = encodeURIComponent(product_name);
+      this.$router.push({ name: 'ProductDetails', params: { product_name: encodedProductName } });
     },
 
   },
