@@ -3,6 +3,7 @@
     <router-link to="/"><img class="logo" src="../assets/rasbiosport-logo-white.png"></router-link>
     <SearchBar></SearchBar>
     <div>
+      <router-link to="/cart" v-if="itsLogged"><img class="cart" src="../assets/carrito.png"></router-link>
       <router-link v-if="itsLogged" to="/profile" class="icon">
         <userIcon></userIcon>
       </router-link>
@@ -83,7 +84,11 @@ div {
   display: flex;
   align-items: center;
 }
-
+.cart{
+  height: 2.5rem;
+  width: 2.5rem;
+  margin: 2.5rem;
+}
 .search-input {
   width: 900px;
   height: 50px;

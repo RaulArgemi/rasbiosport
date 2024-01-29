@@ -1,33 +1,19 @@
-
-
-
 <template>
-
-
-<div class="container d-flex">
-    <FilterVue></FilterVue>
+  <div class="container d-flex">
 
     <div class="col-9">
-    <div class="row">
-      <ProductCard
-      class="mt-3"
-        v-for="product in products"
-        :key="product.product_id"
-        :imageSrc="product.product_image"
-        :title="product.product_name"
-        :description="product.product_description"
-        :price="product.product_price"
-        :product_id="product.product_id"
-        @click="goToProductDetails(product.product_name)"/>
-        </div>
-  </div>
+      <div class="row">
+        <ProductCard class="mt-3" v-for="product in products" :key="product.product_id" :imageSrc="product.product_image"
+          :title="product.product_name" :description="product.product_description" :price="product.product_price"
+          :product_id="product.product_id"/>
+      </div>
+    </div>
   </div>
 </template>
 
 
 
 <script>
-import FilterVue from '@/components/FilterVue.vue';
 import ProductCard from "@/components/ProductCard.vue";
 
 
@@ -36,8 +22,13 @@ const url = "http://localhost:3000"
 export default {
   name: 'CategoryProducts',
   components: {
-    FilterVue,
-    ProductCard,
+    ProductCard
+  },
+  props:  {
+    category_prop: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -46,8 +37,14 @@ export default {
     };
   },
   created() {
-    this.category_name = this.$route.params.category_name;
- 
+    console.log(this.$route.params.category_name)
+    console.log(this.category_prop)
+    if (this.$route.params.category_name != undefined){
+      this.category_name = this.$route.params.category_name;
+    } else if (this.category_prop == 'Destacados'){
+      this.category_name = this.category_prop;
+    }
+    console.log(this.category_name)
     this.fetchProducts();
   },
   watch: {
@@ -58,9 +55,9 @@ export default {
   },
   methods: {
     async fetchProducts() {
-      if(this.category_name=="Todos") {
-      this.category_name=""
-    } 
+      if(this.category_name == "Todos"){
+        this.category_name=""
+      }
       try {
         const response = await fetch(`${url}/api/products?category_name=${this.category_name}`);
         const data = await response.json();
@@ -69,10 +66,7 @@ export default {
         console.error('Error al obtener productos:', error);
       }
     },
-    goToProductDetails(productName) {
-      const encodedProductName = encodeURIComponent(productName);
-      this.$router.push({ name: 'ProductDetails', params: { product_name: encodedProductName } });
-    },
+
   },
 };
 </script>

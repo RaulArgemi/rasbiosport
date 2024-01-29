@@ -3,7 +3,8 @@
     <NavComponent></NavComponent>
     <NavMenu></NavMenu>
     <CustomSection></CustomSection>
-    <CategoryProducts></CategoryProducts>
+    <CategoryProducts
+    :category_prop="'Destacados'"></CategoryProducts>
     <FooterVue></FooterVue>
   </div>
 </template>
