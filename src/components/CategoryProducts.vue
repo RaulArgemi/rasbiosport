@@ -1,6 +1,6 @@
 <template>
   <div class="container d-flex">
-    <div class="col-3">
+    <div v-if="!destacado" class="col-3">
       <form @submit.prevent="applyFilters">
         <label for="size">Tamaño:</label>
         <select v-model="size" id="size">
@@ -77,6 +77,7 @@ export default {
       size: "",
       minPrice: 0,
       maxPrice: 100,
+      destacado: false
     };
   },
   created() {
@@ -84,6 +85,7 @@ export default {
       this.category_name = this.$route.params.category_name;
     } else if (this.category_prop == "Destacados") {
       this.category_name = this.category_prop;
+      this.destacado=true 
     }
     this.fetchProducts();
   },
