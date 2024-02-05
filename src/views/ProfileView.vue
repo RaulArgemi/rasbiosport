@@ -7,15 +7,17 @@
         <div v-for="(value, key) in editableUser" :key="key">
           <div v-if="key !== 'id_user' && key !== 'user_role'" class="mb-3">
             <label :for="key" class="form-label">{{ key }}</label>
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
               <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control"
                 :type="getInputType(key)">
               <span v-else>{{ user[key] }}</span>
-              <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">✔️</button>
-              <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">❌</button>
-              <button v-else @click="enableEdit(key)" class="btn btn-primary btn-sm" :disabled="isDisabled(key)">
-                Editar
-              </button>
+              <div class="button-group">
+                <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">Guardar</button>
+                <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">Cancelar</button>
+                <button v-else @click="enableEdit(key)" class="btn btn-primary btn-sm" :disabled="isDisabled(key)">
+                  Editar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -31,7 +33,7 @@ import FooterVue from '@/components/FooterVue.vue';
 import { useStore } from 'vuex';
 import Cookies from 'js-cookie';
 
-const url ="http://localhost:3000"
+const url = "http://localhost:3000";
 
 export default {
   name: 'ProfileView',
@@ -64,8 +66,7 @@ export default {
     enableEdit(field) {
       this.editMode[field] = true;
       this.editableUser[field] = this.user[field];
-    }
-    ,
+    },
     cancelEdit(field) {
       this.editMode[field] = false;
     },
@@ -150,3 +151,43 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Estilos específicos para este componente */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h2 {
+  color: #333;
+}
+
+.profile-form {
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.button-group {
+  margin-top: 10px;
+}
+
+.btn-success {
+  background-color: #28a745;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-primary {
+  background-color: #007bff;
+}
+
+/* Añadir más estilos según sea necesario */
+</style>
