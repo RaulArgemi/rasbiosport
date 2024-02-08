@@ -24,8 +24,9 @@
         <button @click="openCheckoutModal">Comprar</button>
       </div>
       <CheckoutModal :isModalVisible="checkoutModalVisible" :cartItems="cartItems"
-        :calculateTotalPrice="calculateTotalPrice" @close-modal="closeCheckoutModal"
-        @confirm-purchase="handleConfirmPurchase" />
+        :totalPrice="parseFloat(calculateTotalPrice())" @close-modal="closeCheckoutModal"
+        @confirm-purchase="confirmPurchase" />
+
     </div>
   </div>
   <FooterVue></FooterVue>
@@ -126,13 +127,27 @@ export default {
     closeCheckoutModal() {
       this.checkoutModalVisible = false;
     },
-    handleConfirmPurchase(checkoutDetails) {
-      console.log('Detalles de la compra:', checkoutDetails);
+    confirmPurchase(paymentMethod) {
+      console.log('Procesando compra con método de pago:', paymentMethod);
       this.closeCheckoutModal();
+      this.clearCart();
     },
+    clearCart() {
+      const userId = JSON.parse(Cookies.get('userData')).id_user;
+      fetch(`${url}/api/cart/clear/${userId}`, {
+        method: 'DELETE'
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+          this.cartItems = [];
+        })
+        .catch(error => console.error('Error al limpiar el carrito:', error));
+    }
   }
 };
 </script>
+
 
 <style scoped>
 .cart-container {

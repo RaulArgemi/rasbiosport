@@ -1,148 +1,249 @@
 <template>
-    <div class="checkout-modal" v-if="isModalVisible">
-        <div class="modal-content">
-            <span class="close" @click="closeModal">&times;</span>
-            <h2>Confirmar Compra</h2>
-            <form @submit.prevent="submitForm">
-                <!-- Otras secciones del formulario -->
-
-                <!-- Método de envío -->
-                <label for="shippingMethod">Método de envío:</label>
-                <select v-model="selectedShippingMethod" id="shippingMethod" required>
-                    <option value="" disabled>Seleccione un método</option>
-                    <option value="visa">Visa</option>
-                    <option value="mastercard">Mastercard</option>
-                    <option value="paypal">PayPal</option>
-                </select>
-
-                <!-- Formulario específico para Visa -->
-                <div v-if="selectedShippingMethod === 'visa'">
-                    <label for="visaCardNumber">Número de tarjeta Visa:</label>
-                    <input type="text" v-model="visaCardNumber" id="visaCardNumber" required>
-                    <!-- Agrega otros campos según sea necesario -->
-                </div>
-
-                <!-- Formulario específico para Mastercard -->
-                <div v-else-if="selectedShippingMethod === 'mastercard'">
-                    <label for="mastercardCardNumber">Número de tarjeta Mastercard:</label>
-                    <input type="text" v-model="mastercardCardNumber" id="mastercardCardNumber" required>
-                    <!-- Agrega otros campos según sea necesario -->
-                </div>
-
-                <!-- Formulario específico para PayPal -->
-                <div v-else-if="selectedShippingMethod === 'paypal'">
-                    <label for="paypalEmail">Correo electrónico de PayPal:</label>
-                    <input type="email" v-model="paypalEmail" id="paypalEmail" required>
-                    <!-- Agrega otros campos según sea necesario -->
-                </div>
-
-                <!-- Botón de confirmar -->
-                <button :disabled="!isFormValid" type="submit">Confirmar Compra</button>
-            </form>
+  <div v-if="isModalVisible" class="checkout-modal">
+    <div class="modal-content">
+      <span class="close" @click="closeModal">&times;</span>
+      <h2>Confirmar Compra</h2>
+      <p class="total">El total de tu compra es: {{ totalPrice.toFixed(2) }}€</p>
+      <div class="payment-methods">
+        <div v-for="method in paymentMethods" :key="method.value" @click="selectedPaymentMethod = method.value"
+          :class="{ active: selectedPaymentMethod === method.value }" class="payment-method">
+          <img :src="method.image" :alt="method.label" class="payment-method-image">
         </div>
+      </div>
+      <div v-if="selectedPaymentMethod === 'tarjeta'" class="payment-form">
+        <h3>Información de la Tarjeta</h3>
+        <form @submit.prevent="submitForm">
+          <div class="form-group">
+            <label for="cardNumber">Número de Tarjeta</label>
+            <input v-model="cardNumber" type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+          </div>
+          <div class="form-group">
+            <label for="cardName">Nombre en la Tarjeta</label>
+            <input v-model="cardName" type="text" id="cardName" placeholder="Nombre Apellido" required>
+          </div>
+          <div class="form-group">
+            <label for="expiryDate">Fecha de Caducidad</label>
+            <input v-model="expiryDate" type="text" id="expiryDate" placeholder="MM/YY" required>
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV</label>
+            <input v-model="cvv" type="text" id="cvv" placeholder="123" required>
+          </div>
+          <button :disabled="!isFormValid" type="submit">Pagar</button>
+        </form>
+      </div>
+      <div v-else-if="selectedPaymentMethod === 'paypal'" class="payment-form">
+        <h3>Pago con PayPal</h3>
+        <form @submit.prevent="submitPayPalForm">
+          <paypal-button :client-id="'tu-client-id-de-paypal'" :amount="totalPrice" currency="EUR"
+            :create-order-on-click="true" @approve="onApprove" />
+        </form>
+      </div>
+      <div v-else-if="selectedPaymentMethod === 'transferencia'" class="payment-form">
+        <h3>Transferencia Bancaria</h3>
+        <form @submit.prevent="submitTransferForm">
+          <div class="form-group">
+            <label for="bankName">Nombre del Banco</label>
+            <input v-model="bankName" type="text" id="bankName" placeholder="Nombre del Banco" required>
+          </div>
+          <div class="form-group">
+            <label for="accountNumber">Número de Cuenta</label>
+            <input v-model="accountNumber" type="text" id="accountNumber" placeholder="1234567890" required>
+          </div>
+          <div class="form-group">
+            <label for="accountHolderName">Nombre del Titular</label>
+            <input v-model="accountHolderName" type="text" id="accountHolderName" placeholder="Nombre Apellido" required>
+          </div>
+          <button :disabled="!isFormValid" type="submit">Pagar por Transferencia Bancaria</button>
+        </form>
+      </div>
     </div>
+  </div>
 </template>
-  
+
 <script>
 export default {
-    props: {
-        isModalVisible: Boolean,
-        cartItems: Array,
-        calculateTotalPrice: Function,
+  props: {
+    isModalVisible: {
+      type: Boolean,
+      required: true
     },
-    data() {
-        return {
-            selectedShippingMethod: '',
-            visaCardNumber: '',
-            mastercardCardNumber: '',
-            paypalEmail: '',
-        };
+    cartItems: {
+      type: Array,
+      required: true
     },
-    computed: {
-        isFormValid() {
-            // Validación del formulario
-            switch (this.selectedShippingMethod) {
-                case 'visa':
-                    return this.visaCardNumber !== '';
-                case 'mastercard':
-                    return this.mastercardCardNumber !== '';
-                case 'paypal':
-                    return this.paypalEmail !== '';
-                default:
-                    return false;
-            }
+    totalPrice: {
+      type: Number,
+      required: true
+    }
+  },
+  data() {
+    return {
+      selectedPaymentMethod: '',
+      cardNumber: '',
+      cardName: '',
+      expiryDate: '',
+      cvv: '',
+      paypalEmail: '',
+      bankName: '',
+      accountNumber: '',
+      accountHolderName: '',
+      paymentMethods: [
+        {
+          label: 'Tarjeta de Crédito/Débito',
+          value: 'tarjeta',
+          image: '/assets/tarjeta.png'
         },
-    },
-    methods: {
-        closeModal() {
-            this.$emit('close-modal');
+        {
+          label: 'PayPal',
+          value: 'paypal',
+          image: '/assets/paypal.png'
         },
-        submitForm() {
-            // Lógica para enviar la compra
-            // ...
-            this.closeModal();
-        },
+        {
+          label: 'Transferencia Bancaria',
+          value: 'transferencia',
+          image: '/assets/transferencia.png'
+        }
+      ]
+    };
+  },
+  computed: {
+    isFormValid() {
+      if (this.selectedPaymentMethod === 'tarjeta') {
+        return this.cardNumber.trim() !== '' &&
+               this.cardName.trim() !== '' &&
+               this.expiryDate.trim() !== '' &&
+               this.cvv.trim() !== '';
+      } else if (this.selectedPaymentMethod === 'transferencia') {
+        return this.bankName.trim() !== '' &&
+               this.accountNumber.trim() !== '' &&
+               this.accountHolderName.trim() !== '';
+      }
+      return true;
     },
+    isEmailValid() {
+      return this.validateEmail(this.paypalEmail);
+    }
+  },
+  methods: {
+    closeModal() {
+      this.$emit('close-modal');
+    },
+    submitForm() {
+      if (this.selectedPaymentMethod !== '' && this.isFormValid) {
+        console.log('Pago con tarjeta procesado.');
+        this.closeModal();
+      }
+    },
+    submitPayPalForm() {
+      if (this.selectedPaymentMethod === 'paypal' && this.isEmailValid) {
+        console.log('Pago con PayPal procesado.');
+        this.closeModal();
+      }
+    },
+    submitTransferForm() {
+      if (this.selectedPaymentMethod === 'transferencia' && this.isFormValid) {
+        console.log('Pago por transferencia bancaria procesado.');
+        this.closeModal();
+      }
+    },
+    validateEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+  }
 };
 </script>
 
+
+
 <style scoped>
 .checkout-modal {
-  display: none; /* Inicialmente oculto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
-  top: 0;
+  z-index: 1000;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-  background-color: #fff;
-  margin: 10% auto;
+  background-color: #fefefe;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 600px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  position: relative;
+  width: 90%;
 }
 
 .close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
+  color: #aaa;
+  align-self: flex-end;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
   cursor: pointer;
 }
 
-h2 {
-  text-align: center;
+.payment-methods {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+.payment-method {
+  cursor: pointer;
+  margin: 0 10px;
+  transition: border-color 0.3s ease;
+}
+
+.payment-method.active {
+  border: 2px solid #007bff;
+}
+
+.payment-method-image {
+  width: 100px;
+  height: auto;
+}
+
+.payment-form {
+  margin-top: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
 }
 
 label {
-  margin-top: 10px;
+  font-weight: bold;
 }
 
-select,
-input {
-  margin-bottom: 10px;
-  padding: 8px;
+input[type="text"],
+input[type="email"] {
+  padding: 10px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 100%;
 }
 
 button {
-  background-color: #4caf50;
-  color: #fff;
-  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:disabled {
@@ -150,13 +251,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Estilos específicos para los formularios de Visa, Mastercard y PayPal */
-div[v-if],
-div[v-else-if] {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 4px;
+button:hover {
+  background-color: #0056b3;
 }
-
 </style>
