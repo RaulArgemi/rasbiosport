@@ -6,6 +6,7 @@
 
 <script>
 import LogOutIcon from './icons/LogOutIcon.vue';
+
 export default {
   name: 'LogoutVue',
   components: {
@@ -19,7 +20,7 @@ export default {
 
       localStorage.removeItem('cart_lrrxhx28ll9ixhvxkf')
 
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
       this.$router.push('/login');
 

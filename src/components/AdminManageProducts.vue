@@ -19,14 +19,14 @@
                         <td>{{ product.product_name }}</td>
                         <td>{{ product.product_price }} €</td>
                         <td>
-                            <button class="edit" @click="editProduct(product)">Editar</button>
+                            <button><a href="#1" class="edit" @click="editProduct(product)">Editar</a></button>
                             <button class="delete" @click="deleteProduct(product.product_id)">Eliminar</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
  
-            <div v-if="editingProduct">
+            <div id="1" v-if="editingProduct">
                 <h2>Editar Producto</h2>
                 <form @submit.prevent="updateProduct">
     <div class="form-group">
@@ -168,7 +168,7 @@
 },
         async deleteProduct(productId) {
             try {
-                const response = await fetch(`${url}api/products/${productId}`, {
+                const response = await fetch(`${url}/api/products/${productId}`, {
                     method: 'DELETE'
                 });
                 if (!response.ok) {
@@ -219,7 +219,10 @@ button:active {
     color: #fff;
 }
 
-
+.edit{
+    color: black;
+    text-decoration: none;
+}
 
 body {
     height: 100vh;
