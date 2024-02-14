@@ -29,10 +29,18 @@ export default {
   methods: {
     checkAuthentication() {
       const cookie = Cookies.get('userData');
-      let cooked = JSON.parse(cookie)
-      if (cooked.user_role == 'admin') {
-        console.log(cookie.user_role)
-        this.itsAdmin = true
+
+      if (cookie) {
+        try {
+          const userData = JSON.parse(cookie);
+          if (userData.user_role === 'admin') {
+            this.itsAdmin = true;
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      } else {
+        console.log('No hay cookie');
       }
     },
   },
