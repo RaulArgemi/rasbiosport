@@ -28,32 +28,21 @@ export default {
   },
   methods: {
     checkAuthentication() {
-  try {
-    const cookie = Cookies.get('userData');
+      const cookie = Cookies.get('userData');
 
-    // Verificar si la cookie está presente y no es nula
-    if (cookie) {
-      const parsedCookie = JSON.parse(cookie);
-
-      // Verificar si parsedCookie y user_role están definidos
-      if (parsedCookie && parsedCookie.user_role) {
-        console.log(parsedCookie.user_role);
-
-        // Verificar el rol y realizar la lógica correspondiente
-        if (parsedCookie.user_role === 'admin') {
-          this.itsAdmin = true;
+      if (cookie) {
+        try {
+          const userData = JSON.parse(cookie);
+          if (userData.user_role === 'admin') {
+            this.itsAdmin = true;
+          }
+        } catch (error) {
+          console.error('Error:', error);
         }
       } else {
-        console.error('user_role no está definido en la cookie.');
+        console.log('No hay cookie');
       }
-    } else {
-      console.error('Cookie de userData no encontrada.');
-    }
-  } catch (error) {
-    console.error('Error al obtener y analizar la cookie de userData:', error);
-  }
-}
-
+    },
   },
 };
 </script>
