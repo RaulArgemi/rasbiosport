@@ -8,6 +8,7 @@
             </li>
         </ul>
     </div>
+    <button @click="submitSearch">Buscar</button>
 </template>
   
 <script>
@@ -47,6 +48,11 @@ export default {
             this.showResults = false;
             this.$router.push({ name: 'ProductDetails', params: { product_name: product.product_name } });
         },
+        submitSearch() {
+        if (this.searchTerm) {
+            this.$router.push({ path: '/results', query: { query: this.searchTerm } });
+        }
+    },
     }
 };
 </script>

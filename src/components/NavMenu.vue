@@ -19,22 +19,41 @@ export default {
 
   name: 'NavMenu',
   data() {
-
     return {
       itsAdmin: false
     };
   }, mounted() {
+    this.itsAdmin=false
     this.checkAuthentication();
   },
   methods: {
     checkAuthentication() {
-      const cookie = Cookies.get('userData');
-      let cooked = JSON.parse(cookie)
-      if (cooked.user_role == 'admin') {
-        console.log(cookie.user_role)
-        this.itsAdmin = true
+  try {
+    const cookie = Cookies.get('userData');
+
+    // Verificar si la cookie está presente y no es nula
+    if (cookie) {
+      const parsedCookie = JSON.parse(cookie);
+
+      // Verificar si parsedCookie y user_role están definidos
+      if (parsedCookie && parsedCookie.user_role) {
+        console.log(parsedCookie.user_role);
+
+        // Verificar el rol y realizar la lógica correspondiente
+        if (parsedCookie.user_role === 'admin') {
+          this.itsAdmin = true;
+        }
+      } else {
+        console.error('user_role no está definido en la cookie.');
       }
-    },
+    } else {
+      console.error('Cookie de userData no encontrada.');
+    }
+  } catch (error) {
+    console.error('Error al obtener y analizar la cookie de userData:', error);
+  }
+}
+
   },
 };
 </script>
