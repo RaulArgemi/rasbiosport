@@ -10,7 +10,6 @@ import CategoryView from '../views/CategoryView.vue'
 import AdminManageProductsVue from '@/components/AdminManageProducts.vue';
 import ProductDetailsVue from '@/components/ProductDetails.vue';
 import CartViewVue from '@/views/CartView.vue';
-import SearchResultsVue from '@/components/SearchResults.vue';
 const routes = [
   { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
@@ -31,7 +30,7 @@ const routes = [
     path: '/search',
     name: 'SearchResults',
     component: () => import('@/components/SearchResults.vue')
-  }
+  },
   
   { path: '/cart', component: CartViewVue, meta: { requiresAuth: true }}
 ];
