@@ -168,7 +168,7 @@
 },
         async deleteProduct(productId) {
             try {
-                const response = await fetch(`${url}api/products/${productId}`, {
+                const response = await fetch(`${url}/api/products/${productId}`, {
                     method: 'DELETE'
                 });
                 if (!response.ok) {

@@ -25,7 +25,13 @@ const routes = [
     component: ProductDetailsVue,
     props: route => ({ product_name: decodeURIComponent(route.params.product_name) }),
   },
-  { path: '/cart', component: CartViewVue}
+  { path: '/cart', component: CartViewVue},
+  {
+    path: '/search',
+    name: 'SearchResults',
+    component: () => import('@/components/SearchResults.vue')
+  }
+  
 ];
 
 const router = createRouter({

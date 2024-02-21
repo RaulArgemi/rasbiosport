@@ -6,15 +6,13 @@
       <p class="card-text">{{ description }}</p>
       <p class="card-price">{{ price }} €</p>
     </div>
-    <router-link to="/cart" class="buy" v-on:click="addToCart(product_id)">Añadir al carrito</router-link>
-
+    <button class="buy" @click="addToCart(product_id)">Añadir al carrito</button>
   </div>
 </template>
 
 <script>
 import Cookies from 'js-cookie';
-
-const url = "http://localhost:3000"
+const url = "http://localhost:3000";
 
 export default {
   props: {
@@ -42,8 +40,8 @@ export default {
   methods: {
     addToCart(productId) {
       const userId = JSON.parse(Cookies.get('userData')).id_user;
-      console.log(userId)
-      console.log(productId)
+      console.log(userId);
+      console.log(productId);
       fetch(`${url}/api/cart/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,20 +61,15 @@ export default {
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
-  /* Ancho total del contenedor padre (se adaptará al ancho de la fila) */
   max-width: 300px;
-  /* Ancho máximo de la tarjeta */
   margin: 0 auto;
-  /* Centrar la tarjeta en la fila */
   box-sizing: border-box;
-  /* Incluir bordes y relleno en el ancho total */
 }
 
 .card-img-top {
   object-fit: cover;
   width: 100%;
   height: 150px;
-  /* Altura fija para la imagen */
 }
 
 .card-body {
@@ -98,4 +91,30 @@ export default {
   font-size: 1.25rem;
   color: #e44d26;
   font-weight: bold;
-}</style>
+}
+
+.buy {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 0;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 4px;
+}
+
+.buy:hover {
+  background-color: #0056b3;
+}
+</style>
