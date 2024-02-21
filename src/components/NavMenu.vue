@@ -19,11 +19,11 @@ export default {
 
   name: 'NavMenu',
   data() {
-
     return {
       itsAdmin: false
     };
   }, mounted() {
+    this.itsAdmin=false
     this.checkAuthentication();
   },
   methods: {

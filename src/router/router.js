@@ -10,6 +10,7 @@ import CategoryView from '../views/CategoryView.vue'
 import AdminManageProductsVue from '@/components/AdminManageProducts.vue';
 import ProductDetailsVue from '@/components/ProductDetails.vue';
 import CartViewVue from '@/views/CartView.vue';
+import SearchResultsVue from '@/components/SearchResults.vue';
 const routes = [
   { path: '/privacy', component: Privacidad },
   { path: '/', component: Inicio },
