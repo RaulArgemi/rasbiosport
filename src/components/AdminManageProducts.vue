@@ -5,8 +5,15 @@
         <section class="product-section">
             <div class="añadir">
                 <h1>Lista de Productos</h1>
-                <button v-if="!showRegister" class="btn success" @click="displayRegisterForm"><p>+</p></button>
+                <button v-if="!showRegister" class="btn success" @click="displayRegisterForm">
+                    <p>+</p>
+                </button>
             </div>
+        <div class="popup-container" v-if="showRegister">
+            <div class="popup-content">
+                <RegisterForm @cancel="cancelAdd"></RegisterForm>
+            </div>
+        </div>
             <table>
                 <thead>
                     <tr>
@@ -22,90 +29,85 @@
                         <td>{{ product.product_name }}</td>
                         <td>{{ product.product_price }} €</td>
                         <td>
-                            <button><a href="#1" class="edit" @click="editProduct(product)"><img src="../assets/editar.png"></a></button>
+                            <button><a href="#1" class="edit" @click="editProduct(product)"><img
+                                        src="../assets/editar.png"></a></button>
                             <button class="delete" @click="deleteProduct(product.product_id)">Eliminar</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
- 
+
             <div id="1" v-if="editingProduct">
                 <h2>Editar Producto</h2>
                 <form @submit.prevent="updateProduct">
-    <div class="form-group">
-      <label for="productId">Id del Producto:</label>
-      <input v-model="editingProduct.product_id" id="productId" placeholder="Id del Producto">
-    </div>
+                    <div class="form-group">
+                        <label for="productId">Id del Producto:</label>
+                        <input v-model="editingProduct.product_id" id="productId" placeholder="Id del Producto">
+                    </div>
 
-    <div class="form-group">
-      <label for="productName">Nombre del Producto:</label>
-      <input v-model="editingProduct.product_name" id="productName" placeholder="Nombre del producto">
-    </div>
+                    <div class="form-group">
+                        <label for="productName">Nombre del Producto:</label>
+                        <input v-model="editingProduct.product_name" id="productName" placeholder="Nombre del producto">
+                    </div>
 
-    <div class="form-group">
-      <label for="categoryId">Id de la Categoría:</label>
-      <input v-model="editingProduct.category_id" id="categoryId" placeholder="Id de la categoría">
-    </div>
+                    <div class="form-group">
+                        <label for="categoryId">Id de la Categoría:</label>
+                        <input v-model="editingProduct.category_id" id="categoryId" placeholder="Id de la categoría">
+                    </div>
 
-    <div class="form-group">
-      <label for="productDesc">Descuento:</label>
-      <input v-model="editingProduct.product_desc" id="productDesc" placeholder="Descuento">
-    </div>
+                    <div class="form-group">
+                        <label for="productDesc">Descuento:</label>
+                        <input v-model="editingProduct.product_desc" id="productDesc" placeholder="Descuento">
+                    </div>
 
-    <div class="form-group">
-      <label for="productInfo">Información del Producto:</label>
-      <input v-model="editingProduct.product_info" id="productInfo" placeholder="Información del producto">
-    </div>
+                    <div class="form-group">
+                        <label for="productInfo">Información del Producto:</label>
+                        <input v-model="editingProduct.product_info" id="productInfo"
+                            placeholder="Información del producto">
+                    </div>
 
-    <div class="form-group">
-      <label for="productImage">Imagen del Producto:</label>
-      <input v-model="editingProduct.product_image" id="productImage" placeholder="Imagen del producto">
-    </div>
+                    <div class="form-group">
+                        <label for="productImage">Imagen del Producto:</label>
+                        <input v-model="editingProduct.product_image" id="productImage" placeholder="Imagen del producto">
+                    </div>
 
-    <div class="form-group">
-      <label for="productSize">Talla del Producto:</label>
-      <select v-model="editingProduct.product_size" id="productSize">
-        <option v-for="size in productSizes" :key="size" :value="size">{{ size }}</option>
-      </select>
-    </div>
+                    <div class="form-group">
+                        <label for="productSize">Talla del Producto:</label>
+                        <select v-model="editingProduct.product_size" id="productSize">
+                            <option v-for="size in productSizes" :key="size" :value="size">{{ size }}</option>
+                        </select>
+                    </div>
 
-    <div class="form-group">
-      <label for="productPrice">Precio del Producto:</label>
-      <input v-model="editingProduct.product_price" id="productPrice" placeholder="Precio del producto">
-    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Precio del Producto:</label>
+                        <input v-model="editingProduct.product_price" id="productPrice" placeholder="Precio del producto">
+                    </div>
 
-    <div class="form-group">
-      <label for="productTag">Información del Producto:</label>
-      <input v-model="editingProduct.product_tag" id="productTag" placeholder="Información del producto">
-    </div>
+                    <div class="form-group">
+                        <label for="productTag">Información del Producto:</label>
+                        <input v-model="editingProduct.product_tag" id="productTag" placeholder="Información del producto">
+                    </div>
 
-    <div class="form-actions">
-      <button type="submit" :disabled="!isValidProductSize">Guardar Cambios</button>
-      <button @click="cancelEdit">Cancelar</button>
-    </div>
-  </form>
+                    <div class="form-actions">
+                        <button type="submit" :disabled="!isValidProductSize">Guardar Cambios</button>
+                        <button @click="cancelEdit">Cancelar</button>
+                    </div>
+                </form>
             </div>
         </section>
-        <section class="d-flex justify-content-center flex-column">
-    <div class="d-flex flex-column justify-content-center">
-        <button v-if="showRegister" class="btn success" @click="displayRegisterForm">Eliminar</button>
-        <RegisterForm v-if="showRegister"></RegisterForm>
     </div>
-</section>
+    <FooterVue></FooterVue>
+</template>
  
-        <FooterVue></FooterVue>
-    </div>
- </template>
- 
- <script>
- import NavComponent from '../components/NavComponent.vue';
- import FooterVue from '@/components/FooterVue.vue';
- import NavMenu from '../components/NavMenu.vue';
- import RegisterForm from './RegisterFormAdmin.vue';
+<script>
+import NavComponent from '../components/NavComponent.vue';
+import FooterVue from '@/components/FooterVue.vue';
+import NavMenu from '../components/NavMenu.vue';
+import RegisterForm from './RegisterFormAdmin.vue';
 
- const url = "http://localhost:3000"
- 
- export default {
+const url = "http://localhost:3000"
+
+export default {
     name: 'AdminManageProducts',
     components: {
         NavComponent,
@@ -122,14 +124,17 @@
         };
     },
     computed: {
-    isValidProductSize() {
-      return this.productSizes.includes(this.editingProduct.product_size);
-    }
-  },
+        isValidProductSize() {
+            return this.productSizes.includes(this.editingProduct.product_size);
+        }
+    },
     async created() {
         await this.fetchProducts();
     },
     methods: {
+        cancelAdd() {
+            this.showRegister = false;
+        },
         async fetchProducts() {
             try {
                 const response = await fetch(`${url}/api/products`);
@@ -141,7 +146,7 @@
                 console.error('Error al cargar los productos:', error);
             }
         },
-   
+
         editProduct(product) {
             this.editingProduct = { ...product };
         },
@@ -166,8 +171,8 @@
             }
         },
         displayRegisterForm() {
-    this.showRegister = !this.showRegister
-},
+            this.showRegister = !this.showRegister
+        },
         async deleteProduct(productId) {
             try {
                 const response = await fetch(`${url}/api/products/${productId}`, {
@@ -185,8 +190,8 @@
             this.editingProduct = null;
         },
     },
- }
- </script>
+}
+</script>
       
 <style scoped>
 * {
@@ -208,22 +213,22 @@ body {
     gap: 40px;
 }
 
-.añadir{
+.añadir {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.añadir button{
+.añadir button {
     background-color: rgb(0, 177, 24);
     height: 80%;
 }
 
-.añadir button p{
+.añadir button p {
     font-weight: bold;
 }
 
-.añadir button:hover{
+.añadir button:hover {
     background-color: rgb(0, 148, 20);
     color: white;
 }
@@ -238,10 +243,54 @@ button {
     color: #ffffff;
     border-radius: 5px;
 }
+
 .product-section {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 20px auto;
 }
+
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; 
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.popup-content {
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin: auto;
+}
+
+.close-btn-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.close-btn {
+    font-size: 1rem;
+    cursor: pointer;
+    padding: .5em 1em;
+    font-weight: bold;
+    border: none;
+    color: #ffffff;
+    background-color: #dc3545;
+    border-radius: 5px;
+}
+
+.close-btn:hover {
+    background-color: #c82333;
+}
+
 
 table {
     width: 100%;
@@ -267,7 +316,7 @@ td {
     text-decoration: none;
 }
 
-.edit img{
+.edit img {
     width: 2rem;
     height: 2rem;
 }
