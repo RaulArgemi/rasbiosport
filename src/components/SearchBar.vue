@@ -3,7 +3,6 @@
         <input type="text" v-model="searchTerm" @input="searchProducts" placeholder="Buscar productos..."
             class="search-input"><button @click="submitSearch">Buscar</button>
     </div>
-    <button @click="submitSearch">Buscar</button>
 </template>
   
 <script>
