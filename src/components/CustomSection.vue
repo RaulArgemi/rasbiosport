@@ -1,7 +1,7 @@
 <template>
 
-    <div>
-        <img src="../assets/rasbiosport-custom.png">
+    <div class="img">
+        
     </div>
 
 
@@ -9,14 +9,12 @@
 
 <style scoped>
 
-img{
-    height: 250px;
+.img{
+    background-image: url("../assets/destacada.jpeg");
+    height: 25rem;
     width: 100%;
-}
-div{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5% 15% 5% 15%;
+    background-size: cover;
+    background-position: center;
+    opacity: 550%;
 }
 </style>

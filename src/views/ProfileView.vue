@@ -6,7 +6,7 @@
       <div class="profile-form">
         <div v-for="(value, key) in editableUser" :key="key">
           <div v-if="key !== 'id_user' && key !== 'user_role'" class="mb-3">
-            <label :for="key" class="form-label">{{ key }}</label>
+            <label :for="key" class="form-label">{{ getLabel(key) }}</label>
             <div class="d-flex align-items-center">
               <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control"
                 :type="getInputType(key)">
@@ -21,6 +21,26 @@
             </div>
           </div>
         </div>
+        <!-- Cambio de contraseña -->
+        <div class="mb-3">
+          <button @click="toggleChangePassword" class="btn btn-primary btn-sm">Modificar Contraseña</button>
+          <div v-if="showChangePassword">
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">Nueva Contraseña</label>
+              <input v-model="newPassword" id="newPassword" type="password" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+              <input v-model="confirmPassword" id="confirmPassword" type="password" class="form-control">
+              <!-- Mostrar mensaje de error si las contraseñas no coinciden -->
+              <span v-if="passwordsMismatch" class="text-danger">Las contraseñas no coinciden</span>
+              <span v-if="passwordRequirementsError" class="text-danger">La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula y 1 número</span>
+            </div>
+            <button @click="changePassword" class="btn btn-primary">Cambiar Contraseña</button>
+
+          </div>
+        </div>
+        <!-- Fin Cambio de contraseña -->
       </div>
     </div>
     <FooterVue></FooterVue>
@@ -51,6 +71,18 @@ export default {
     return {
       editMode: {},
       editableUser: {},
+      labels: {
+        name_user: 'Nombre',
+        user_email: 'Correo electrónico',
+        user_address: 'Dirección',
+        user_phone: 'Teléfono',
+        // Agrega más etiquetas según sea necesario
+      },
+      showChangePassword: false,
+      newPassword: '',
+      confirmPassword: '',
+      passwordsMismatch: false, // Agrega la propiedad para controlar el mensaje de error
+      passwordRequirementsError: false // Agrega la propiedad para controlar el mensaje de error de requisitos de contraseña
     };
   },
   beforeMount() {
@@ -63,6 +95,9 @@ export default {
     this.checkAuthentication();
   },
   methods: {
+    getLabel(key) {
+      return this.labels[key] || key;
+    },
     enableEdit(field) {
       this.editMode[field] = true;
       this.editableUser[field] = this.user[field];
@@ -107,9 +142,7 @@ export default {
         });
 
         const data = await response.json();
-        if (response.ok) {
-          //.
-        } else {
+        if (!response.ok) {
           throw new Error(data.error || 'Error al actualizar el perfil');
         }
       } catch (error) {
@@ -148,46 +181,59 @@ export default {
     isDisabled(field) {
       return field === 'user_id' || field === 'user_role';
     },
+    toggleChangePassword() {
+      this.showChangePassword = !this.showChangePassword;
+    },async changePassword() {
+  try {
+    // Restablecer mensajes de error
+    this.passwordsMismatch = false;
+    this.passwordRequirementsError = false;
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.passwordsMismatch = true; // Mostrar mensaje de error
+      return; // Salir del método si las contraseñas no coinciden
+    }
+
+    // Validar requisitos de contraseña
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+    if (!passwordRegex.test(this.newPassword)) {
+      this.passwordRequirementsError = true; // Mostrar mensaje de error de requisitos de contraseña
+      return; // Salir del método si la contraseña no cumple con los requisitos
+    }
+
+    const updateData = {
+      id_user: this.user.id_user,
+      new_password: this.newPassword
+    };
+
+    const response = await fetch(`${url}/api/change-password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(updateData)
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log("Contraseña actualizada exitosamente");
+      this.newPassword = '';
+      this.confirmPassword = '';
+      this.showChangePassword = false; // Ocultar campos de cambio de contraseña
+      // Cerrar edición de campos de contraseña
+      this.editMode['new_password'] = false;
+      this.editMode['confirm_password'] = false;
+    } else {
+      throw new Error(data.error || 'Error al actualizar la contraseña');
+    }
+  } catch (error) {
+    console.error('Error al actualizar la contraseña:', error);
+    // Restablecer campos de contraseña
+    this.newPassword = '';
+    this.confirmPassword = '';
+  }
+},
   },
 };
 </script>
-
-<style scoped>
-/* Estilos específicos para este componente */
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-h2 {
-  color: #333;
-}
-
-.profile-form {
-  background-color: #f8f8f8;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.form-label {
-  font-weight: bold;
-}
-
-.button-group {
-  margin-top: 10px;
-}
-
-.btn-success {
-  background-color: #28a745;
-}
-
-.btn-danger {
-  background-color: #dc3545;
-}
-
-.btn-primary {
-  background-color: #007bff;
-}
-
-/* Añadir más estilos según sea necesario */
-</style>

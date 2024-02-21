@@ -13,6 +13,7 @@
       <div class="mb-3">
         <label for="contraseña" class="form-label">Contraseña</label>
         <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="·······">
+        <small v-if="contraseña && !cumpleRequisitosContraseña" class="text-danger">La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula y 1 número.</small>
       </div>
       <div class="mb-3">
         <label for="confirmarContraseña" class="form-label">Confirmar contraseña</label>
@@ -21,6 +22,10 @@
       <div class="mb-3">
         <label for="telefono" class="form-label">Número de teléfono</label>
         <input v-model="telefono" type="tel" class="form-control" id="telefono" placeholder="Ej: +34 675239884">
+      </div>
+      <div class="mb-3">
+        <label for="direccion" class="form-label">Dirección</label>
+        <input v-model="direccion" type="text" class="form-control" id="direccion" placeholder="Ej: Calle Principal, 123">
       </div>
       <div class="mb-3">
         <div class="form-check">
@@ -51,8 +56,15 @@ export default {
       correo: '',
       contraseña: '',
       confirmarContraseña: '',
+      direccion: '',
       errorMensaje:'',
     };
+  },
+  computed: {
+    cumpleRequisitosContraseña() {
+      const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+      return passwordRegex.test(this.contraseña);
+    }
   },
   methods: {
     async register() {
@@ -63,28 +75,27 @@ export default {
           correo: this.correo,
           contraseña: this.contraseña,
           confirmarContraseña: this.confirmarContraseña,
+          direccion: this.direccion,
         };
 
-        if (!formData.nombre || !formData.telefono || !formData.correo || !formData.contraseña || !formData.confirmarContraseña) {
+        // Validación de campos obligatorios
+        if (!formData.nombre || !formData.telefono || !formData.correo || !formData.contraseña || !formData.confirmarContraseña || !formData.direccion) {
           console.error('Todos los campos son obligatorios');
           this.errorMensaje='Todos los campos son obligatorios'
-          this.$refs.formulario.classList.add('rebote');
-            setTimeout(() => {
-              this.$refs.formulario.classList.remove('rebote');
-            }, 500);
-            this.$refs.formulario.querySelectorAll('input').forEach((input) => {
-              input.classList.add('input-fallido');
-            });
           return;
         }
 
+        // Validación de contraseña
+        if (!this.cumpleRequisitosContraseña) {
+          console.error('La contraseña no cumple con los requisitos mínimos');
+          this.errorMensaje='La contraseña no cumple con los requisitos mínimos'
+          return;
+        }
+
+        // Validación de coincidencia de contraseñas
         if (formData.contraseña !== formData.confirmarContraseña) {
           console.error('Las contraseñas no coinciden');
           this.errorMensaje='Las contraseñas no coinciden'
-          this.$refs.formulario.classList.add('rebote');
-            setTimeout(() => {
-              this.$refs.formulario.classList.remove('rebote');
-            }, 500);
           return;
         }
 
@@ -102,34 +113,27 @@ export default {
         } else if (response.status === 409) {
           console.error('El correo ya está registrado');
           this.errorMensaje='El correo ya está registrado'
-          this.$refs.formulario.classList.add('rebote');
-            setTimeout(() => {
-              this.$refs.formulario.classList.remove('rebote');
-            }, 500);
         } else {
           console.error('Error al registrarse');
           this.errorMensaje='Error al registrarse'
-          this.$refs.formulario.classList.add('rebote');
-            setTimeout(() => {
-              this.$refs.formulario.classList.remove('rebote');
-            }, 500);
         }   
 
       } catch (error) {
-        console.error('Prueba Error al registrarse:', error);
+        console.error('Error al registrarse:', error);
       }
     },
   },
 };
 </script>
 <style scoped>
-
-.textoRegister{
+.textoRegister {
   margin-left: 35%;
 }
-.botonRegister{
-margin-left: 40%;
+
+.botonRegister {
+  margin-left: 40%;
 }
+
 .rebote {
   animation: rebote 0.5s;
 }
@@ -231,6 +235,7 @@ margin-left: 40%;
     box-shadow: 0 0 8px rgba(244, 107, 66, 0.5);
     border-color: #f31919;
   }
-}</style>
+}
+</style>
 
 
