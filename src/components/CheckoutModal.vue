@@ -39,23 +39,8 @@
             :create-order-on-click="true" @approve="onApprove" />
         </form>
       </div>
-      <div v-else-if="selectedPaymentMethod === 'transferencia'" class="payment-form">
-        <h3>Transferencia Bancaria</h3>
-        <form @submit.prevent="submitTransferForm">
-          <div class="form-group">
-            <label for="bankName">Nombre del Banco</label>
-            <input v-model="bankName" type="text" id="bankName" placeholder="Nombre del Banco" required>
-          </div>
-          <div class="form-group">
-            <label for="accountNumber">Número de Cuenta</label>
-            <input v-model="accountNumber" type="text" id="accountNumber" placeholder="1234567890" required>
-          </div>
-          <div class="form-group">
-            <label for="accountHolderName">Nombre del Titular</label>
-            <input v-model="accountHolderName" type="text" id="accountHolderName" placeholder="Nombre Apellido" required>
-          </div>
-          <button :disabled="!isFormValid" type="submit">Pagar por Transferencia Bancaria</button>
-        </form>
+      <div v-if="paymentSuccess" class="payment-success">
+        <p>¡Se ha efectuado el pago correctamente!</p>
       </div>
     </div>
   </div>
@@ -88,6 +73,7 @@ export default {
       bankName: '',
       accountNumber: '',
       accountHolderName: '',
+      paymentSuccess: false,
       paymentMethods: [
         {
           label: 'Tarjeta de Crédito/Débito',
@@ -99,11 +85,6 @@ export default {
           value: 'paypal',
           image: '/assets/paypal.png'
         },
-        {
-          label: 'Transferencia Bancaria',
-          value: 'transferencia',
-          image: '/assets/transferencia.png'
-        }
       ]
     };
   },
@@ -132,20 +113,27 @@ export default {
     submitForm() {
       if (this.selectedPaymentMethod !== '' && this.isFormValid) {
         console.log('Pago con tarjeta procesado.');
-        this.closeModal();
+        this.paymentSuccess = true;
+        setTimeout(() => {
+          this.closeModal();
+        }, 3000);
       }
     },
     submitPayPalForm() {
       if (this.selectedPaymentMethod === 'paypal' && this.isEmailValid) {
         console.log('Pago con PayPal procesado.');
-        this.closeModal();
+        this.paymentSuccess = true;
+        setTimeout(() => {
+          this.closeModal();
+        }, 3000);
       }
     },
-    submitTransferForm() {
-      if (this.selectedPaymentMethod === 'transferencia' && this.isFormValid) {
-        console.log('Pago por transferencia bancaria procesado.');
+    onApprove(data) {
+      console.log('Pago aprobado por PayPal:', data);
+      this.paymentSuccess = true;
+      setTimeout(() => {
         this.closeModal();
-      }
+      }, 3000);
     },
     validateEmail(email) {
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -154,7 +142,6 @@ export default {
   }
 };
 </script>
-
 
 
 <style scoped>

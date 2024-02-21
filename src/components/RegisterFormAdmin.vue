@@ -21,7 +21,8 @@
       </div>
       <div class="mb-3">
         <label for="product_image" class="form-label">Imagen del producto</label>
-        <input v-model="product_image" type="text" class="form-control" id="product_image" placeholder="">
+        <input v-model="product_image" type="text" class="
+form-control" id="product_image" placeholder="">
       </div>
       <div class="mb-3">
         <label for="product_price" class="form-label">Precio del Producto</label>
@@ -30,10 +31,14 @@
       </div>
 
       <div class="mb-3">
-        <label for="product_size" class="form-label">Tamaño del producto: </label><br>
-        <select v-model="product_size">
-          <option v-for="size in product_sizes" :key="size" :value="size">{{ size }}</option>
-        </select>
+        <label for="product_sizes" class="form-label">Tallas: </label><br>
+        <div v-for="(size, index) in Tallas" :key="index">
+          <label>
+            {{ size.name }} Cantidad:
+            <input type="number" min="0" v-model="size.cantidad">
+          </label><br>
+        </div>
+
       </div>
       <div class="mb-3">
         <label for="product_tag" class="form-label">Tag</label>
@@ -46,8 +51,7 @@
 </template>
 
 <script>
-
-const url = "http://localhost:3000"
+const url = "http://localhost:3000";
 
 export default {
   name: 'AdminRegister',
@@ -60,20 +64,55 @@ export default {
       product_info: '',
       product_image: '',
       product_tag: '',
-      product_size: '',
+      product_size:'L',
       categorias: [],
-      product_sizes: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
+      Tallas: {
+        'XXS': { name: 'XXS', cantidad: 0 },
+        'XS': { name: 'XS', cantidad: 0 },
+        'S': { name: 'S', cantidad: 0 },
+        'M': { name: 'M', cantidad: 0 },
+        'L': { name: 'L', cantidad: 0 },
+        'XL': { name: 'XL', cantidad: 0 },
+        'XXL': { name: 'XXL', cantidad: 0 },
+      },
     };
   },
   mounted() {
-    this.loadCategoryData()
+    this.loadCategoryData();
   },
 
   methods: {
+    async addSizes() {
+      const tallasConCantidad = Object.fromEntries(
+      Object.entries(this.Tallas).filter(([, info]) => info.cantidad > 0))
+      console.log("MIERDA" + JSON.stringify(tallasConCantidad))
+      try {
+        const responseTalla = await fetch(`${url}/api/add/talla`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            Tallas: tallasConCantidad,
+          }),
+        });
+
+        if (responseTalla.status === 200) {
+          console.log('Tallas añadidas exitosamente.');
+        } else {
+          console.error('Error al añadir tallas:', responseTalla.status, await responseTalla.text());
+        }
+
+      } catch (error) {
+        console.error('Error en la solicitud al agregar tallas:', error);
+      }
+    },
+
     handleNumericInput(event) {
       event.target.value = event.target.value.replace(/[^0-9.]/g, '');
       this.product_price = event.target.value;
     },
+
     async loadCategoryData() {
       try {
         const response = await fetch(`${url}/api/category`);
@@ -132,6 +171,8 @@ export default {
 
         if (response.status === 200) {
           console.log('Registro exitoso');
+          this.addSizes()
+
         } else {
           console.error('Error al registrarse:', response.status, await response.text());
           console.error('Error al registrarse');
@@ -140,14 +181,16 @@ export default {
             this.$refs.formulario.classList.remove('rebote');
           }, 500);
         }
-
+        
       } catch (error) {
         console.error('Error al registrarse:', error);
       }
     },
+
   },
 };
 </script>
+
 
 <style scoped>
 .textoRegister {

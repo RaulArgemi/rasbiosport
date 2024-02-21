@@ -38,20 +38,49 @@ export default {
     },
   },
   methods: {
-    addToCart(productId) {
+  async getSizes(productId) {
+    try {
+      const response = await fetch(`${url}/api/get/tallas/${productId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await response.json();
+      console.log('Respuesta recibida:', data);
+    } catch (error) {
+      console.error('Error al obtener tallas:', error);
+    }
+  },
+
+  async addToCart(productId) {
+    try {
       const userId = JSON.parse(Cookies.get('userData')).id_user;
       console.log(userId);
       console.log(productId);
+
+      await this.getSizes(productId);
+
       fetch(`${url}/api/cart/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, productId })
+        body: JSON.stringify({ userId, productId }),
       })
         .then(response => response.json())
-        .then(data => console.log(data.message))
+        .then(data => {
+          console.log(data.message);
+        })
         .catch(error => console.error('Error al añadir al carrito:', error));
-    },
-  }
+    } catch (error) {
+      console.error('Error al ejecutar addToCart:', error);
+    }
+  },
+
+  showSelectable(sizes) {
+    // Aquí puedes implementar la lógica para mostrar un seleccionable con las tallas
+    console.log('Mostrar seleccionable:', sizes);
+  },
+},
+
 };
 </script>
 
@@ -91,30 +120,4 @@ export default {
   font-size: 1.25rem;
   color: #e44d26;
   font-weight: bold;
-}
-
-.buy {
-  display: block;
-  width: 100%;
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 0;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  cursor: pointer;
-  user-select: none;
-  border-radius: 4px;
-}
-
-.buy:hover {
-  background-color: #0056b3;
-}
-</style>
+}</style>
