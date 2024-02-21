@@ -185,65 +185,46 @@
     },
  }
  </script>
- 
- 
-  
-      
-
-
       
 <style scoped>
-button {
-    --c: #4285F4;
-
-    box-shadow: 0 0 0 .1em inset var(--c);
-    --_g: linear-gradient(var(--c) 0 0) no-repeat;
-    background:
-        var(--_g) calc(var(--_p, 0%) - 100%) 0%,
-        var(--_g) calc(200% - var(--_p, 0%)) 0%,
-        var(--_g) calc(var(--_p, 0%) - 100%) 100%,
-        var(--_g) calc(200% - var(--_p, 0%)) 100%;
-    background-size: 50.5% calc(var(--_p, 0%)/2 + .5%);
-    outline-offset: .1em;
-    transition: background-size .4s, background-position 0s .4s;
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-button:hover {
-    --_p: 100%;
-    transition: background-position .4s, background-size 0s;
-}
-
-button:active {
-    box-shadow: 0 0 9e9q inset #0009;
-    background-color: var(--c);
-    color: #fff;
-}
-
-.edit{
-    color: black;
-    text-decoration: none;
-}
-
+/* Estilos generales */
 body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background: #F2DCA2;
     height: 100vh;
     margin: 0;
     display: grid;
     place-content: center;
     grid-auto-flow: column;
     gap: 40px;
-    background: #F2DCA2;
 }
 
 button {
-    margin: 1rem;
-    margin-left: 22rem;
-    font-family: system-ui, sans-serif;
-    font-size: 2rem;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
     cursor: pointer;
-    padding: .1em .6em;
+    padding: .5em 1em;
     font-weight: bold;
     border: none;
-    max-width: 60%;
+    background: #4285F4;
+    color: #fff;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    background-color: #002080;
 }
 
 .product-section {
@@ -269,39 +250,49 @@ td {
     max-height: 100px;
 }
 
-.buy {
-    margin: 1rem;
-    font-family: system-ui, sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: .1em .6em;
-    font-weight: bold;
-    border: none;
+.edit {
+    color: black;
+    text-decoration: none;
 }
+
 .form-group {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 label {
-  display: block;
-  margin-bottom: 5px;
+    display: block;
+    margin-bottom: 5px;
 }
 
 input {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  margin-bottom: 10px;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
 }
 
 .form-actions {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
-button {
-  margin-right: 10px;
-  padding: 8px 15px;
-  cursor: pointer;
+button[type="submit"] {
+    margin-right: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.delete {
+    margin-right: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+.delete:hover {
+    background-color: #c82333;
 }
 </style>
 
