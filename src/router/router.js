@@ -25,7 +25,7 @@ const routes = [
     component: ProductDetailsVue,
     props: route => ({ product_name: decodeURIComponent(route.params.product_name) }),
   },
-  { path: '/cart', component: CartViewVue}
+  { path: '/cart', component: CartViewVue, meta: { requiresAuth: true }}
 ];
 
 const router = createRouter({
