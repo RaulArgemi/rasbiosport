@@ -1,22 +1,7 @@
 <template>
-      <NavComponent></NavComponent>
-    <NavMenu></NavMenu>
+  <NavComponent></NavComponent>
+  <NavMenu></NavMenu>
   <div class="product-details-container">
-    <!-- Productos Relacionados -->
-    <div class="related-products">
-      <h3>Productos Relacionados:</h3>
-      <div class="related-product-list">
-        <div class="product-card-tiny" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id"
-          @click="goToProductDetails(relatedProduct.product_name)">
-          <img :src="relatedProduct.product_image" alt="Imagen del producto">
-          <div class="product-info">
-            <p>{{ relatedProduct.product_name }}</p>
-            <p>Precio: {{ relatedProduct.product_price }} €</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Detalles del Producto -->
     <div class="product-details">
       <div class="product-image">
@@ -30,12 +15,28 @@
         <!-- Agregar más detalles del producto si es necesario -->
         <p><strong>Información adicional:</strong> {{ productDetails.product_info }}</p>
         <p><strong>Etiqueta:</strong> {{ productDetails.product_tag }}</p>
+        <button class="buy" @click="addToCart(product_id)">Añadir al carrito</button>
+      </div>
+    </div>
+
+    <!-- Productos Relacionados -->
+    <div class="related-products">
+      <h3>Productos Relacionados:</h3>
+      <div class="related-product-list">
+        <div class="product-card-small" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id"
+          @click="goToProductDetails(relatedProduct.product_name)">
+          <img :src="relatedProduct.product_image" alt="Imagen del producto">
+          <div class="product-info2">
+            <p class="texto-relacionado">{{ relatedProduct.product_name }}</p>
+            <p>Precio: {{ relatedProduct.product_price }} €</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Reseñas del Producto -->
-  <div class="container mt-4">
+  <div>
     <div v-if="productReviews.length > 0" class="product-reviews">
       <h3 class="mb-4">Reseñas:</h3>
       <div v-for="review in productReviews" :key="review.review_id" class="card mb-4">
@@ -52,11 +53,10 @@
       </div>
     </div>
   </div>
-
   <FooterVue></FooterVue>
 </template>
-
 <script>
+import Cookies from 'js-cookie';
 import NavComponent from '../components/NavComponent.vue';
 import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
@@ -82,6 +82,28 @@ export default {
     await this.initializeData();
   },
   methods: {
+    async addToCart(productId) {
+    try {
+      const userId = JSON.parse(Cookies.get('userData')).id_user;
+      console.log(userId);
+      console.log(productId);
+
+      await this.getSizes(productId);
+
+      fetch(`${url}/api/cart/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, productId }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+        })
+        .catch(error => console.error('Error al añadir al carrito:', error));
+    } catch (error) {
+      console.error('Error al ejecutar addToCart:', error);
+    }
+  },
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -90,9 +112,7 @@ export default {
       await this.fetchProductDetails();
       await this.fetchRelatedProducts();
       await this.fetchProductReviews();
-
     },
-
     async fetchProductDetails() {
       try {
         const response = await fetch(`${url}/api/products/${this.$route.params.product_name}`);
@@ -102,7 +122,6 @@ export default {
         console.error('Error al obtener detalles del producto:', error);
       }
     },
-
     async fetchRelatedProducts() {
       try {
         const response = await fetch(`${url}/api/products/related/${this.productDetails.category_id}`);
@@ -140,26 +159,38 @@ export default {
 /* Estilos para el contenedor principal */
 .product-details-container {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
   margin: 20px;
 }
 
 /* Estilos para los detalles del producto */
 .product-details {
-  max-width: 60%;
   width: 100%;
+  display: flex;
+}
+
+.product-image {
+  width: 50rem;
+  height: 50rem;
 }
 
 .product-image img {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
+  margin-top: 1rem;
+  width: 75%;
+  height: 80%;
   border-radius: 8px;
   margin-bottom: 20px;
 }
 
+.product-info {
+  width: 50%;
+  margin-top: 2rem;
+  text-align: left;
+  height: 100%;
+}
+
 .product-info h2 {
+  margin-top: 0;
   font-size: 2.5em;
   color: #333;
   margin-bottom: 10px;
@@ -174,19 +205,30 @@ export default {
 
 /* Estilos para la lista de productos relacionados */
 .related-products {
-  max-width: 30%;
   width: 100%;
-  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.product-info {
+  width: 50%;
+  margin-top: 2rem;
+  text-align: left;
+  height: 100%;
 }
 
 .related-product-list {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
-.product-card-tiny {
-  width: 100%;
-  margin-bottom: 10px;
+.product-card-small {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  text-align: center;
+  align-items: center;
+  width: 16rem;
+  height: 20rem;
+  margin-bottom: 20px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -195,23 +237,31 @@ export default {
   cursor: pointer;
 }
 
-.product-card-tiny:hover {
+.texto-relacionado{
+  font-weight: bold;
+}
+
+.product-card-small:hover {
   transform: scale(1.02);
 }
 
-.product-card-tiny img {
-  width: 100%;
-  height: auto;
+.product-card-small img {
+  margin-top: 10px;
+  width: 15rem;
+  height: 15rem;
   border-radius: 8px 8px 0 0;
 }
 
-.product-card-tiny .product-info {
+.product-card-small .product-info {
   padding: 10px;
 }
 
 /* Estilos para las reseñas del producto */
 .product-reviews {
+  width: auto;
   margin-top: 30px;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .card {

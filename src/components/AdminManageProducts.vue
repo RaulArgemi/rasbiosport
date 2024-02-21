@@ -3,7 +3,10 @@
         <NavComponent></NavComponent>
         <NavMenu></NavMenu>
         <section class="product-section">
-            <h1>Lista de Productos</h1>
+            <div class="añadir">
+                <h1>Lista de Productos</h1>
+                <button v-if="!showRegister" class="btn success" @click="displayRegisterForm"><p>+</p></button>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -19,7 +22,7 @@
                         <td>{{ product.product_name }}</td>
                         <td>{{ product.product_price }} €</td>
                         <td>
-                            <button><a href="#1" class="edit" @click="editProduct(product)">Editar</a></button>
+                            <button><a href="#1" class="edit" @click="editProduct(product)"><img src="../assets/editar.png"></a></button>
                             <button class="delete" @click="deleteProduct(product.product_id)">Eliminar</button>
                         </td>
                     </tr>
@@ -84,7 +87,6 @@
             </div>
         </section>
         <section class="d-flex justify-content-center flex-column">
-    <button v-if="!showRegister" class="btn success" @click="displayRegisterForm">Añadir Producto</button>
     <div class="d-flex flex-column justify-content-center">
         <button v-if="showRegister" class="btn success" @click="displayRegisterForm">Eliminar</button>
         <RegisterForm v-if="showRegister"></RegisterForm>
@@ -187,7 +189,6 @@
  </script>
       
 <style scoped>
-/* Reset de estilos */
 * {
     margin: 0;
     padding: 0;
@@ -207,6 +208,26 @@ body {
     gap: 40px;
 }
 
+.añadir{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.añadir button{
+    background-color: rgb(0, 177, 24);
+    height: 80%;
+}
+
+.añadir button p{
+    font-weight: bold;
+}
+
+.añadir button:hover{
+    background-color: rgb(0, 148, 20);
+    color: white;
+}
+
 button {
     font-family: Arial, sans-serif;
     font-size: 1rem;
@@ -214,19 +235,9 @@ button {
     padding: .5em 1em;
     font-weight: bold;
     border: none;
-    background: #4285F4;
-    color: #fff;
+    color: #ffffff;
     border-radius: 5px;
 }
-
-button:hover {
-    background-color: #0056b3;
-}
-
-button:active {
-    background-color: #002080;
-}
-
 .product-section {
     max-width: 800px;
     margin: 20px auto;
@@ -251,8 +262,14 @@ td {
 }
 
 .edit {
-    color: black;
+    background-color: none;
+    color: rgb(255, 255, 255);
     text-decoration: none;
+}
+
+.edit img{
+    width: 2rem;
+    height: 2rem;
 }
 
 .form-group {
