@@ -34,7 +34,11 @@
         </form>
       </div>
       <div v-if="paymentSuccess" class="payment-success">
-        <p>¡Se ha efectuado el pago correctamente!</p>
+        <p v-if="selectedPaymentMethod === 'tarjeta'">¡Se ha efectuado el pago con tarjeta correctamente!</p>
+        <p v-else-if="selectedPaymentMethod === 'paypal'">¡Felicidades por comprar en Rasbiosport! Tus datos de compra son:</p>
+        <ul v-else>
+          <li><strong>Método de pago:</strong> {{ selectedPaymentMethod }}</li>
+¡        </ul>
       </div>
     </div>
   </div>
@@ -129,6 +133,8 @@ export default {
       if (this.selectedPaymentMethod === 'paypal' && this.isEmailValid) {
         console.log('Pago con PayPal procesado.');
         this.paymentSuccess = true;
+
+
         setTimeout(() => {
           this.closeModal();
         }, 3000);
