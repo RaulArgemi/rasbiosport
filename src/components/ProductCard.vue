@@ -132,16 +132,23 @@ export default {
   max-width: 300px;
   margin: 0 auto;
   box-sizing: border-box;
-  margin-bottom: 20px; 
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card-img-top {
   object-fit: cover;
   width: 100%;
   height: 150px;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .card-body {
+  align-items: center;
+  text-align: center;
   padding: 1.25rem;
 }
 

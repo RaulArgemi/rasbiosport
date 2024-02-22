@@ -15,14 +15,14 @@
           </div>
         </div>
         <div class="buttons">
-          <button @click="addToCart(item.product_id)" class="add-button">Añadir</button>
-          <button @click="removeOneFromCart(item.product_id)" class="remove-button">-1</button>
-          <button @click="removeFromCart(item.product_id)" class="remove-button">Quitar</button>
+          <button @click="addToCart(item.product_id)" class="add-button">+</button>
+          <button @click="removeOneFromCart(item.product_id)" class="remove-button">-</button>
+          <button @click="removeFromCart(item.product_id)" class="remove-button">X</button>
         </div>
       </div>
       <div class="total-price">
         <p>Total: {{ calculateTotalPrice().toFixed(2) }}€</p>
-        <button @click="openCheckoutModal">Comprar</button>
+        <button @click="openCheckoutModal" class="buy-button">Comprar</button>
       </div>
       <CheckoutModal :isModalVisible="checkoutModalVisible" :cartItems="cartItems"
         :totalPrice="parseFloat(calculateTotalPrice())" @close-modal="closeCheckoutModal"
@@ -236,7 +236,9 @@ export default {
 }
 
 .add-button,
-.remove-button {
+.remove-button,
+.buy-button {
+  border-radius: 5%;
   padding: 8px 15px;
   margin-right: 10px;
   font-size: 14px;
@@ -244,15 +246,36 @@ export default {
 }
 
 .add-button {
-  background-color: #4caf50;
+  background-color: #4285F4;
   color: #fff;
   border: none;
+  transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+  background-color: #3367D6;
 }
 
 .remove-button {
   background-color: #e74c3c;
   color: #fff;
   border: none;
+  transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+  background-color: #c0392b;
+}
+
+.buy-button {
+  background-color: #0F9D58;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.buy-button:hover {
+  background-color: #0a7d41;
 }
 
 .total-price {

@@ -3,8 +3,10 @@
     <NavComponent></NavComponent>
     <NavMenu></NavMenu>
     <CustomSection></CustomSection>
-    <CategoryProducts
-    :category_prop="'Destacados'"></CategoryProducts>
+    <div class="container mt-4">
+      <h2 class="text-center">Destacados</h2>
+      <CategoryProducts :category_prop="'Destacados'"></CategoryProducts>
+    </div>
     <FooterVue></FooterVue>
   </div>
 </template>
@@ -15,6 +17,7 @@ import FooterVue from '../components/FooterVue.vue'
 import NavMenu from '@/components/NavMenu.vue';
 import CustomSection from '@/components/CustomSection.vue';
 import CategoryProducts from '@/components/CategoryProducts.vue';
+
 export default {
   name: 'HomeView',
   components: {
@@ -23,11 +26,12 @@ export default {
     NavMenu,
     CustomSection,
     CategoryProducts
-}
+  }
 };
 </script>
 
 <style scoped>
+/* Tus estilos CSS existentes */
 .jumbotron {
   background-color: #f8f9fa;
   padding: 2rem;
@@ -62,5 +66,4 @@ export default {
   max-width: 100%;
   height: auto;
 }
-
 </style>
