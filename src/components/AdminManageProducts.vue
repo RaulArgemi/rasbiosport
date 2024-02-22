@@ -29,9 +29,10 @@
                         <td>{{ product.product_name }}</td>
                         <td>{{ product.product_price }} €</td>
                         <td>
-                            <button><a href="#1" class="edit" @click="editProduct(product)"><img
+                            <button class="edit"><a href="#1" class="edit" @click="editProduct(product)"><img
                                         src="../assets/editar.png"></a></button>
-                            <button class="delete" @click="deleteProduct(product.product_id)">Eliminar</button>
+                            <button class="edit" @click="deleteProduct(product.product_id)"><img
+                                        src="../assets/borrar.png"></button>
                         </td>
                     </tr>
                 </tbody>
@@ -89,8 +90,8 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" :disabled="!isValidProductSize">Guardar Cambios</button>
-                        <button @click="cancelEdit">Cancelar</button>
+                        <button class="boton1" type="submit" :disabled="!isValidProductSize">Guardar Cambios</button>
+                        <button class="boton2" @click="cancelEdit">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -311,9 +312,11 @@ td {
 }
 
 .edit {
-    background-color: none;
+    background-color: transparent; 
     color: rgb(255, 255, 255);
     text-decoration: none;
+    border: none; 
+    padding: 0; 
 }
 
 .edit img {
@@ -359,6 +362,31 @@ button[type="submit"] {
 
 .delete:hover {
     background-color: #c82333;
+}
+
+.boton1{
+    background-color: #4285f4;
+}
+
+.boton2{
+    background-color: rgb(221, 0, 0);
+}
+
+.boton1:hover{
+    cursor: pointer;
+    background-color: #3a77d8;
+}
+.boton2:hover{
+    cursor: pointer;
+    background-color: #c82333;
+}
+
+.FooterVue {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px; /* Altura deseada para el footer */
 }
 </style>
 

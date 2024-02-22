@@ -165,6 +165,8 @@ export default {
 .container {
   max-width: 1200px;
   display: flex;
+  justify-content: center;
+  margin: 0 auto;
 }
 
 .sidebar {
@@ -172,19 +174,36 @@ export default {
   max-width: 25%;
   padding: 15px;
   background-color: #f4f4f4;
+  height: 30rem;
+  margin-top: 2rem; 
+  overflow-y: auto; 
+  margin-right: 1rem;
 }
 
 .filters {
   margin-bottom: 30px;
+  height: auto; 
 }
 
 .filter-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.filter-group select,
+.filter-group input[type="number"] {
+  width: calc(100% - 10px);
+  margin-top: 5px;
 }
 
 .price-ranges {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .price-range {
@@ -204,11 +223,17 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.apply-button:hover {
+  background-color: #0056b3;
 }
 
 .product-list {
   flex: 1;
   padding: 15px;
+  height: auto; 
 }
 
 .row {

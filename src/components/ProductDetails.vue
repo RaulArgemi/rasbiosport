@@ -104,6 +104,19 @@ export default {
       console.error('Error al ejecutar addToCart:', error);
     }
   },
+  async getSizes(productId) {
+    try {
+      const response = await fetch(`${url}/api/get/tallas/${productId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await response.json();
+      console.log('Respuesta recibida:', data);
+    } catch (error) {
+      console.error('Error al obtener tallas:', error);
+    }
+  },
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
