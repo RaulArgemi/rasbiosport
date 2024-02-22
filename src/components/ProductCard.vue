@@ -22,8 +22,7 @@
 
 <script>
 import Cookies from 'js-cookie';
-
-const url = "http://localhost:3000"
+const url = "http://localhost:3000";
 
 export default {
   data() {
@@ -140,7 +139,6 @@ export default {
   object-fit: cover;
   width: 100%;
   height: 150px;
-  /* Altura fija para la imagen */
 }
 
 .card-body {

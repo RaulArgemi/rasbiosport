@@ -1,56 +1,62 @@
 <template>
   <NavComponent></NavComponent>
   <NavMenu></NavMenu>
-
   <div class="product-details-container">
+    <!-- Detalles del Producto -->
     <div class="product-details">
-      <h2>{{ productDetails.product_name }}</h2>
-      <img :src="productDetails.product_image" alt="Imagen del producto">
-      <p>{{ productDetails.product_desc }}</p>
-      <p>Tallas disponibles:
-        {{ this.productDetails.product_size }}
-      </p>
-      <h3>Precio: {{ productDetails.product_price }} €</h3>
+      <div class="product-image">
+        <img :src="productDetails.product_image" alt="Imagen del producto">
+      </div>
+      <div class="product-info">
+        <h2>{{ productDetails.product_name }}</h2>
+        <p class="product-description">{{ productDetails.product_desc }}</p>
+        <p><strong>Tallas disponibles:</strong> {{ productDetails.product_size }}</p>
+        <p><strong>Precio:</strong> {{ productDetails.product_price }} €</p>
+        <!-- Agregar más detalles del producto si es necesario -->
+        <p><strong>Información adicional:</strong> {{ productDetails.product_info }}</p>
+        <p><strong>Etiqueta:</strong> {{ productDetails.product_tag }}</p>
+        <button class="buy" @click="addToCart(product_id)">Añadir al carrito</button>
+      </div>
     </div>
 
-    <div>
+    <!-- Productos Relacionados -->
+    <div class="related-products">
       <h3>Productos Relacionados:</h3>
-      <div class="related-products">
-        <div class="product-card" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id"
+      <div class="related-product-list">
+        <div class="product-card-small" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id"
           @click="goToProductDetails(relatedProduct.product_name)">
           <img :src="relatedProduct.product_image" alt="Imagen del producto">
-          <div class="product-info">
-            <p>{{ relatedProduct.product_name }}</p>
+          <div class="product-info2">
+            <p class="texto-relacionado">{{ relatedProduct.product_name }}</p>
             <p>Precio: {{ relatedProduct.product_price }} €</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="container mt-4">
+
+  <!-- Reseñas del Producto -->
+  <div>
     <div v-if="productReviews.length > 0" class="product-reviews">
       <h3 class="mb-4">Reseñas:</h3>
       <div v-for="review in productReviews" :key="review.review_id" class="card mb-4">
         <div class="card-body">
-          <div class="d-grid gap-2 d-md-flex justify-content-md-between align-items-center mb-2">
-            <div>
-              <h5 class="card-title mb-0"><strong>{{ review.user_name }}</strong></h5>
-              <p class="mb-0">{{ formatDate(review.review_date) }}</p>
-            </div>
-            <span class="mb-0">
-              <span v-for="star in parseInt(review.review_rating)" :key="star" class="text-warning">&#9733;</span>
-            </span>
+          <div class="review-header">
+            <h5 class="card-title mb-0"><strong>{{ review.user_name }}</strong></h5>
+            <p class="mb-0">{{ formatDate(review.review_date) }}</p>
+          </div>
+          <div class="review-stars">
+            <span v-for="star in parseInt(review.review_rating)" :key="star" class="text-warning">&#9733;</span>
           </div>
           <p class="card-text">{{ review.review_info }}</p>
         </div>
       </div>
     </div>
   </div>
-
   <FooterVue></FooterVue>
 </template>
-  
 <script>
+import Cookies from 'js-cookie';
 import NavComponent from '../components/NavComponent.vue';
 import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
@@ -76,6 +82,28 @@ export default {
     await this.initializeData();
   },
   methods: {
+    async addToCart(productId) {
+    try {
+      const userId = JSON.parse(Cookies.get('userData')).id_user;
+      console.log(userId);
+      console.log(productId);
+
+      await this.getSizes(productId);
+
+      fetch(`${url}/api/cart/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, productId }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+        })
+        .catch(error => console.error('Error al añadir al carrito:', error));
+    } catch (error) {
+      console.error('Error al ejecutar addToCart:', error);
+    }
+  },
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -84,26 +112,20 @@ export default {
       await this.fetchProductDetails();
       await this.fetchRelatedProducts();
       await this.fetchProductReviews();
-
     },
-
     async fetchProductDetails() {
       try {
         const response = await fetch(`${url}/api/products/${this.$route.params.product_name}`);
         const data = await response.json();
         this.productDetails = data;
-        console.log(this.productDetails);
       } catch (error) {
         console.error('Error al obtener detalles del producto:', error);
       }
     },
-
     async fetchRelatedProducts() {
       try {
         const response = await fetch(`${url}/api/products/related/${this.productDetails.category_id}`);
-        console.log(response);
         this.relatedProducts = await response.json();
-        console.log(this.relatedProducts);
       } catch (error) {
         console.error('Error al obtener productos relacionados:', error);
       }
@@ -112,7 +134,6 @@ export default {
       try {
         const response = await fetch(`${url}/api/products/${this.productDetails.product_id}/reviews`);
         this.productReviews = await response.json();
-        console.log(this.productReviews)
       } catch (error) {
         console.error('Error al obtener reseñas:', error);
       }
@@ -133,115 +154,137 @@ export default {
   },
 };
 </script>
-<style scoped>
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  margin: 0;
-  padding: 0;
-}
 
+<style scoped>
+/* Estilos para el contenedor principal */
 .product-details-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
   margin: 20px;
 }
 
+/* Estilos para los detalles del producto */
 .product-details {
-  text-align: center;
-  max-width: 600px;
   width: 100%;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  margin-right: 20px;
+  display: flex;
 }
 
-.product-details h2 {
-  font-size: 2.8em;
-  color: #333;
-  margin-bottom: 15px;
+.product-image {
+  width: 50rem;
+  height: 50rem;
 }
 
-.product-details img {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
+.product-image img {
+  margin-top: 1rem;
+  width: 75%;
+  height: 80%;
+  border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-.product-details p {
-  font-size: 1.3em;
+.product-info {
+  width: 50%;
+  margin-top: 2rem;
+  text-align: left;
+  height: 100%;
+}
+
+.product-info h2 {
+  margin-top: 0;
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.product-info p {
+  font-size: 1.2em;
   line-height: 1.6;
   color: #555;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
-.product-details h3 {
-  font-size: 2.2em;
-  color: #007BFF;
-  margin-bottom: 20px;
-}
-
+/* Estilos para la lista de productos relacionados */
 .related-products {
-  max-width: 400px;
   width: 100%;
+  margin-top: 20px;
 }
 
-.product-card {
-  width: 100%;
+.product-info {
+  width: 50%;
+  margin-top: 2rem;
+  text-align: left;
+  height: 100%;
+}
+
+.related-product-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product-card-small {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  text-align: center;
+  align-items: center;
+  width: 16rem;
+  height: 20rem;
   margin-bottom: 20px;
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease;
   cursor: pointer;
 }
 
-.product-card:hover {
-  transform: scale(1.05);
+.texto-relacionado{
+  font-weight: bold;
 }
 
-.product-card img {
-  width: 100%;
-  height: auto;
-  border-radius: 12px 12px 0 0;
+.product-card-small:hover {
+  transform: scale(1.02);
 }
 
-.product-info {
-  padding: 20px;
+.product-card-small img {
+  margin-top: 10px;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 8px 8px 0 0;
 }
 
-.product-info p {
-  font-size: 1.2em;
-  margin-bottom: 10px;
+.product-card-small .product-info {
+  padding: 10px;
 }
 
+/* Estilos para las reseñas del producto */
 .product-reviews {
+  width: auto;
   margin-top: 30px;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .card {
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  padding: 25px;
-  margin-bottom: 30px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.card-title {
-  font-size: 1.7em;
-  color: #333;
-  margin-bottom: 15px;
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.text-warning {
+.review-stars {
+  display: flex;
+}
+
+.review-stars .text-warning {
   color: #FFD700;
+  font-size: 1.2em;
 }
-
 </style>
