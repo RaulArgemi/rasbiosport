@@ -211,6 +211,7 @@ export default {
 .add-to-cart-btn:hover {
   background-color: #0056b3;
 }
+<<<<<<< HEAD
 .buy {
   display: block;
   width: 100%;
@@ -227,3 +228,6 @@ export default {
   background-color: #0056b3;
 }
 </style>
+=======
+</style>
+>>>>>>> refs/remotes/origin/main
