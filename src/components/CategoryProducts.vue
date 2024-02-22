@@ -234,6 +234,7 @@ export default {
   flex: 1;
   padding: 15px;
   height: auto; 
+  margin-bottom: 1rem;
 }
 
 .row {

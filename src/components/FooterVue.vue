@@ -16,6 +16,7 @@
 </template>
 <style scoped>
 footer{
+  width: 100%;
   background-color: black;
   display: flex;
   justify-content: space-between;

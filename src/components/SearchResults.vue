@@ -38,13 +38,11 @@
         </div>
       </div>
     </div>
-    <FooterVue />
   </div>
 </template>
 
 <script>
 import NavComponent from './NavComponent.vue';
-import FooterVue from './FooterVue.vue';
 import ProductCard from './ProductCard.vue';
 import NavMenu from './NavMenu.vue';
 
@@ -53,7 +51,6 @@ const url = "http://localhost:3000";
 export default {
   components: {
     NavComponent,
-    FooterVue,
     ProductCard,
     NavMenu
 },

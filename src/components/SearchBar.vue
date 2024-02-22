@@ -1,5 +1,5 @@
 <template>
-    <div class="search-bar" style="background-color: #4285F4;">
+    <div class="search-bar">
         <form>
             <div class="input-container">
                 <input type="search" required v-model="searchTerm" @input="searchProducts" @keyup.enter="submitSearch"
@@ -65,6 +65,7 @@ export default {
     width: 80%;
     margin: 0 auto;
     padding: 10px;
+    background-color:  #2768d1;
 }
 
 form {
@@ -99,7 +100,7 @@ form {
     margin-right: 0.1rem;
     margin-bottom: 0.1rem;
     border: none;
-    background-color: #4285F4;
+    background-color: #2768d1;
     color: #fff;
     border-radius: 50% 50% 50% 50%;
     width: 40px;
@@ -109,7 +110,7 @@ form {
 }
 
 .search-button:hover {
-    background-color: #3367D6;
+    background-color: #588dff;
 }
 
 ul {

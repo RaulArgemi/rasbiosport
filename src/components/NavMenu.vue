@@ -7,7 +7,6 @@
       <li><router-link to="/category/Nba">NBA</router-link></li>
       <li><router-link to="/category/ofertas">Ofertas</router-link></li>
       <li><router-link to="/help">Ayuda</router-link></li>
-
     </ul>
   </div>
 </template>
@@ -16,14 +15,13 @@
 import Cookies from 'js-cookie';
 
 export default {
-
   name: 'NavMenu',
   data() {
     return {
       itsAdmin: false
     };
-  }, mounted() {
-    this.itsAdmin=false
+  }, 
+  mounted() {
     this.checkAuthentication();
   },
   methods: {
@@ -66,7 +64,7 @@ li {
 
 a {
   display: block;
-  color: black;
+  color: black; 
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
@@ -74,7 +72,5 @@ a {
 
 a:hover {
   background-color: #4285F4;
-  color: white;
 }
 </style>
-  

@@ -23,13 +23,11 @@
         </div>
       </div>
     </div>
-    <FooterVue></FooterVue>
   </div>
 </template>
 
 <script>
 import NavComponent from '../components/NavComponent.vue';
-import FooterVue from '@/components/FooterVue.vue';
 import { useStore } from 'vuex';
 import Cookies from 'js-cookie';
 
@@ -39,7 +37,6 @@ export default {
   name: 'ProfileView',
   components: {
     NavComponent,
-    FooterVue,
   },
   computed: {
     user() {

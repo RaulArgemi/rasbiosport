@@ -1,17 +1,13 @@
 <template>
   <div>
-    <a class="icon" @click="logout"><LogOutIcon></LogOutIcon></a>
+    <a class="icon" @click="logout"><img class="icono" src="../assets/logout.png"></a>
   </div>
 </template>
 
 <script>
-import LogOutIcon from './icons/LogOutIcon.vue';
 
 export default {
   name: 'LogoutVue',
-  components: {
-    LogOutIcon,
-  },
   methods: {
     logout() {
       localStorage.removeItem('token');
@@ -33,5 +29,11 @@ export default {
 <style scoped>
 .icon {
   color: aliceblue;
+}
+
+.icono{
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
 }
 </style>

@@ -1,20 +1,18 @@
 <template>
   <div class="login d-flex justify-content-center align-items-center">
-    <div ref="formulario" class="gray-bg p-4 border border-dark rounded">
-      <h3 class="mb-4 text-center">Inicia sesión</h3>
+    <div ref="formulario" class="gray-bg p-4 border border-dark rounded col-md-6">
+      <h3 class="mb-4">Inicia sesión</h3>
       <div class="mb-3">
         <label for="correo" class="form-label">Correo</label>
-        <input @keyup.enter="login" v-model="correo" type="text" class="form-control" id="correo" placeholder="Correo" @focus="resaltarCampo">
+        <input v-model="correo" type="text" class="form-control" id="correo" placeholder="Correo">
       </div>
       <div class="mb-3">
         <label for="contraseña" class="form-label">Contraseña</label>
-        <input @keyup.enter="login" v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="Contraseña" @focus="resaltarCampo">
+        <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="·······">
       </div>
-      <div class="boton">
-        <p v-if="errorMensaje" class="text-danger text-center m-0">{{ errorMensaje }}</p>
-        <button @click="login" class="btn btn-primary mb-3 colorGreen">Iniciar sesión</button>
-        <p>No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
-      </div>
+      <p v-if="errorMensaje" class="text-danger mb-3">{{ errorMensaje }}</p>
+      <button @click="login" class="btn btn-primary colorGreen mb-3 boton">Iniciar sesión</button>
+      <p class="mb-0 boton2">No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
     </div>
   </div>
 </template>
@@ -102,3 +100,39 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.login {
+  background-image: url(https://www.spain.info/.content/imagenes/cabeceras-grandes/cataluna/camp-nou-barcelona-c-fcbarcelona.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  width: 100%;
+  min-height: 90vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gray-bg {
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.colorGreen {
+  background-color: #4285f4;
+}
+
+.colorGreen:hover {
+  background-color: #34a853;
+  transition: background-color 0.3s;
+}
+.boton{
+  margin-left: 23rem;
+}
+.boton2{
+  margin-left: 20rem;
+}
+</style>

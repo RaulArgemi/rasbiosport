@@ -1,15 +1,19 @@
 <template>
-  <router-view></router-view>
+  <div class="min-vh-100 d-flex justify-content-between flex-column">
+    <router-view class="margin"></router-view>
+    <footer-vue></footer-vue>
+  </div>
 </template>
 
-
 <script>
-
+import FooterVue from "./components/FooterVue.vue";
 import "./assets/main.css"
+
 const url = "http://localhost:3000"
 
 export default {
-  name: 'App', 
+  name: 'App',
+  components: { FooterVue },
   created() {
     this.checkSessionAndFetchUserData();
   },
@@ -36,4 +40,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.margin {
+  margin-bottom: 100px; 
+}
+</style>

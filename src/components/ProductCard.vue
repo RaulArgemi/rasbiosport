@@ -133,6 +133,7 @@ export default {
   margin: 0 auto;
   box-sizing: border-box;
   transition: transform 0.3s ease;
+  margin-bottom: 55px;
 }
 
 .card:hover {
@@ -208,6 +209,21 @@ export default {
 }
 
 .add-to-cart-btn:hover {
-  background-color: rgb(66, 202, 66);
+  background-color: #0056b3;
+}
+.buy {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buy:hover {
+  background-color: #0056b3;
 }
 </style>
