@@ -30,12 +30,10 @@
 
     </div>
   </div>
-  <FooterVue></FooterVue>
 </template>
 
 <script>
 import NavComponent from '../components/NavComponent.vue';
-import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
 import CheckoutModal from '../components/CheckoutModal.vue';
 import Cookies from 'js-cookie';
@@ -46,7 +44,6 @@ export default {
   name: 'CategoryView',
   components: {
     NavComponent,
-    FooterVue,
     NavMenu,
     CheckoutModal,
   },

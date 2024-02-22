@@ -7,13 +7,11 @@
       <h2 class="text-center">Destacados</h2>
       <CategoryProducts :category_prop="'Destacados'"></CategoryProducts>
     </div>
-    <FooterVue></FooterVue>
   </div>
 </template>
 
 <script>
 import NavComponent from '../components/NavComponent.vue'
-import FooterVue from '../components/FooterVue.vue'
 import NavMenu from '@/components/NavMenu.vue';
 import CustomSection from '@/components/CustomSection.vue';
 import CategoryProducts from '@/components/CategoryProducts.vue';
@@ -22,7 +20,6 @@ export default {
   name: 'HomeView',
   components: {
     NavComponent,
-    FooterVue,
     NavMenu,
     CustomSection,
     CategoryProducts

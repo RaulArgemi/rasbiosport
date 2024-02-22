@@ -97,12 +97,10 @@
             </div>
         </section>
     </div>
-    <FooterVue></FooterVue>
 </template>
  
 <script>
 import NavComponent from '../components/NavComponent.vue';
-import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
 import RegisterForm from './RegisterFormAdmin.vue';
 
@@ -112,7 +110,6 @@ export default {
     name: 'AdminManageProducts',
     components: {
         NavComponent,
-        FooterVue,
         NavMenu,
         RegisterForm,
     },
@@ -379,14 +376,6 @@ button[type="submit"] {
 .boton2:hover{
     cursor: pointer;
     background-color: #c82333;
-}
-
-.FooterVue {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100px; /* Altura deseada para el footer */
 }
 </style>
 

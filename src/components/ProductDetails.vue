@@ -53,12 +53,10 @@
       </div>
     </div>
   </div>
-  <FooterVue></FooterVue>
 </template>
 <script>
 import Cookies from 'js-cookie';
 import NavComponent from '../components/NavComponent.vue';
-import FooterVue from '@/components/FooterVue.vue';
 import NavMenu from '../components/NavMenu.vue';
 
 const url = "http://localhost:3000"
@@ -67,7 +65,6 @@ export default {
   name: 'ProductDetails',
   components: {
     NavComponent,
-    FooterVue,
     NavMenu,
   },
   data() {
