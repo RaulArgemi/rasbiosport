@@ -10,10 +10,14 @@
             <div class="d-flex align-items-center">
               <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control" :type="getInputType(key)">
               <span v-else>{{ user[key] }}</span>
-              <div class="button-group">
-                <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">Guardar</button>
-                <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">Cancelar</button>
-                <button v-else @click="enableEdit(key)" class="btn btn-primary btn-sm" :disabled="isDisabled(key)">Editar</button>
+              <div class="ml-auto">
+                <div class="button-group">
+                  <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">Guardar</button>
+                  <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">Cancelar</button>
+                  <button v-else @click="enableEdit(key)" class="editar" :disabled="isDisabled(key)">
+                    <img src="../assets/editar.png" alt="Editar" width="20" height="20">
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -73,7 +77,6 @@ export default {
         user_email: 'Correo electrónico',
         user_address: 'Dirección',
         user_phone: 'Teléfono',
-        // Agrega más etiquetas según sea necesario
       },
       showChangePassword: false,
       currentPassword: '',
@@ -293,13 +296,13 @@ export default {
 }
 
 .btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
+  background-color: #007bff;
+  border-color: #007bff;
 }
 
 .btn-success:hover {
-  background-color: #218838;
-  border-color: #218838;
+  background-color: #0056b3;
+  border-color: #0056b3;
 }
 
 .btn-danger {
@@ -314,5 +317,20 @@ export default {
 
 .text-danger {
   color: #dc3545;
+}
+
+.editar img {
+  width: 20px;
+  height: 20px;
+  background-color: none;
+  border: none;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.editar:hover {
+  cursor: pointer;
 }
 </style>
