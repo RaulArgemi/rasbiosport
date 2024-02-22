@@ -5,7 +5,7 @@
       <li><router-link to="/category/Todos">Productos</router-link></li>
       <li><router-link to="/category/Futbol">Futbol</router-link></li>
       <li><router-link to="/category/Nba">NBA</router-link></li>
-      <li><router-link to="/category/ofertas">Ofertas</router-link></li>
+      <!-- <li><router-link to="/category/ofertas">Ofertas</router-link></li> -->
       <li><router-link to="/help">Ayuda</router-link></li>
     </ul>
   </div>
