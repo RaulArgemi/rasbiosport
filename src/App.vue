@@ -40,8 +40,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.margin {
-  margin-bottom: 100px; 
-}
-</style>
