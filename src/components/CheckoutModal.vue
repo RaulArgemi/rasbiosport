@@ -72,7 +72,7 @@ export default {
         {
           label: 'Tarjeta de Crédito/Débito',
           value: 'tarjeta',
-          image: '/assets/tarjeta.png'
+          image: './assets/tarjeta.png'
         },
         {
           label: 'PayPal',

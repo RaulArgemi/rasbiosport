@@ -15,7 +15,6 @@
           </div>
         </div>
         <div class="buttons">
-          <button @click="addToCart(item.product_id)" class="add-button">+</button>
           <button @click="removeOneFromCart(item.product_id)" class="remove-button">-</button>
           <button @click="removeFromCart(item.product_id)" class="remove-button">X</button>
         </div>
