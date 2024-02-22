@@ -148,6 +148,10 @@ export default {
   border-bottom: 1px solid #dee2e6;
 }
 
+.card-img-top:hover{
+  cursor: pointer;
+}
+
 .card-body {
   align-items: center;
   text-align: center;

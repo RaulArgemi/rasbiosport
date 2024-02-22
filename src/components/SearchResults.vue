@@ -1,6 +1,7 @@
 <template>
   <div>
     <NavComponent />
+    <NavMenu></NavMenu>
     <div class="container">
       <h2>Resultados de búsqueda</h2>
       <div class="row">
@@ -10,24 +11,23 @@
           @click="goToProductDetails(product.product_name)" />
       </div>
     </div>
-    <FooterVue />
   </div>
 </template>
   
 
 <script>
 import NavComponent from './NavComponent.vue';
-import FooterVue from './FooterVue.vue';
-import ProductCard from './ProductCard.vue'; // Asegúrate de que la ruta al componente sea correcta
+import NavMenu from './NavMenu.vue';
+import ProductCard from './ProductCard.vue'; 
 import Cookies from 'js-cookie';
 const url = "http://localhost:3000"
 
 export default {
   components: {
     NavComponent,
-    FooterVue,
     ProductCard,
-  },
+    NavMenu
+},
   data() {
     return {
       products: [],
