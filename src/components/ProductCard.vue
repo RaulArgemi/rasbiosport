@@ -6,6 +6,7 @@
       <p class="card-text">{{ description }}</p>
       <p class="card-price">{{ price }} €</p>
     </div>
+    <button class="view-btn" @click="clickImageHandler">Ver producto</button>
     <button v-if="!optionsVisible" @click="showOptions('abrir')" class="add-to-cart-btn">Añadir al carrito</button>
     <button v-if="optionsVisible" @click="showOptions('cerrar')" class="close-options-btn">Cerrar</button>
     <div v-if="optionsVisible" class="options-container">
@@ -211,19 +212,18 @@ export default {
 .add-to-cart-btn:hover {
   background-color: #0056b3;
 }
-.buy {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.view-btn {
+  background-color: #4CAF50; /* Color verde clásico de Google */
+  color: #fff; /* Texto en color blanco */
+  padding: 8px 16px; /* Espaciado interno */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Borde redondeado */
+  cursor: pointer; /* Cursor de puntero */
+  margin-top: 12px; /* Margen superior */
 }
 
-.buy:hover {
-  background-color: #0056b3;
+.view-btn:hover {
+  background-color: #45a049; /* Color de fondo al pasar el mouse */
 }
+
 </style>
