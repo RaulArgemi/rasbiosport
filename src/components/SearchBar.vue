@@ -1,6 +1,6 @@
-<template>
-    <div class="search-bar">
-        <form>
+
+  <template>
+        <div class="form">
             <div class="input-container">
                 <input type="search" required v-model="searchTerm" @input="searchProducts" @keyup.enter="submitSearch"
                     placeholder="Buscar productos..." class="search-input">
@@ -8,11 +8,11 @@
                     <img src="../assets/lupa.png" alt="search icon" class="search-icon">
                 </button>
             </div>
-        </form>
-    </div>
+        </div>
 </template>
 
 <script>
+
 export default {
     name: "SearchBar",
     data() {
@@ -25,24 +25,25 @@ export default {
     methods: {
         submitSearch() {
             if (this.searchTerm) {
-                // Codificar el término de búsqueda antes de enviarlo como parámetro de la URL
                 const encodedQuery = encodeURIComponent(this.searchTerm);
                 this.$router.push({ path: '/search', query: { query: encodedQuery } });
             }
         },
+
     },
+
 };
 </script>
 
 <style scoped>
-.search-bar {
+.form {
     width: 80%;
     margin: 0 auto;
     padding: 10px;
     background-color:  #2768d1;
 }
 
-form {
+.form {
     display: flex;
     justify-content: center;
     align-items: center;
