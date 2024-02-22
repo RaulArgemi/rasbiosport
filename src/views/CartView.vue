@@ -15,7 +15,6 @@
           </div>
         </div>
         <div class="buttons">
-          <button @click="addToCart(item.product_id)" class="add-button">+</button>
           <button @click="removeOneFromCart(item.product_id)" class="remove-button">-</button>
           <button @click="removeFromCart(item.product_id)" class="remove-button">X</button>
         </div>
@@ -64,15 +63,14 @@ export default {
     const userId = userData.id_user;
     const orderAddress = userData.user_address; 
     const orderTotal = this.calculateTotalPrice().toFixed(2);
+   const productos = this.cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, size: item.size }));
+   console.log("productos: " + JSON.stringify(this.cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, size: item.size })), null, 2));
 
-    console.log("USER_ID: " + userId);
-    console.log("ORDER_ADDRESS: " + orderAddress);
-    console.log("TOTAL: " + orderTotal);
 
     fetch(`${url}/api/order/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, orderAddress, orderTotal }),
+      body: JSON.stringify({ userId, orderAddress, orderTotal, productos}),
     })
     .then(response =>{response.json(); console.log(response.json)})
     .then(data => {

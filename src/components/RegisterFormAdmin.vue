@@ -49,7 +49,7 @@
 const url = "http://localhost:3000";
 
 export default {
-  name: 'RegisterFormAdmin',
+  name: 'AdminRegister',
 
   data() {
     return {
@@ -59,15 +59,16 @@ export default {
       product_info: '',
       product_image: '',
       product_tag: '',
+      product_size:'L',
       categorias: [],
       Tallas: {
-        'XXS': { cantidad: 0 },
-        'XS': { cantidad: 0 },
-        'S': { cantidad: 0 },
-        'M': { cantidad: 0 },
-        'L': { cantidad: 0 },
-        'XL': { cantidad: 0 },
-        'XXL': { cantidad: 0 },
+        'XXS': { name: 'XXS', cantidad: 0 },
+        'XS': { name: 'XS', cantidad: 0 },
+        'S': { name: 'S', cantidad: 0 },
+        'M': { name: 'M', cantidad: 0 },
+        'L': { name: 'L', cantidad: 0 },
+        'XL': { name: 'XL', cantidad: 0 },
+        'XXL': { name: 'XXL', cantidad: 0 },
       },
     };
   },
@@ -76,24 +77,35 @@ export default {
   },
 
   methods: {
-    async addProduct() {
+    async addSizes() {
+      const tallasConCantidad = Object.fromEntries(
+      Object.entries(this.Tallas).filter(([, info]) => info.cantidad > 0))
+      console.log("MIERDA" + JSON.stringify(tallasConCantidad))
       try {
-        const formData = {
-          product_name: this.product_name,
-          category: this.categoria,
-          product_info: this.product_info,
-          product_image: this.product_image,
-          product_price: this.product_price,
-          product_tag: this.product_tag,
-          Tallas: this.Tallas,
-        };
+        const responseTalla = await fetch(`${url}/api/add/talla`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            Tallas: tallasConCantidad,
+          }),
+        });
 
-        console.log(formData);
+        if (responseTalla.status === 200) {
+          console.log('Tallas añadidas exitosamente.');
+        } else {
+          console.error('Error al añadir tallas:', responseTalla.status, await responseTalla.text());
+        }
 
-        // Realizar aquí la lógica para enviar los datos al servidor
       } catch (error) {
-        console.error('Error al registrar el producto:', error);
+        console.error('Error en la solicitud al agregar tallas:', error);
       }
+    },
+
+    handleNumericInput(event) {
+      event.target.value = event.target.value.replace(/[^0-9.]/g, '');
+      this.product_price = event.target.value;
     },
 
     async loadCategoryData() {
@@ -110,21 +122,71 @@ export default {
         }
 
         const data = await response.json();
+        console.log(data);
         const categoryNames = data.map(category => category.category_name);
-        this.categorias = categoryNames;
+        this.categorias = categoryNames
+        console.log(this.categorias)
       } catch (error) {
         console.error('Error al cargar los datos de categorías:', error);
       }
     },
+    async addProduct() {
+      try {
+        const formData = {
+          product_name: JSON.stringify(this.product_name),
+          category: JSON.stringify(this.categoria),
+          product_info: JSON.stringify(this.product_info),
+          product_size: JSON.stringify(this.product_size),
+          product_image: JSON.stringify(this.product_image),
+          product_price: this.product_price,
+          product_tag: JSON.stringify(this.product_tag),
+        };
 
-    handleNumericInput(event) {
-      event.target.value = event.target.value.replace(/[^0-9.]/g, '');
-      this.product_price = event.target.value;
+        console.log(formData)
+        console.log(JSON.stringify(formData))
+        if (!formData.product_name || !formData.category || !formData.product_info || !formData.product_image || !formData.product_tag || !formData.product_price || !formData.product_size) {
+
+          console.error('Todos los campos son obligatorios');
+          this.$refs.formulario.classList.add('rebote');
+          setTimeout(() => {
+            this.$refs.formulario.classList.remove('rebote');
+          }, 500);
+          this.$refs.formulario.querySelectorAll('input').forEach((input) => {
+            input.classList.add('input-fallido');
+          });
+          return;
+        }
+        const response = await fetch(`${url}/api/products`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.status === 200) {
+          console.log('Registro exitoso');
+          this.addSizes()
+
+        } else {
+          console.error('Error al registrarse:', response.status, await response.text());
+          console.error('Error al registrarse');
+          this.$refs.formulario.classList.add('rebote');
+          setTimeout(() => {
+            this.$refs.formulario.classList.remove('rebote');
+          }, 500);
+        }
+        
+      } catch (error) {
+        console.error('Error al registrarse:', error);
+      }
     },
 
     cancelAdd() {
       this.$emit('cancel');
     }
+
+
   },
 };
 </script>
