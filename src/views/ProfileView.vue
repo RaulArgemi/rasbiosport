@@ -8,15 +8,12 @@
           <div v-if="key !== 'id_user' && key !== 'user_role'" class="mb-3">
             <label :for="key" class="form-label">{{ getLabel(key) }}</label>
             <div class="d-flex align-items-center">
-              <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control"
-                :type="getInputType(key)">
+              <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control" :type="getInputType(key)">
               <span v-else>{{ user[key] }}</span>
               <div class="button-group">
                 <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">Guardar</button>
                 <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">Cancelar</button>
-                <button v-else @click="enableEdit(key)" class="btn btn-primary btn-sm" :disabled="isDisabled(key)">
-                  Editar
-                </button>
+                <button v-else @click="enableEdit(key)" class="btn btn-primary btn-sm" :disabled="isDisabled(key)">Editar</button>
               </div>
             </div>
           </div>
@@ -26,18 +23,21 @@
           <button @click="toggleChangePassword" class="btn btn-primary btn-sm">Modificar Contraseña</button>
           <div v-if="showChangePassword">
             <div class="mb-3">
+              <label for="currentPassword" class="form-label">Contraseña Actual</label>
+              <input v-model="currentPassword" id="currentPassword" type="password" class="form-control">
+              <span v-if="incorrectCurrentPassword" class="text-danger">La contraseña actual es incorrecta</span>
+            </div>
+            <div class="mb-3">
               <label for="newPassword" class="form-label">Nueva Contraseña</label>
               <input v-model="newPassword" id="newPassword" type="password" class="form-control">
             </div>
             <div class="mb-3">
               <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
               <input v-model="confirmPassword" id="confirmPassword" type="password" class="form-control">
-              <!-- Mostrar mensaje de error si las contraseñas no coinciden -->
               <span v-if="passwordsMismatch" class="text-danger">Las contraseñas no coinciden</span>
               <span v-if="passwordRequirementsError" class="text-danger">La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula y 1 número</span>
             </div>
             <button @click="changePassword" class="btn btn-primary">Cambiar Contraseña</button>
-
           </div>
         </div>
         <!-- Fin Cambio de contraseña -->
@@ -79,14 +79,15 @@ export default {
         // Agrega más etiquetas según sea necesario
       },
       showChangePassword: false,
+      currentPassword: '',
       newPassword: '',
       confirmPassword: '',
-      passwordsMismatch: false, // Agrega la propiedad para controlar el mensaje de error
-      passwordRequirementsError: false // Agrega la propiedad para controlar el mensaje de error de requisitos de contraseña
+      incorrectCurrentPassword: false,
+      passwordsMismatch: false,
+      passwordRequirementsError: false
     };
   },
   beforeMount() {
-    console.log("Se ha reiniciado")
     this.resetEdit();
     const storedUser = Cookies.get('userData');
     if (storedUser) {
@@ -110,12 +111,10 @@ export default {
       await this.updateUserProfile(field, this.editableUser[field]);
       this.$store.dispatch('updateUserField', { field, value: this.editableUser[field] });
       this.setUserDataCookie();
-      console.log("Usuario actualizado")
     },
-
     getInputType(field) {
-      if (field === 'email') return 'email';
-      if (field === 'phone') return 'tel';
+      if (field === 'user_email') return 'email';
+      if (field === 'user_phone') return 'tel';
       return 'text';
     },
     resetEdit() {
@@ -128,8 +127,8 @@ export default {
       try {
         const updateData = {
           id_user: this.user.id_user,
-          field: JSON.stringify(field),
-          value: JSON.stringify(value)
+          field: field,
+          value: value
         };
 
         const response = await fetch(`${url}/api/me`, {
@@ -149,7 +148,6 @@ export default {
         console.error('Error al actualizar el perfil:', error);
       }
     },
-
     setUserDataCookie() {
       const userData = {
         id_user: this.user.id_user,
@@ -172,68 +170,87 @@ export default {
       if (userDataCookie) {
         this.itsLogged = true;
         this.$store.dispatch('setUser', JSON.parse(userDataCookie));
-        console.log('Usuario autenticado');
       } else {
         this.itsLogged = false;
-        console.log('Usuario no autenticado');
       }
     },
     isDisabled(field) {
-      return field === 'user_id' || field === 'user_role';
+      return field === 'id_user' || field === 'user_role';
     },
     toggleChangePassword() {
       this.showChangePassword = !this.showChangePassword;
-    },async changePassword() {
-  try {
-    // Restablecer mensajes de error
-    this.passwordsMismatch = false;
-    this.passwordRequirementsError = false;
+    },
+    async changePassword() {
+      this.passwordsMismatch = false;
+      this.passwordRequirementsError = false;
+      this.incorrectCurrentPassword = false;
 
-    if (this.newPassword !== this.confirmPassword) {
-      this.passwordsMismatch = true; // Mostrar mensaje de error
-      return; // Salir del método si las contraseñas no coinciden
-    }
+      if (this.newPassword !== this.confirmPassword) {
+        this.passwordsMismatch = true;
+        return;
+      }
 
-    // Validar requisitos de contraseña
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
-    if (!passwordRegex.test(this.newPassword)) {
-      this.passwordRequirementsError = true; // Mostrar mensaje de error de requisitos de contraseña
-      return; // Salir del método si la contraseña no cumple con los requisitos
-    }
+      const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+      if (!passwordRegex.test(this.newPassword)) {
+        this.passwordRequirementsError = true;
+        return;
+      }
 
-    const updateData = {
-      id_user: this.user.id_user,
-      new_password: this.newPassword
-    };
+      const isCurrentPasswordCorrect = await this.verifyCurrentPassword();
+      if (!isCurrentPasswordCorrect) {
+        this.incorrectCurrentPassword = true;
+        return;
+      }
 
-    const response = await fetch(`${url}/api/change-password`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify(updateData)
-    });
+      try {
+        const updateData = {
+          id_user: this.user.id_user,
+          new_password: this.newPassword
+        };
 
-    const data = await response.json();
-    if (response.ok) {
-      console.log("Contraseña actualizada exitosamente");
-      this.newPassword = '';
-      this.confirmPassword = '';
-      this.showChangePassword = false; // Ocultar campos de cambio de contraseña
-      // Cerrar edición de campos de contraseña
-      this.editMode['new_password'] = false;
-      this.editMode['confirm_password'] = false;
-    } else {
-      throw new Error(data.error || 'Error al actualizar la contraseña');
-    }
-  } catch (error) {
-    console.error('Error al actualizar la contraseña:', error);
-    // Restablecer campos de contraseña
-    this.newPassword = '';
-    this.confirmPassword = '';
-  }
-},
+        const response = await fetch(`${url}/api/change-password`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(updateData)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Error al actualizar la contraseña');
+        }
+
+        this.newPassword = '';
+        this.confirmPassword = '';
+        this.currentPassword = '';
+        this.showChangePassword = false;
+      } catch (error) {
+        console.error('Error al actualizar la contraseña:', error);
+      }
+    },
+    async verifyCurrentPassword() {
+      try {
+        const response = await fetch(`${url}/api/verify-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            id_user: this.user.id_user,
+            current_password: this.currentPassword
+          })
+        });
+
+        const data = await response.json();
+        return data.isPasswordCorrect;
+      } catch (error) {
+        console.error('Error al verificar la contraseña:', error);
+        return false;
+      }
+    },
   },
 };
 </script>

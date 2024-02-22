@@ -23,20 +23,14 @@
           </div>
           <div class="form-group">
             <label for="expiryDate">Fecha de Caducidad</label>
-            <input v-model="expiryDate" type="text" id="expiryDate" placeholder="MM/YY" required>
+            <input v-model="expiryDate" type="text" id="expiryDate" placeholder="MM/YY" @input="formatExpiryDate"
+              required>
           </div>
           <div class="form-group">
             <label for="cvv">CVV</label>
             <input v-model="cvv" type="text" id="cvv" placeholder="123" required>
           </div>
           <button :disabled="!isFormValid" type="submit">Pagar</button>
-        </form>
-      </div>
-      <div v-else-if="selectedPaymentMethod === 'paypal'" class="payment-form">
-        <h3>Pago con PayPal</h3>
-        <form @submit.prevent="submitPayPalForm">
-          <paypal-button :client-id="'tu-client-id-de-paypal'" :amount="totalPrice" currency="EUR"
-            :create-order-on-click="true" @approve="onApprove" />
         </form>
       </div>
       <div v-if="paymentSuccess" class="payment-success">
@@ -88,32 +82,44 @@ export default {
       ]
     };
   },
+
+
   computed: {
     isFormValid() {
       if (this.selectedPaymentMethod === 'tarjeta') {
-        return this.cardNumber.trim() !== '' &&
-               this.cardName.trim() !== '' &&
-               this.expiryDate.trim() !== '' &&
-               this.cvv.trim() !== '';
-      } else if (this.selectedPaymentMethod === 'transferencia') {
-        return this.bankName.trim() !== '' &&
-               this.accountNumber.trim() !== '' &&
-               this.accountHolderName.trim() !== '';
+        const isCVVValid = /^\d{3}$/.test(this.cvv);
+        return /^\d{16}$/.test(this.cardNumber) &&
+          this.cardName.trim() !== '' &&
+          isCVVValid;
       }
       return true;
     },
+
     isEmailValid() {
       return this.validateEmail(this.paypalEmail);
     }
   },
   methods: {
+    formatExpiryDate() {
+      let cleanedExpiryDate = this.expiryDate.replace(/\D/g, '');
+      cleanedExpiryDate = cleanedExpiryDate.slice(0, 4);
+
+      let formattedExpiryDate = cleanedExpiryDate.replace(/(\d{2})(\d{2})/, '$1/$2');
+      this.expiryDate = formattedExpiryDate;
+    },
+    isFutureDate(dateString) {
+      const today = new Date();
+      const selectedDate = new Date(dateString);
+      return selectedDate > today;
+    },
     closeModal() {
       this.$emit('close-modal');
     },
     submitForm() {
       if (this.selectedPaymentMethod !== '' && this.isFormValid) {
         console.log('Pago con tarjeta procesado.');
-        this.paymentSuccess = true;
+        this.$emit('pago-con-tarjeta-procesado');
+
         setTimeout(() => {
           this.closeModal();
         }, 3000);
