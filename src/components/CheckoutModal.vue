@@ -7,7 +7,7 @@
       <div class="payment-methods">
         <div v-for="method in paymentMethods" :key="method.value" @click="selectedPaymentMethod = method.value"
           :class="{ active: selectedPaymentMethod === method.value }" class="payment-method">
-          <img :src="method.image" :alt="method.label" class="payment-method-image">
+          <img :src="require('@/assets/' + method.image)" :alt="method.label" class="payment-method-image">
         </div>
       </div>
       <div v-if="selectedPaymentMethod === 'tarjeta'" class="payment-form">
