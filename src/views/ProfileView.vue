@@ -60,7 +60,7 @@
         <span class="product-name">{{ product.product_name }}</span>
         <span class="product-quantity">Cantidad: {{ product.quantity }}</span>
         <span class="product-price">{{ currency(product.product_price) }}</span>
-        <button @click="openReviewModal(order.order_id, product.product_id)" class="btn btn-link">Dejar Review</button>
+        <!-- <button @click="openReviewModal(order.order_id, product.product_id)" class="btn btn-link">Dejar Review</button> -->
       </div>
     </div>
   </div>
@@ -73,13 +73,13 @@
       </div>
     </div>
      <!-- Modal/Formulario de Review -->
-    <b-modal v-model="showReviewModal" title="Dejar Review del Producto" hide-footer>
+    <!-- <b-modal v-model="showReviewModal" title="Dejar Review del Producto" hide-footer>
       <div class="d-flex flex-column align-items-center">
         <rating-component v-model="currentReview.rating"></rating-component>
         <b-form-textarea v-model="currentReview.comment" placeholder="Escribe tu comentario aquí..." rows="4" class="mt-3 mb-3"></b-form-textarea>
         <b-button @click="submitReview" variant="primary">Enviar Review</b-button>
       </div>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 
@@ -423,5 +423,9 @@ async submitReview() {
 
 .editar:hover {
   cursor: pointer;
+}
+.product-image{
+  height: 100px;
+  width: 100px;
 }
 </style>
