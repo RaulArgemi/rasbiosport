@@ -9,6 +9,8 @@
 import FooterVue from "./components/FooterVue.vue";
 import "./assets/main.css"
 
+const url = "http://localhost:3000"
+
 export default {
   name: 'App',
   components: { FooterVue },
