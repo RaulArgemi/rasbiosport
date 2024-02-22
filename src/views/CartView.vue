@@ -11,6 +11,7 @@
             <p class="product-name">{{ item.product_name }}</p>
             <p class="quantity">Cantidad: {{ item.quantity }}</p>
             <p class="price">Precio: {{ item.product_price * item.quantity }}</p>
+            <p>Tallas: {{ item.size }}</p>
           </div>
         </div>
         <div class="buttons">
@@ -25,7 +26,7 @@
       </div>
       <CheckoutModal :isModalVisible="checkoutModalVisible" :cartItems="cartItems"
         :totalPrice="parseFloat(calculateTotalPrice())" @close-modal="closeCheckoutModal"
-        @confirm-purchase="confirmPurchase" />
+        @confirm-purchase="confirmPurchase" @pago-con-tarjeta-procesado="addOrder" />
 
     </div>
   </div>
@@ -59,11 +60,39 @@ export default {
     this.fetchCartItems();
   },
   methods: {
+
+    addOrder() {
+  try {
+    const userData = JSON.parse(Cookies.get('userData'));
+    const userId = userData.id_user;
+    const orderAddress = userData.user_address; 
+    const orderTotal = this.calculateTotalPrice().toFixed(2);
+
+    console.log("USER_ID: " + userId);
+    console.log("ORDER_ADDRESS: " + orderAddress);
+    console.log("TOTAL: " + orderTotal);
+
+    fetch(`${url}/api/order/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, orderAddress, orderTotal }),
+    })
+    .then(response =>{response.json(); console.log(response.json)})
+    .then(data => {
+      console.log(data.message);
+    })
+    .catch(error => console.error('Error adding the order:', error));
+  } catch (error) {
+    console.error('Error parsing user data:', error);
+  }
+},
+
     fetchCartItems() {
       const userId = JSON.parse(Cookies.get('userData')).id_user;
       fetch(`${url}/api/cart/${userId}`)
         .then(response => response.json())
         .then(data => {
+          console.log(data)
           this.cartItems = data;
         })
         .catch(error => console.error('Error al obtener el carrito:', error));

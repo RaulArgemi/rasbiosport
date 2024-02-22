@@ -47,14 +47,17 @@
           :description="product.product_description"
           :price="product.product_price"
           :product_id="product.product_id"
-          @click="goToProductDetails(product.product_name)"
+          @clickImage="goToProductDetails(product.product_name)"
         />
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
+//          @click="goToProductDetails(product.product_name)"
+
 import ProductCard from "@/components/ProductCard.vue";
 
 const url = "http://localhost:3000";
