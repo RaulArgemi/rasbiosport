@@ -54,10 +54,9 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .icon {
-  color: aliceblue;
+  color: #fff;
   margin-right: 2.5rem;
 }
 
@@ -84,20 +83,51 @@ div {
   display: flex;
   align-items: center;
 }
+
 .cart{
   height: 2.5rem;
   width: 2.5rem;
   margin: 2.5rem;
 }
+
 .search-input {
-  width: 900px;
-  height: 50px;
+  width: 300px;
+  height: 30px;
+  border: none;
   border-radius: 15px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* Color de fondo transparente */
+  color: #333; /* Color del texto */
+  outline: none; /* Quita el contorno al enfocar */
 }
 
-.header-photo {
-  height: 2.5em;
-  width: 2.5em;
-  margin-left: 10px;
-  margin-right: 10px;
-}</style>
+button.search-button {
+  background-color: #4285F4;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  margin-left: -50px; /* Ajuste para superponerse ligeramente al input */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.search-button:hover {
+  background-color: #3367D6;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  cursor: pointer;
+  padding: 5px;
+}
+
+li:hover {
+  background-color: #f2f2f2;
+}
+</style>

@@ -2,11 +2,7 @@
     <NavComponent></NavComponent>
     <div class="container mt-4">
       <h1 class="mb-4">Política de Privacidad de RasbioSport</h1>
-  
-      <p>
-        <strong>Fecha de Entrada en Vigor:</strong> [Fecha]
-      </p>
-  
+
       <p>
         <strong>Introducción</strong>
       </p>

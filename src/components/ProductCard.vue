@@ -93,15 +93,23 @@ export default {
   max-width: 300px;
   margin: 0 auto;
   box-sizing: border-box;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
 }
 
 .card-img-top {
   object-fit: cover;
   width: 100%;
   height: 150px;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .card-body {
+  align-items: center;
+  text-align: center;
   padding: 1.25rem;
 }
 
@@ -120,4 +128,21 @@ export default {
   font-size: 1.25rem;
   color: #e44d26;
   font-weight: bold;
-}</style>
+}
+
+.buy {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buy:hover {
+  background-color: #0056b3;
+}
+</style>
