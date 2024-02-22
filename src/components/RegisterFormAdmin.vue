@@ -1,46 +1,46 @@
 <template>
-  <div class="login d-flex justify-content-center align-items-center">
-    <div ref="formulario" class="gray-bg p-4 border border-dark rounded col-md-6">
-      <div class="d-flex justify-content-center">
-        <h3 class="mb-4 ">Añade un nuevo Producto</h3>
+  <div class="form-container">
+    <div class="form-wrapper">
+      <h3 class="form-title">Añade un nuevo Producto</h3>
+      <div class="form-group">
+        <label for="product_name" class="form-label">Producto</label>
+        <input v-model="product_name" type="text" class="form-control" id="product_name" placeholder="Nombre del producto">
       </div>
-      <div class="mb-3">
-        <label for="product_name" class="form-label"> Producto</label>
-        <input v-model="product_name" type="text" class="form-control" id="product_name" placeholder="">
-      </div>
-      <div class="mb-3">
-        <label for="category" class="form-label">Categoría: </label>
-        <br>
-        <select v-model="categoria">
+      <div class="form-group">
+        <label for="category" class="form-label">Categoría:</label>
+        <select v-model="categoria" class="form-control">
           <option v-for="cat in categorias" :key="cat" :value="cat">{{ cat }}</option>
         </select>
       </div>
-      <div class="mb-3">
+      <div class="form-group">
         <label for="product_info" class="form-label">Información del producto</label>
-        <input v-model="product_info" type="text" class="form-control" id="product_info" placeholder="">
+        <input v-model="product_info" type="text" class="form-control" id="product_info" placeholder="Información del producto">
       </div>
-      <div class="mb-3">
+      <div class="form-group">
         <label for="product_image" class="form-label">Imagen del producto</label>
-        <input v-model="product_image" type="text" class="form-control" id="product_image" placeholder="">
+        <input v-model="product_image" type="text" class="form-control" id="product_image" placeholder="URL de la imagen">
       </div>
-      <div class="mb-3">
+      <div class="form-group">
         <label for="product_price" class="form-label">Precio del Producto</label>
-        <input v-model="product_price" @input="handleNumericInput" type="text" class="form-control" id="product_price"
-          placeholder="">
+        <input v-model="product_price" @input="handleNumericInput" type="text" class="form-control" id="product_price" placeholder="Precio del producto">
       </div>
-
-      <div class="mb-3">
-        <label for="product_size" class="form-label">Tamaño del producto: </label><br>
-        <select v-model="product_size">
-          <option v-for="size in product_sizes" :key="size" :value="size">{{ size }}</option>
-        </select>
+      <div class="form-group">
+        <label class="form-label">Tallas:</label>
+        <div v-for="(size, key) in Tallas" :key="key">
+          <label>
+            {{ key }} Cantidad:
+            <input type="number" min="0" v-model="size.cantidad">
+          </label><br>
+        </div>
       </div>
-      <div class="mb-3">
+      <div class="form-group">
         <label for="product_tag" class="form-label">Tag</label>
-        <input v-model="product_tag" type="text" class="form-control" id="product_tag" placeholder="">
+        <input v-model="product_tag" type="text" class="form-control" id="product_tag" placeholder="Tag">
       </div>
-      <button @click="addProduct" class="btn btn-primary colorGreen botonRegister">Registrar</button>
-      <br>
+      <div class="button-container">
+        <button @click="cancelAdd" class="cancel-btn">Cancelar</button>
+        <button @click="addProduct" class="btn btn-primary">Registrar</button>
+      </div>
     </div>
   </div>
 </template>
@@ -60,20 +60,55 @@ export default {
       product_info: '',
       product_image: '',
       product_tag: '',
-      product_size: '',
+      product_size:'L',
       categorias: [],
-      product_sizes: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
+      Tallas: {
+        'XXS': { name: 'XXS', cantidad: 0 },
+        'XS': { name: 'XS', cantidad: 0 },
+        'S': { name: 'S', cantidad: 0 },
+        'M': { name: 'M', cantidad: 0 },
+        'L': { name: 'L', cantidad: 0 },
+        'XL': { name: 'XL', cantidad: 0 },
+        'XXL': { name: 'XXL', cantidad: 0 },
+      },
     };
   },
   mounted() {
-    this.loadCategoryData()
+    this.loadCategoryData();
   },
 
   methods: {
+    async addSizes() {
+      const tallasConCantidad = Object.fromEntries(
+      Object.entries(this.Tallas).filter(([, info]) => info.cantidad > 0))
+      console.log("MIERDA" + JSON.stringify(tallasConCantidad))
+      try {
+        const responseTalla = await fetch(`${url}/api/add/talla`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            Tallas: tallasConCantidad,
+          }),
+        });
+
+        if (responseTalla.status === 200) {
+          console.log('Tallas añadidas exitosamente.');
+        } else {
+          console.error('Error al añadir tallas:', responseTalla.status, await responseTalla.text());
+        }
+
+      } catch (error) {
+        console.error('Error en la solicitud al agregar tallas:', error);
+      }
+    },
+
     handleNumericInput(event) {
       event.target.value = event.target.value.replace(/[^0-9.]/g, '');
       this.product_price = event.target.value;
     },
+
     async loadCategoryData() {
       try {
         const response = await fetch(`${url}/api/category`);
@@ -132,6 +167,8 @@ export default {
 
         if (response.status === 200) {
           console.log('Registro exitoso');
+          this.addSizes()
+
         } else {
           console.error('Error al registrarse:', response.status, await response.text());
           console.error('Error al registrarse');
@@ -140,124 +177,88 @@ export default {
             this.$refs.formulario.classList.remove('rebote');
           }, 500);
         }
-
+        
       } catch (error) {
         console.error('Error al registrarse:', error);
       }
     },
+
+    cancelAdd() {
+      this.$emit('cancel');
+    }
+
+
   },
 };
 </script>
 
 <style scoped>
-.textoRegister {
-  margin-left: 35%;
-}
-
-.botonRegister {
-  margin-left: 40%;
-}
-
-.rebote {
-  animation: rebote 0.5s;
-}
-
-@keyframes rebote {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  25%,
-  75% {
-    transform: translateX(-20px);
-  }
-
-  50% {
-    transform: translateX(20px);
-  }
-}
-
-.boton {
+.form-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.login {
-
-  width: 100%;
-  height: 90vh;
-  margin: 0;
-  padding: 0;
-}
-
-.gray-bg {
-  background-color: #f2f2f2;
+.form-wrapper {
+  background-color: #fff;
   padding: 20px;
+  border-radius: 10px;
+  width: 50%; 
+  height: 70%;
+  overflow: scroll;
 }
 
-.colorGreen {
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333; 
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   background-color: #4285f4;
-
+  color: #fff;
 }
 
-.colorGreen:hover {
-  background-color: #34A853;
-  transition: background-color 0.3s;
+.btn:hover {
+  background-color: #34a853;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #ccc;
+  color: #000;
+  margin-right: 10px;
 }
 
-.login {
-  animation: slideUp 1s ease-in-out;
+.cancel-btn:hover {
+  background-color: #aaa;
 }
 
-.input-resaltado {
-  animation: resaltarInput 0.5s forwards;
-}
-
-.input-fallido {
-  animation: resaltarInputFallido 0.5s forwards;
-}
-
-
-@keyframes resaltarInput {
-  0% {
-    box-shadow: 0 0 0px rgba(66, 133, 244, 0);
-    border-color: #4285f4;
-  }
-
-  100% {
-    box-shadow: 0 0 8px rgba(66, 133, 244, 0.5);
-    border-color: #4285f4;
-  }
-}
-
-
-
-@keyframes resaltarInputFallido {
-  0% {
-    box-shadow: 0 0 0px rgba(66, 133, 244, 0);
-    border-color: #f31919;
-  }
-
-  100% {
-    box-shadow: 0 0 8px rgba(244, 107, 66, 0.5);
-    border-color: #f31919;
-  }
+.button-container {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
-  
-  
-  

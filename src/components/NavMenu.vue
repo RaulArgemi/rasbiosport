@@ -1,13 +1,12 @@
 <template>
   <div class="nav-menu">
     <ul>
-      <li v-if="itsAdmin"><router-link to="/products/admin">PruebaAdmin</router-link></li>
+      <li v-if="itsAdmin"><router-link to="/products/admin">Administración</router-link></li>
       <li><router-link to="/category/Todos">Productos</router-link></li>
       <li><router-link to="/category/Futbol">Futbol</router-link></li>
       <li><router-link to="/category/Nba">NBA</router-link></li>
-      <li><router-link to="/category/ofertas">Ofertas</router-link></li>
+      <!-- <li><router-link to="/category/ofertas">Ofertas</router-link></li> -->
       <li><router-link to="/help">Ayuda</router-link></li>
-
     </ul>
   </div>
 </template>
@@ -16,23 +15,30 @@
 import Cookies from 'js-cookie';
 
 export default {
-
   name: 'NavMenu',
   data() {
-
     return {
       itsAdmin: false
     };
-  }, mounted() {
+  }, 
+  mounted() {
     this.checkAuthentication();
   },
   methods: {
     checkAuthentication() {
       const cookie = Cookies.get('userData');
-      let cooked = JSON.parse(cookie)
-      if (cooked.user_role == 'admin') {
-        console.log(cookie.user_role)
-        this.itsAdmin = true
+
+      if (cookie) {
+        try {
+          const userData = JSON.parse(cookie);
+          if (userData.user_role === 'admin') {
+            this.itsAdmin = true;
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      } else {
+        console.log('No hay cookie');
       }
     },
   },
@@ -58,7 +64,7 @@ li {
 
 a {
   display: block;
-  color: black;
+  color: black; 
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
@@ -66,7 +72,5 @@ a {
 
 a:hover {
   background-color: #4285F4;
-  color: white;
 }
 </style>
-  

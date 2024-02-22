@@ -1,16 +1,13 @@
 <template>
   <div>
-    <a class="icon" @click="logout"><LogOutIcon></LogOutIcon></a>
+    <a class="icon" @click="logout"><img class="icono" src="../assets/logout.png"></a>
   </div>
 </template>
 
 <script>
-import LogOutIcon from './icons/LogOutIcon.vue';
+
 export default {
   name: 'LogoutVue',
-  components: {
-    LogOutIcon,
-  },
   methods: {
     logout() {
       localStorage.removeItem('token');
@@ -19,7 +16,7 @@ export default {
 
       localStorage.removeItem('cart_lrrxhx28ll9ixhvxkf')
 
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
       this.$router.push('/login');
 
@@ -32,5 +29,11 @@ export default {
 <style scoped>
 .icon {
   color: aliceblue;
+}
+
+.icono{
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
 }
 </style>

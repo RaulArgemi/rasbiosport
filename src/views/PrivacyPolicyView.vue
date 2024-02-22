@@ -2,11 +2,7 @@
     <NavComponent></NavComponent>
     <div class="container mt-4">
       <h1 class="mb-4">Política de Privacidad de RasbioSport</h1>
-  
-      <p>
-        <strong>Fecha de Entrada en Vigor:</strong> [Fecha]
-      </p>
-  
+
       <p>
         <strong>Introducción</strong>
       </p>
@@ -83,15 +79,13 @@
         Si tiene preguntas o inquietudes sobre esta política de privacidad, comuníquese con nosotros a través de [Dirección de Correo Electrónico de Contacto].
       </p>
     </div>
-    <FooterVue></FooterVue>
   </template>
   
 <script>
 import NavComponent from '../components/NavComponent.vue';
-import FooterVue from '../components/FooterVue.vue';
   export default {
     name: 'PrivacyPolicy',
-    components: { NavComponent, FooterVue }
+    components: { NavComponent }
 };
   </script>
 
