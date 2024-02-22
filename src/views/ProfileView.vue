@@ -4,6 +4,7 @@
     <div class="container mt-4">
       <h2 class="text-center">Perfil</h2>
       <div class="profile-form">
+        <!-- Formulario de perfil existente -->
         <div v-for="(value, key) in editableUser" :key="key">
           <div v-if="key !== 'id_user' && key !== 'user_role'" class="mb-3">
             <label :for="key" class="form-label">{{ getLabel(key) }}</label>
@@ -40,9 +41,41 @@
             <button @click="changePassword" class="btn btn-primary">Cambiar Contraseña</button>
           </div>
         </div>
-        <!-- Fin Cambio de contraseña -->
+        <!-- Sección de pedidos recientes -->
+        <div class="recent-orders">
+          <h3>Pedidos Recientes</h3>
+          <div v-for="order in recentOrders" :key="order.order_id" class="order-card">
+  <div class="order-header">
+    <h4>Pedido #{{ order.order_id }}</h4>
+    <span class="order-date">{{ formatDate(order.order_date) }}</span>
+  </div>
+  <div class="order-body">
+    <div v-for="product in order.products" :key="product.product_id" class="order-product">
+      <img :src="product.product_image" :alt="product.product_name" class="product-image"/>
+      <div class="product-info">
+        <span class="product-name">{{ product.product_name }}</span>
+        <span class="product-quantity">Cantidad: {{ product.quantity }}</span>
+        <span class="product-price">{{ currency(product.product_price) }}</span>
+        <button @click="openReviewModal(order.order_id, product.product_id)" class="btn btn-link">Dejar Review</button>
       </div>
     </div>
+  </div>
+  <div class="order-footer">
+    <span class="order-total">Total: {{ currency(order.order_total) }}</span>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+     <!-- Modal/Formulario de Review -->
+    <b-modal v-model="showReviewModal" title="Dejar Review del Producto" hide-footer>
+      <div class="d-flex flex-column align-items-center">
+        <rating-component v-model="currentReview.rating"></rating-component>
+        <b-form-textarea v-model="currentReview.comment" placeholder="Escribe tu comentario aquí..." rows="4" class="mt-3 mb-3"></b-form-textarea>
+        <b-button @click="submitReview" variant="primary">Enviar Review</b-button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -81,7 +114,15 @@ export default {
       confirmPassword: '',
       incorrectCurrentPassword: false,
       passwordsMismatch: false,
-      passwordRequirementsError: false
+      passwordRequirementsError: false,
+      recentOrders: [], // Agregado para almacenar los pedidos recientes
+      showReviewModal: false, // Controla la visibilidad del modal de review
+      currentReview: { // Almacena la información de la review actual
+        orderId: null,
+        productId: null,
+        rating: 0,
+        comment: ''
+      }
     };
   },
   beforeMount() {
@@ -90,9 +131,18 @@ export default {
     if (storedUser) {
       this.$store.dispatch('setUser', JSON.parse(storedUser));
     }
+    this.fetchRecentOrders(); // Llamada para obtener los pedidos recientes
     this.checkAuthentication();
   },
   methods: {
+    formatDate(value) {
+      if (value) {
+        return new Date(value).toLocaleDateString();
+      }
+    },
+    currency(value) {
+    return parseFloat(value).toFixed(2) + ' €';
+  },
     getLabel(key) {
       return this.labels[key] || key;
     },
@@ -163,7 +213,6 @@ export default {
     },
     checkAuthentication() {
       const userDataCookie = Cookies.get('userData');
-
       if (userDataCookie) {
         this.itsLogged = true;
         this.$store.dispatch('setUser', JSON.parse(userDataCookie));
@@ -174,6 +223,30 @@ export default {
     isDisabled(field) {
       return field === 'id_user' || field === 'user_role';
     },
+    openReviewModal(orderId, productId) {
+      this.currentReview.orderId = orderId;
+      this.currentReview.productId = productId;
+      this.showReviewModal = true;
+    },
+async submitReview() {
+  try {
+    const response = await fetch(`${url}/api/add-review`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(this.currentReview)
+    });
+    if (!response.ok) throw new Error('Error al enviar review');
+    // Cerrar modal y resetear currentReview
+    this.showReviewModal = false;
+    this.currentReview = { orderId: null, productId: null, rating: 0, comment: '' };
+    // Opcional: actualizar la UI o mostrar mensaje de éxito
+  } catch (error) {
+    console.error('Error al enviar review:', error);
+  }
+},
     toggleChangePassword() {
       this.showChangePassword = !this.showChangePassword;
     },
@@ -194,6 +267,7 @@ export default {
       }
 
       const isCurrentPasswordCorrect = await this.verifyCurrentPassword();
+      // Continuación de changePassword
       if (!isCurrentPasswordCorrect) {
         this.incorrectCurrentPassword = true;
         return;
@@ -219,15 +293,19 @@ export default {
           throw new Error(data.error || 'Error al actualizar la contraseña');
         }
 
+        // Limpiar los campos y cerrar el formulario de cambio de contraseña
         this.newPassword = '';
         this.confirmPassword = '';
         this.currentPassword = '';
         this.showChangePassword = false;
+
+        // Opcionalmente, mostrar un mensaje de éxito o actualizar el estado para reflejar el cambio
       } catch (error) {
         console.error('Error al actualizar la contraseña:', error);
       }
     },
     async verifyCurrentPassword() {
+      // Implementación para verificar si la contraseña actual es correcta
       try {
         const response = await fetch(`${url}/api/verify-password`, {
           method: 'POST',
@@ -248,71 +326,19 @@ export default {
         return false;
       }
     },
+    fetchRecentOrders() {
+      // Método para buscar los pedidos recientes del usuario
+      fetch(`${url}/api/user-orders/${this.user.id_user}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.recentOrders = data;
+      })
+      .catch(error => console.error('Error al cargar los pedidos:', error));
+    },
   },
 };
 </script>
-
-<style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.profile-form {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.profile-form h2 {
-  color: #333;
-}
-
-.form-label {
-  font-weight: bold;
-}
-
-.button-group {
-  margin-top: 10px;
-}
-
-.button-group button {
-  margin-right: 10px;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-.btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.btn-success:hover {
-  background-color: #218838;
-  border-color: #218838;
-}
-
-.btn-danger {
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
-
-.btn-danger:hover {
-  background-color: #c82333;
-  border-color: #c82333;
-}
-
-.text-danger {
-  color: #dc3545;
-}
-</style>
