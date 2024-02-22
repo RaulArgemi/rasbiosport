@@ -1,18 +1,18 @@
 <template>
   <div class="login d-flex justify-content-center align-items-center">
     <div ref="formulario" class="gray-bg p-4 border border-dark rounded col-md-6">
-      <h3 class="mb-4">Inicia sesión</h3>
+      <h3 class="mb-4 text-center">Inicia sesión</h3>
       <div class="mb-3">
         <label for="correo" class="form-label">Correo</label>
         <input v-model="correo" type="text" class="form-control" id="correo" placeholder="Correo">
       </div>
       <div class="mb-3">
         <label for="contraseña" class="form-label">Contraseña</label>
-        <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="·······">
+        <input v-model="contraseña" type="password" class="form-control" id="contraseña" placeholder="·······" @keyup.enter="login">
       </div>
       <p v-if="errorMensaje" class="text-danger mb-3">{{ errorMensaje }}</p>
       <button @click="login" class="btn btn-primary colorGreen mb-3 boton">Iniciar sesión</button>
-      <p class="mb-0 boton2">No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
+      <p class="mb-0 boton2 text-center">No tienes cuenta? <router-link to="/register">Regístrate!</router-link></p>
     </div>
   </div>
 </template>
@@ -111,9 +111,6 @@ export default {
   min-height: 90vh;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .gray-bg {
@@ -129,10 +126,16 @@ export default {
   background-color: #34a853;
   transition: background-color 0.3s;
 }
+
 .boton{
-  margin-left: 23rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
+
 .boton2{
-  margin-left: 20rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 </style>
