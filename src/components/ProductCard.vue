@@ -16,6 +16,7 @@
       </select>
       <label for="quantity" class="options-label">Cantidad:</label>
       <input v-model.number="selectedQuantity" type="number" id="quantity" :max="quantityLimit" min="1" class="options-input">
+      <span v-if="addedToCart">Añadido correctamente.</span>
       <button @click="addToCart(product_id)" :disabled="!selectedSize" class="add-to-cart-btn">Agregar al carrito</button>
     </div>  
   </div>
@@ -33,6 +34,7 @@ export default {
       selectedQuantity: 1,
       sizes: [],
       quantityLimit: 0,
+      addedToCart: false
     };
   },
   props: {
@@ -113,6 +115,7 @@ export default {
           .then(response => response.json())
           .then(data => {
             console.log(data.message);
+            this.addedToCart = true;
           })
           .catch(error => console.error('Error al añadir al carrito:', error));
       } catch (error) {

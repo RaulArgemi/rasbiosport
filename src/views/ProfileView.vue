@@ -9,7 +9,8 @@
           <div v-if="key !== 'id_user' && key !== 'user_role'" class="mb-3">
             <label :for="key" class="form-label">{{ getLabel(key) }}</label>
             <div class="d-flex align-items-center">
-              <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control" :type="getInputType(key)">
+              <input v-if="editMode[key]" v-model="editableUser[key]" :id="key" class="form-control"
+                :type="getInputType(key)">
               <span v-else>{{ user[key] }}</span>
               <div class="ml-auto">
                 <div class="button-group">
@@ -40,39 +41,34 @@
               <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
               <input v-model="confirmPassword" id="confirmPassword" type="password" class="form-control">
               <span v-if="passwordsMismatch" class="text-danger">Las contraseñas no coinciden</span>
-              <span v-if="passwordRequirementsError" class="text-danger">La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 minúscula y 1 número</span>
+              <span v-if="passwordRequirementsError" class="text-danger">La contraseña debe tener al menos 8 caracteres, 1
+                mayúscula, 1 minúscula y 1 número</span>
             </div>
             <button @click="changePassword" class="btn btn-primary">Cambiar Contraseña</button>
           </div>
         </div>
         <!-- Sección de pedidos recientes -->
-        <div class="recent-orders">
-          <h3>Pedidos Recientes</h3>
-          <div v-for="order in recentOrders" :key="order.order_id" class="order-card">
-  <div class="order-header">
-    <h4>Pedido #{{ order.order_id }}</h4>
-    <span class="order-date">{{ formatDate(order.order_date) }}</span>
-  </div>
-  <div class="order-body">
-    <div v-for="product in order.products" :key="product.product_id" class="order-product">
-      <img :src="product.product_image" :alt="product.product_name" class="product-image"/>
-      <div class="product-info">
-        <span class="product-name">{{ product.product_name }}</span>
-        <span class="product-quantity">Cantidad: {{ product.quantity }}</span>
-        <span class="product-price">{{ currency(product.product_price) }}</span>
-        <!-- <button @click="openReviewModal(order.order_id, product.product_id)" class="btn btn-link">Dejar Review</button> -->
+        <p v-if="!showOrders">Todavía no has hecho ningún pedido :(</p>
+        <div v-if="showOrders" class="recent-orders">
+    <h2>Pedidos Recientes</h2>
+    <div v-for="order in recentOrders" :key="order.order_id" class="order-card" @click="viewOrderDetails(order)">
+      <div class="order-header">
+        <h5>Pedido #{{ order.order_id }} | <span class="order-date">{{ formatDate(order.order_date) }}</span></h5>
       </div>
-    </div>
-  </div>
-  <div class="order-footer">
-    <span class="order-total">Total: {{ currency(order.order_total) }}</span>
-  </div>
-</div>
-
+      <div class="order-body">
+        <div v-for="product in order.products" :key="product.product_id" class="order-product">
+          <!-- Mostrar algunos detalles del producto, si es necesario -->
         </div>
       </div>
+      <div class="order-footer">
+        <b class="order-total">Total: {{ currency(order.order_total) }}</b>
+      </div>
     </div>
-     <!-- Modal/Formulario de Review -->
+  </div>
+  <OrderDetails :order="selectedOrder" v-if="selectedOrder !== null" @close="selectedOrder = null" />
+      </div>
+    </div>
+    <!-- Modal/Formulario de Review -->
     <!-- <b-modal v-model="showReviewModal" title="Dejar Review del Producto" hide-footer>
       <div class="d-flex flex-column align-items-center">
         <rating-component v-model="currentReview.rating"></rating-component>
@@ -87,6 +83,8 @@
 import NavComponent from '../components/NavComponent.vue';
 import { useStore } from 'vuex';
 import Cookies from 'js-cookie';
+import OrderDetails from '@/components/OrderDetails.vue';
+
 
 const url = "http://localhost:3000";
 
@@ -94,6 +92,7 @@ export default {
   name: 'ProfileView',
   components: {
     NavComponent,
+    OrderDetails
   },
   computed: {
     user() {
@@ -118,14 +117,16 @@ export default {
       incorrectCurrentPassword: false,
       passwordsMismatch: false,
       passwordRequirementsError: false,
-      recentOrders: [], // Agregado para almacenar los pedidos recientes
       showReviewModal: false, // Controla la visibilidad del modal de review
       currentReview: { // Almacena la información de la review actual
         orderId: null,
         productId: null,
         rating: 0,
         comment: ''
-      }
+      },
+      recentOrders: [], // Tu lista de pedidos recientes
+      showOrders: false, // Determina si mostrar los pedidos recientes
+      selectedOrder: null // El pedido seleccionado para ver detalles
     };
   },
   beforeMount() {
@@ -138,14 +139,17 @@ export default {
     this.checkAuthentication();
   },
   methods: {
+    viewOrderDetails(order) {
+      this.selectedOrder = order;
+    },
     formatDate(value) {
       if (value) {
         return new Date(value).toLocaleDateString();
       }
     },
     currency(value) {
-    return parseFloat(value).toFixed(2) + ' €';
-  },
+      return parseFloat(value).toFixed(2) + ' €';
+    },
     getLabel(key) {
       return this.labels[key] || key;
     },
@@ -231,25 +235,25 @@ export default {
       this.currentReview.productId = productId;
       this.showReviewModal = true;
     },
-async submitReview() {
-  try {
-    const response = await fetch(`${url}/api/add-review`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify(this.currentReview)
-    });
-    if (!response.ok) throw new Error('Error al enviar review');
-    // Cerrar modal y resetear currentReview
-    this.showReviewModal = false;
-    this.currentReview = { orderId: null, productId: null, rating: 0, comment: '' };
-    // Opcional: actualizar la UI o mostrar mensaje de éxito
-  } catch (error) {
-    console.error('Error al enviar review:', error);
-  }
-},
+    async submitReview() {
+      try {
+        const response = await fetch(`${url}/api/add-review`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(this.currentReview)
+        });
+        if (!response.ok) throw new Error('Error al enviar review');
+        // Cerrar modal y resetear currentReview
+        this.showReviewModal = false;
+        this.currentReview = { orderId: null, productId: null, rating: 0, comment: '' };
+        // Opcional: actualizar la UI o mostrar mensaje de éxito
+      } catch (error) {
+        console.error('Error al enviar review:', error);
+      }
+    },
     toggleChangePassword() {
       this.showChangePassword = !this.showChangePassword;
     },
@@ -336,11 +340,14 @@ async submitReview() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
-      .then(response => response.json())
-      .then(data => {
-        this.recentOrders = data;
-      })
-      .catch(error => console.error('Error al cargar los pedidos:', error));
+        .then(response => response.json())
+        .then(data => {
+          this.recentOrders = data;
+          if (this.recentOrders.length) {
+            this.showOrders = true;
+          }
+        })
+        .catch(error => console.error('Error al cargar los pedidos:', error));
     },
   },
 };
@@ -358,6 +365,7 @@ async submitReview() {
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 100px;
 }
 
 .profile-form h2 {
@@ -370,6 +378,9 @@ async submitReview() {
 
 .button-group {
   margin-top: 10px;
+}
+.order-header{
+  cursor: pointer;
 }
 
 .button-group button {
@@ -424,7 +435,8 @@ async submitReview() {
 .editar:hover {
   cursor: pointer;
 }
-.product-image{
+
+.product-image {
   height: 100px;
   width: 100px;
 }

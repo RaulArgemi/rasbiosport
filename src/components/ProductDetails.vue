@@ -22,8 +22,9 @@
       </select>
       <label for="quantity" class="options-label">Cantidad:</label>
       <input v-model.number="selectedQuantity" type="number" id="quantity" :max="quantityLimit" min="1" class="options-input">
+      <span v-if="addedToCart">Añadido correctamente.<br></span>
       <button @click="addToCart(product_id)" :disabled="!selectedSize" class="add-to-cart-btn">Agregar al carrito</button>
-    </div> 
+    </div>
       </div>
     </div>
 
@@ -61,11 +62,10 @@
       </div>
     </div>
   </div>
-</template>
-<script>
-import Cookies from 'js-cookie';
+</template><script>
 import NavComponent from '../components/NavComponent.vue';
 import NavMenu from '../components/NavMenu.vue';
+import Cookies from 'js-cookie';
 
 const url = "http://localhost:3000"
 
@@ -77,6 +77,7 @@ export default {
   },
   data() {
     return {
+      addedToCart: false,
       productDetails: {},
       productReviews: [],
       relatedProducts: [],
@@ -89,10 +90,8 @@ export default {
   },
   async created() {
     await this.initializeData();
-    console.log(JSON.stringify(this.productDetails))
   },
   methods: {
-
     updateQuantityLimit() {
       const selectedSizeObject = this.sizes.find(item => item.size === this.selectedSize);
       if (selectedSizeObject) {
@@ -147,13 +146,13 @@ export default {
           .then(response => response.json())
           .then(data => {
             console.log(data.message);
+            this.addedToCart = true;
           })
           .catch(error => console.error('Error al añadir al carrito:', error));
       } catch (error) {
         console.error('Error al ejecutar addToCart:', error);
       }
     },
-
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -163,19 +162,24 @@ export default {
       await this.fetchRelatedProducts();
       await this.fetchProductReviews();
     },
+
     async fetchProductDetails() {
       try {
         const response = await fetch(`${url}/api/products/${this.$route.params.product_name}`);
         const data = await response.json();
         this.productDetails = data;
+        console.log(this.productDetails);
       } catch (error) {
         console.error('Error al obtener detalles del producto:', error);
       }
     },
+
     async fetchRelatedProducts() {
       try {
         const response = await fetch(`${url}/api/products/related/${this.productDetails.category_id}`);
+        console.log(response);
         this.relatedProducts = await response.json();
+        console.log(this.relatedProducts);
       } catch (error) {
         console.error('Error al obtener productos relacionados:', error);
       }
@@ -184,6 +188,7 @@ export default {
       try {
         const response = await fetch(`${url}/api/products/${this.productDetails.product_id}/reviews`);
         this.productReviews = await response.json();
+        console.log(this.productReviews)
       } catch (error) {
         console.error('Error al obtener reseñas:', error);
       }
@@ -191,7 +196,7 @@ export default {
     goToProductDetails(productName) {
       this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
     },
-
+  },
   computed: {
     filteredRelatedProducts() {
       return this.relatedProducts.filter(product => product.product_id !== this.productDetails.product_id);
@@ -201,8 +206,10 @@ export default {
     $route() {
       this.initializeData();
     },
-  },}};
+  },
+};
 </script>
+
 
 <style scoped>
 /* Estilos para el contenedor principal */
