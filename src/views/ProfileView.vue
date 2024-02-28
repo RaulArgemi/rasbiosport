@@ -16,8 +16,8 @@
                 <div class="button-group">
                   <button v-if="editMode[key]" @click="updateField(key)" class="btn btn-success btn-sm">Guardar</button>
                   <button v-if="editMode[key]" @click="cancelEdit(key)" class="btn btn-danger btn-sm">Cancelar</button>
-                  <button v-else @click="enableEdit(key)" class="editar" :disabled="isDisabled(key)">
-                    <img src="../assets/editar.png" alt="Editar" width="20" height="20">
+                  <button v-else @click="enableEdit(key)" class="editar edit" :disabled="isDisabled(key)">
+                    <img src="../assets/editar.png" alt="Editar" width="20" height="20" class="edit-icon">
                   </button>
                 </div>
               </div>
@@ -48,7 +48,7 @@
           </div>
         </div>
         <!-- Sección de pedidos recientes -->
-        <p v-if="!showOrders">Todavía no has hecho ningún pedido :(</p>
+        <p v-if="!showOrders">Todavía no has hecho ningún pedido :</p>
         <div v-if="showOrders" class="recent-orders">
     <h2>Pedidos Recientes</h2>
     <div v-for="order in recentOrders" :key="order.order_id" class="order-card" @click="viewOrderDetails(order)">
@@ -439,5 +439,23 @@ export default {
 .product-image {
   height: 100px;
   width: 100px;
+}
+
+.edit {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-icon {
+    width: 100%;
+    height: auto;
 }
 </style>
