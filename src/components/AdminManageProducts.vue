@@ -11,7 +11,7 @@
             </div>
         <div class="popup-container" v-if="showRegister">
             <div class="popup-content">
-                <RegisterForm @cancel="cancelAdd"></RegisterForm>
+                <RegisterForm @product-added="closeRegisterForm" @cancel="cancelAdd"></RegisterForm>
             </div>
         </div>
             <table>
@@ -130,6 +130,9 @@ export default {
         await this.fetchProducts();
     },
     methods: {
+        closeRegisterForm() {
+            this.showRegister = false;
+        },
         cancelAdd() {
             this.showRegister = false;
         },
