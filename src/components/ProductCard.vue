@@ -1,24 +1,26 @@
 <template>
   <div class="card">
-    <img :src="imageSrc" class="card-img-top" :alt="title"  style="height: 300px;" @click="clickImageHandler">
+    <img :src="imageSrc" class="card-img-top" :alt="title" style="height: 300px;" @click="clickImageHandler">
     <div class="card-body">
       <h5 class="card-title">{{ title }}</h5>
       <p class="card-text">{{ description }}</p>
       <p class="card-price">{{ price }} €</p>
     </div>
     <button class="view-btn" @click="clickImageHandler">Ver producto</button>
-    <button v-if="!optionsVisible" @click="showOptions('abrir')" class="add-to-cart-btn">Añadir al carrito</button>
+    <button v-if="!optionsVisible" @click="showOptions('abrir')" class="add-to-cart-btn" :disabled="!itsLogged"> {{ itsLogged ? 'Agregar al carrito' : 'Iniciar sesión para comprar' }}</button>
     <button v-if="optionsVisible" @click="showOptions('cerrar')" class="close-options-btn">Cerrar</button>
     <div v-if="optionsVisible" class="options-container">
       <label for="size" class="options-label">Talla:</label>
       <select v-model="selectedSize" id="size" @change="updateQuantityLimit" class="options-select">
-        <option v-for="size in sizes" :key="size.size" :value="size.size">{{ size.size }}</option>
-      </select>
+  <option v-if="hayStock" :value="null" disabled>Selecciona una talla</option>
+  <option v-for="size in sizes" :key="size.size" :value="size.size">{{ size.size }}</option>
+  <option v-if="!hayStock" disabled>Este producto está agotado</option>
+</select>
       <label for="quantity" class="options-label">Cantidad:</label>
       <input v-model.number="selectedQuantity" type="number" id="quantity" :max="quantityLimit" min="1" class="options-input">
       <span v-if="addedToCart">Añadido correctamente.</span>
-      <button @click="addToCart(product_id)" :disabled="!selectedSize" class="add-to-cart-btn">Agregar al carrito</button>
-    </div>  
+      <button @click="addToCart(product_id)" :disabled="!selectedSize || !hayStock" class="add-to-cart-btn">Agregar al carrito</button>
+    </div>
   </div>
 </template>
 
@@ -34,7 +36,9 @@ export default {
       selectedQuantity: 1,
       sizes: [],
       quantityLimit: 0,
-      addedToCart: false
+      addedToCart: false,
+      itsLogged: false,
+      hayStock: true
     };
   },
   props: {
@@ -58,8 +62,14 @@ export default {
       type: String,
       required: true,
     },
+    itsLoggedProp: {
+      type: Boolean,
+      required: true,
+    },
   },
-
+  created() {
+    this.itsLogged = this.itsLoggedProp;
+  },
   methods: {
     clickImageHandler() {
       this.$emit("clickImage");
@@ -76,10 +86,9 @@ export default {
     showOptions(order) {
       if (order == 'abrir') {
         this.optionsVisible = !this.optionsVisible;
-        this.getSizes(this.product_id)
+        this.getSizes(this.product_id);
       } else {
         this.optionsVisible = !this.optionsVisible;
-
       }
     },
     async getSizes(productId) {
@@ -95,22 +104,24 @@ export default {
           size: item.product_size,
           stock: item.product_stock,
         }));
+        if (this.sizes.length == 0){
+          this.hayStock = false
+        }
       } catch (error) {
         console.error('Error al obtener tallas:', error);
       }
     },
-
     async addToCart(productId) {
       try {
         const userId = JSON.parse(Cookies.get('userData')).id_user;
         console.log(userId);
         console.log(productId);
-        console.log(this.selectedSize)
+        console.log(this.selectedSize);
 
         fetch(`${url}/api/cart/add`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, productId, size: this.selectedSize, quantity: this.selectedQuantity}),
+          body: JSON.stringify({ userId, productId, size: this.selectedSize, quantity: this.selectedQuantity }),
         })
           .then(response => response.json())
           .then(data => {
@@ -123,11 +134,15 @@ export default {
       }
     },
   },
-
 };
 </script>
 
+
 <style scoped>
+.add-to-cart-btn.disabled {
+  cursor: not-allowed;
+  background-color: #ccc;
+}
 .card {
   border: 1px solid #dee2e6;
   border-radius: 8px;

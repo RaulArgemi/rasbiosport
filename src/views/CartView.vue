@@ -10,7 +10,7 @@
           <div class="details">
             <p class="product-name">{{ item.product_name }}</p>
             <p class="quantity">Cantidad: {{ item.quantity }}</p>
-            <p class="price">Precio: {{ item.product_price * item.quantity }}</p>
+            <p class="price">Precio por unidad: {{ item.product_price * item.quantity }}€</p>
             <p>Tallas: {{ item.size }}</p>
           </div>
         </div>
@@ -19,14 +19,14 @@
           <button @click="removeFromCart(item.product_id)" class="remove-button">X</button>
         </div>
       </div>
-      <div class="total-price">
+      <p v-if="!hayProductos">No hay productos añadidos</p>
+      <div v-if="hayProductos" class="total-price">
         <p>Total: {{ calculateTotalPrice().toFixed(2) }}€</p>
         <button @click="openCheckoutModal" class="buy-button">Comprar</button>
       </div>
       <CheckoutModal :isModalVisible="checkoutModalVisible" :cartItems="cartItems"
         :totalPrice="parseFloat(calculateTotalPrice())" @close-modal="closeCheckoutModal"
         @confirm-purchase="confirmPurchase" @pago-con-tarjeta-procesado="addOrder" />
-
     </div>
   </div>
 </template>
@@ -50,6 +50,7 @@ export default {
     return {
       cartItems: [],
       checkoutModalVisible: false,
+      hayProductos: true
     };
   },
   created() {
@@ -89,6 +90,9 @@ export default {
         .then(data => {
           console.log(data)
           this.cartItems = data;
+          if (this.cartItems.length == 0){
+          this.hayProductos = false
+        }
         })
         .catch(error => console.error('Error al obtener el carrito:', error));
     },

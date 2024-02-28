@@ -13,18 +13,20 @@
         <p><strong>Precio:</strong> {{ productDetails.product_price }} €</p>
         <p><strong>Información adicional:</strong> {{ productDetails.product_info }}</p>
         <p><strong>Etiqueta:</strong> {{ productDetails.product_tag }}</p>
-        <button v-if="!optionsVisible" @click="showOptions('abrir')" class="add-to-cart-btn">Añadir al carrito</button>
+        <button v-if="!optionsVisible" @click="showOptions('abrir')" class="add-to-cart-btn" :disabled="!itsLogged"> {{ itsLogged ? 'Agregar al carrito' : 'Iniciar sesión para comprar' }}</button>
     <button v-if="optionsVisible" @click="showOptions('cerrar')" class="close-options-btn">Cerrar</button>
     <div v-if="optionsVisible" class="options-container">
       <label for="size" class="options-label">Talla:</label>
       <select v-model="selectedSize" id="size" @change="updateQuantityLimit" class="options-select">
-        <option v-for="size in sizes" :key="size.size" :value="size.size">{{ size.size }}</option>
-      </select>
+  <option v-if="hayStock" :value="null" disabled>Selecciona una talla</option>
+  <option v-for="size in sizes" :key="size.size" :value="size.size">{{ size.size }}</option>
+  <option v-if="!hayStock" disabled>Este producto está agotado temporalmente :(</option>
+</select>
+
       <label for="quantity" class="options-label">Cantidad:</label>
       <input v-model.number="selectedQuantity" type="number" id="quantity" :max="quantityLimit" min="1" class="options-input">
-      <span v-if="addedToCart">Añadido correctamente.<br></span>
-      <button @click="addToCart(product_id)" :disabled="!selectedSize" class="add-to-cart-btn">Agregar al carrito</button>
-    </div>
+      <button @click="addToCart(product_id)" :disabled="!selectedSize || !hayStock" class="add-to-cart-btn">Agregar al carrito</button>
+    </div> 
       </div>
     </div>
 
@@ -62,10 +64,11 @@
       </div>
     </div>
   </div>
-</template><script>
+</template>
+<script>
+import Cookies from 'js-cookie';
 import NavComponent from '../components/NavComponent.vue';
 import NavMenu from '../components/NavMenu.vue';
-import Cookies from 'js-cookie';
 
 const url = "http://localhost:3000"
 
@@ -77,7 +80,6 @@ export default {
   },
   data() {
     return {
-      addedToCart: false,
       productDetails: {},
       productReviews: [],
       relatedProducts: [],
@@ -85,13 +87,32 @@ export default {
       selectedSize: '',
       selectedQuantity: 1,
       sizes: [],
+      hayStock: true,
       quantityLimit: 0,
+      itsLogged: false,
+
     };
   },
   async created() {
     await this.initializeData();
+    this.checkAuthentication()
+
   },
   methods: {
+    checkAuthentication() {
+      const cookie = Cookies.get('userData');
+
+      if (cookie) {
+        try {
+          this.itsLogged=true;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      } else {
+        console.log('No hay cookie');
+        this.itsLogged=false
+      }
+    },
     updateQuantityLimit() {
       const selectedSizeObject = this.sizes.find(item => item.size === this.selectedSize);
       if (selectedSizeObject) {
@@ -125,6 +146,9 @@ export default {
           size: item.product_size,
           stock: item.product_stock,
         }));
+        if (this.sizes.length == 0){
+          this.hayStock = false
+        }
       } catch (error) {
         console.error('Error al obtener tallas:', error);
       }
@@ -146,13 +170,13 @@ export default {
           .then(response => response.json())
           .then(data => {
             console.log(data.message);
-            this.addedToCart = true;
           })
           .catch(error => console.error('Error al añadir al carrito:', error));
       } catch (error) {
         console.error('Error al ejecutar addToCart:', error);
       }
     },
+
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -162,24 +186,19 @@ export default {
       await this.fetchRelatedProducts();
       await this.fetchProductReviews();
     },
-
     async fetchProductDetails() {
       try {
         const response = await fetch(`${url}/api/products/${this.$route.params.product_name}`);
         const data = await response.json();
         this.productDetails = data;
-        console.log(this.productDetails);
       } catch (error) {
         console.error('Error al obtener detalles del producto:', error);
       }
     },
-
     async fetchRelatedProducts() {
       try {
         const response = await fetch(`${url}/api/products/related/${this.productDetails.category_id}`);
-        console.log(response);
         this.relatedProducts = await response.json();
-        console.log(this.relatedProducts);
       } catch (error) {
         console.error('Error al obtener productos relacionados:', error);
       }
@@ -188,7 +207,6 @@ export default {
       try {
         const response = await fetch(`${url}/api/products/${this.productDetails.product_id}/reviews`);
         this.productReviews = await response.json();
-        console.log(this.productReviews)
       } catch (error) {
         console.error('Error al obtener reseñas:', error);
       }
@@ -196,20 +214,20 @@ export default {
     goToProductDetails(productName) {
       this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
     },
+
+    computed: {
+  filteredRelatedProducts() {
+    return this.relatedProducts.filter(relatedProduct => relatedProduct.product_id !== this.productDetails.product_id);
   },
-  computed: {
-    filteredRelatedProducts() {
-      return this.relatedProducts.filter(product => product.product_id !== this.productDetails.product_id);
-    },
+},
+
   },
   watch: {
-    $route() {
-      this.initializeData();
-    },
+  $route() {
+    this.initializeData();
   },
-};
+},};
 </script>
-
 
 <style scoped>
 /* Estilos para el contenedor principal */

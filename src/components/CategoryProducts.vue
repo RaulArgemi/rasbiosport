@@ -48,6 +48,7 @@
           :price="product.product_price"
           :product_id="product.product_id"
           @clickImage="goToProductDetails(product.product_name)"
+          :itsLoggedProp = "itsLogged"
         />
       </div>
     </div>
@@ -57,6 +58,7 @@
 
 <script>
 //          @click="goToProductDetails(product.product_name)"
+import Cookies from 'js-cookie';
 
 import ProductCard from "@/components/ProductCard.vue";
 
@@ -87,6 +89,8 @@ export default {
       },
       customMinPrice: 0,
       customMaxPrice: 200,
+      itsLogged: false,
+
     };
   },
   created() {
@@ -97,6 +101,7 @@ export default {
       this.destacado = true; 
     }
     this.fetchProducts();
+    this.checkAuthentication()
   },
   watch: {
     $route(to) {
@@ -125,6 +130,20 @@ export default {
     },
   },
   methods: {
+    checkAuthentication() {
+      const cookie = Cookies.get('userData');
+
+      if (cookie) {
+        try {
+          this.itsLogged=true;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      } else {
+        console.log('No hay cookie');
+        this.itsLogged=false
+      }
+    },
     async fetchProducts() {
       if (this.category_name == "Todos") {
         this.category_name = "";

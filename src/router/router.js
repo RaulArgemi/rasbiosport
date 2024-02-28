@@ -32,7 +32,8 @@ const routes = [
     component: () => import('@/components/SearchResults.vue')
   },
   
-  { path: '/cart', component: CartViewVue, meta: { requiresAuth: true }}
+  { path: '/cart', component: CartViewVue, meta: { requiresAuth: true }},
+
 ];
 
 const router = createRouter({

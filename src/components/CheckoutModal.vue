@@ -45,6 +45,7 @@
 </template>
 
 <script>
+
 export default {
   props: {
     isModalVisible: {
@@ -120,15 +121,19 @@ export default {
       this.$emit('close-modal');
     },
     submitForm() {
-      if (this.selectedPaymentMethod !== '' && this.isFormValid) {
-        console.log('Pago con tarjeta procesado.');
-        this.$emit('pago-con-tarjeta-procesado');
+  if (this.selectedPaymentMethod !== '' && this.isFormValid) {
+    console.log('Pago con tarjeta procesado.');
 
-        setTimeout(() => {
-          this.closeModal();
-        }, 3000);
-      }
-    },
+
+
+    setTimeout(() => {
+      
+      this.$router.push('/profile');
+
+    }, 1000);
+  }
+},
+
     submitPayPalForm() {
       if (this.selectedPaymentMethod === 'paypal' && this.isEmailValid) {
         console.log('Pago con PayPal procesado.');
