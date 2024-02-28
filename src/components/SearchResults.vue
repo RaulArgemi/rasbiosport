@@ -42,13 +42,13 @@ export default {
     async fetchSearchResults() {
       const query = this.$route.query.query;
       const apiUrl = `http://localhost:3000/api/search?query=${query}`;
-      console.log('URL de la solicitud:', apiUrl);
+      // console.log('URL de la solicitud:', apiUrl);
       try {
         const response = await fetch(apiUrl);
         if (response.ok) {
           const data = await response.json();
           this.products = data.products;
-          console.log('Productos cargados:', JSON.stringify(this.products, null, 2));
+          // console.log('Productos cargados:', JSON.stringify(this.products, null, 2));
           this.found = true;
         } else {
           console.error('Error en la respuesta del servidor:', response.statusText);
@@ -60,15 +60,15 @@ export default {
 
     addToCart(productId) {
       const userId = JSON.parse(Cookies.get('userData')).id_user;
-      console.log(userId);
-      console.log(productId);
+      // console.log(userId);
+      // console.log(productId);
       fetch(`${url}/api/cart/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId })
       })
         .then(response => response.json())
-        .then(data => console.log(data.message))
+        // .then(data => console.log(data.message))
         .catch(error => console.error('Error al añadir al carrito:', error));
     },
     goToProductDetails(product_name) {

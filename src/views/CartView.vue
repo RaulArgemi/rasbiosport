@@ -65,7 +65,7 @@ export default {
     const orderAddress = userData.user_address; 
     const orderTotal = this.calculateTotalPrice().toFixed(2);
    const productos = this.cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, size: item.size }));
-   console.log("productos: " + JSON.stringify(this.cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, size: item.size })), null, 2));
+  //  console.log("productos: " + JSON.stringify(this.cartItems.map(item => ({ product_id: item.product_id, quantity: item.quantity, size: item.size })), null, 2));
 
 
     fetch(`${url}/api/order/add`, {
@@ -73,10 +73,10 @@ export default {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId, orderAddress, orderTotal, productos}),
     })
-    .then(response =>{response.json(); console.log(response.json)})
-    .then(data => {
-      console.log(data.message);
-    })
+    .then(response =>{response.json(); })
+    // .then(data => {
+    //   console.log(data.message);
+    // })
     .catch(error => console.error('Error adding the order:', error));
   } catch (error) {
     console.error('Error parsing user data:', error);
@@ -88,7 +88,7 @@ export default {
       fetch(`${url}/api/cart/${userId}`)
         .then(response => response.json())
         .then(data => {
-          console.log(data)
+          // console.log(data)
           this.cartItems = data;
           if (this.cartItems.length == 0){
           this.hayProductos = false
@@ -107,7 +107,7 @@ export default {
       })
         .then(response => response.json())
         .then(data => {
-          console.log(data.message);
+           console.log(data.message);
           this.fetchCartItems();
         })
         .catch(error => console.error('Error al añadir al carrito:', error));
@@ -139,7 +139,7 @@ export default {
       })
         .then(response => response.json())
         .then(data => {
-          console.log(data.message);
+           console.log(data.message);
           this.fetchCartItems();
         })
         .catch(error => console.error('Error al quitar del carrito:', error));
@@ -148,7 +148,7 @@ export default {
       return this.cartItems.reduce((total, item) => total + item.product_price * item.quantity, 0);
     },
     openCheckoutModal() {
-      console.log('Abriendo modal de compra');
+      // console.log('Abriendo modal de compra');
       this.checkoutModalVisible = true;
     },
 
@@ -156,7 +156,7 @@ export default {
       this.checkoutModalVisible = false;
     },
     confirmPurchase(paymentMethod) {
-      console.log('Procesando compra con método de pago:', paymentMethod);
+       console.log('Procesando compra con método de pago:', paymentMethod);
       this.closeCheckoutModal();
       this.clearCart();
     },

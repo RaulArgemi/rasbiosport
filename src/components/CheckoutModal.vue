@@ -122,7 +122,6 @@ export default {
     },
     submitForm() {
   if (this.selectedPaymentMethod !== '' && this.isFormValid) {
-    console.log('Pago con tarjeta procesado.');
 
 
 
@@ -136,7 +135,6 @@ export default {
 
     submitPayPalForm() {
       if (this.selectedPaymentMethod === 'paypal' && this.isEmailValid) {
-        console.log('Pago con PayPal procesado.');
         this.paymentSuccess = true;
 
 
@@ -146,8 +144,8 @@ export default {
       }
     },
     onApprove(data) {
-      console.log('Pago aprobado por PayPal:', data);
       this.paymentSuccess = true;
+      console.log(data)
       setTimeout(() => {
         this.closeModal();
       }, 3000);

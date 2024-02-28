@@ -140,7 +140,6 @@ export default {
           console.error('Error:', error);
         }
       } else {
-        console.log('No hay cookie');
         this.itsLogged=false
       }
     },

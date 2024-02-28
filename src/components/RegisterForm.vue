@@ -108,7 +108,7 @@ export default {
         });
 
         if (response.status === 200) {
-          console.log('Registro exitoso');
+          // console.log('Registro exitoso');
           this.$router.push('/login')
         } else if (response.status === 409) {
           console.error('El correo ya está registrado');

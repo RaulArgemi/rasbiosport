@@ -80,7 +80,7 @@ export default {
     async addSizes() {
       const tallasConCantidad = Object.fromEntries(
       Object.entries(this.Tallas).filter(([, info]) => info.cantidad > 0))
-      console.log("MIERDA" + JSON.stringify(tallasConCantidad))
+      // console.log("MIERDA" + JSON.stringify(tallasConCantidad))
       try {
         const responseTalla = await fetch(`${url}/api/add/talla`, {
           method: 'POST',
@@ -93,7 +93,7 @@ export default {
         });
 
         if (responseTalla.status === 200) {
-          console.log('Tallas añadidas exitosamente.');
+          // console.log('Tallas añadidas exitosamente.');
         } else {
           console.error('Error al añadir tallas:', responseTalla.status, await responseTalla.text());
         }
@@ -122,10 +122,10 @@ export default {
         }
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         const categoryNames = data.map(category => category.category_name);
         this.categorias = categoryNames
-        console.log(this.categorias)
+        // console.log(this.categorias)
       } catch (error) {
         console.error('Error al cargar los datos de categorías:', error);
       }
@@ -142,8 +142,8 @@ export default {
           product_tag: JSON.stringify(this.product_tag),
         };
 
-        console.log(formData)
-        console.log(JSON.stringify(formData))
+        // console.log(formData)
+        // console.log(JSON.stringify(formData))
         if (!formData.product_name || !formData.category || !formData.product_info || !formData.product_image || !formData.product_tag || !formData.product_price || !formData.product_size) {
 
           console.error('Todos los campos son obligatorios');
@@ -165,7 +165,7 @@ export default {
         });
 
         if (response.status === 200) {
-          console.log('Registro exitoso');
+          // console.log('Registro exitoso');
           this.addSizes()
 
         } else {

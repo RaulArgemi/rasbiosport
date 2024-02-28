@@ -31,11 +31,9 @@
         this.selectedRating = rating;
       },
       submitReview() {
-        // Aquí puedes enviar la reseña al servidor
-        console.log('Rating:', this.selectedRating);
-        console.log('Reseña:', this.review);
-        // Puedes realizar una llamada API para enviar la reseña al servidor
-        // Después de enviar la reseña, puedes hacer alguna lógica adicional, como mostrar un mensaje de éxito, etc.
+        // console.log('Rating:', this.selectedRating);
+        // console.log('Reseña:', this.review);
+
       }
     }
   };

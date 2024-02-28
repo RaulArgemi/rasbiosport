@@ -44,11 +44,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = checkAuthentication();
 
-  console.log('isAuthenticated:', isAuthenticated);
+  // console.log('isAuthenticated:', isAuthenticated);
 
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    console.log('Redirecting to login');
+    // console.log('Redirecting to login');
     next('/login');
   } else {
     next();

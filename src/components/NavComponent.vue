@@ -37,10 +37,10 @@ export default {
       const token = localStorage.getItem('token');
       if (token !== null && token !== undefined) {
         this.itsLogged = true
-        console.log('Usuario autenticado');
+        // console.log('Usuario autenticado');
       } else {
         this.itsLogged = false
-        console.log('Usuario no autenticado');
+        // console.log('Usuario no autenticado');
       }
     },
   },

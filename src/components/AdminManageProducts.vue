@@ -153,7 +153,6 @@ export default {
         },
         async updateProduct() {
             try {
-                console.log(this.editingProduct.product_id)
                 const response = await fetch(`${url}/api/products/${this.editingProduct.product_id}`, {
                     method: 'PUT',
                     headers: {
@@ -161,7 +160,6 @@ export default {
                     },
                     body: JSON.stringify(this.editingProduct),
                 });
-                console.log(response)
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }

@@ -109,7 +109,7 @@ export default {
           console.error('Error:', error);
         }
       } else {
-        console.log('No hay cookie');
+        // console.log('No hay cookie');
         this.itsLogged=false
       }
     },
@@ -141,7 +141,7 @@ export default {
         });
 
         const data = await response.json();
-        console.log('Respuesta recibida:', data);
+        // console.log('Respuesta recibida:', data);
         this.sizes = data.result.map(item => ({
           size: item.product_size,
           stock: item.product_stock,
@@ -158,9 +158,9 @@ export default {
     async addToCart() {
       try {
         const userId = JSON.parse(Cookies.get('userData')).id_user;
-        console.log(userId);
-        console.log(this.productDetails.product_id);
-        console.log(this.selectedSize)
+        // console.log(userId);
+        // console.log(this.productDetails.product_id);
+        // console.log(this.selectedSize)
 
         fetch(`${url}/api/cart/add`, {
           method: 'POST',

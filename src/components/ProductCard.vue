@@ -114,9 +114,9 @@ export default {
     async addToCart(productId) {
       try {
         const userId = JSON.parse(Cookies.get('userData')).id_user;
-        console.log(userId);
-        console.log(productId);
-        console.log(this.selectedSize);
+        // console.log(userId);
+        // console.log(productId);
+        // console.log(this.selectedSize);
 
         fetch(`${url}/api/cart/add`, {
           method: 'POST',
@@ -124,10 +124,7 @@ export default {
           body: JSON.stringify({ userId, productId, size: this.selectedSize, quantity: this.selectedQuantity }),
         })
           .then(response => response.json())
-          .then(data => {
-            console.log(data.message);
-            this.addedToCart = true;
-          })
+       
           .catch(error => console.error('Error al añadir al carrito:', error));
       } catch (error) {
         console.error('Error al ejecutar addToCart:', error);

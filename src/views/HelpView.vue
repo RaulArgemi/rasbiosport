@@ -61,10 +61,7 @@
     },
     methods: {
         submitForm() {
-            // Manejo del envío del formulario
-            console.log('Formulario enviado:', this.formData);
-            // Puedes agregar lógica adicional aquí, como enviar los datos a tu servidor
-            // También puedes restablecer los campos del formulario después del envío
+            // console.log('Formulario enviado:', this.formData);
             this.formData = {
                 name: '',
                 email: '',

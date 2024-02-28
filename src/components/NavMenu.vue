@@ -38,7 +38,7 @@ export default {
           console.error('Error:', error);
         }
       } else {
-        console.log('No hay cookie');
+        // console.log('No hay cookie');
       }
     },
   },

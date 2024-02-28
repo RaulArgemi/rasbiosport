@@ -20,7 +20,7 @@ export default {
 
       this.$router.push('/login');
 
-      console.log('Cierre de sesión exitoso');
+      // console.log('Cierre de sesión exitoso');
     },
   },
 };
