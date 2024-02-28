@@ -176,7 +176,7 @@ export default {
             this.$refs.formulario.classList.remove('rebote');
           }, 500);
         }
-        
+        this.$emit('product-added');
       } catch (error) {
         console.error('Error al registrarse:', error);
       }
