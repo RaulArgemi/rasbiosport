@@ -2,7 +2,6 @@
   <NavComponent></NavComponent>
   <NavMenu></NavMenu>
   <div class="product-details-container">
-    <!-- Detalles del Producto -->
     <div class="product-details">
       <div class="product-image">
         <img :src="productDetails.product_image" alt="Imagen del producto">
@@ -13,29 +12,25 @@
         <p><strong>Precio:</strong> {{ productDetails.product_price }} €</p>
         <p><strong>Información adicional:</strong> {{ productDetails.product_info }}</p>
         <p><strong>Etiqueta:</strong> {{ productDetails.product_tag }}</p>
-        <button v-if="!optionsVisible" @click="showOptions('abrir')" class="add-to-cart-btn" :disabled="!itsLogged"> {{ itsLogged ? 'Agregar al carrito' : 'Iniciar sesión para comprar' }}</button>
-    <button v-if="optionsVisible" @click="showOptions('cerrar')" class="close-options-btn">Cerrar</button>
-    <div v-if="optionsVisible" class="options-container">
-      <label for="size" class="options-label">Talla:</label>
-      <select v-model="selectedSize" id="size" @change="updateQuantityLimit" class="options-select">
-  <option v-if="hayStock" :value="null" disabled>Selecciona una talla</option>
-  <option v-for="size in sizes" :key="size.size" :value="size.size">{{ size.size }}</option>
-  <option v-if="!hayStock" disabled>Este producto está agotado temporalmente :(</option>
-</select>
-
-      <label for="quantity" class="options-label">Cantidad:</label>
-      <input v-model.number="selectedQuantity" type="number" id="quantity" :max="quantityLimit" min="1" class="options-input">
-      <button @click="addToCart(product_id)" :disabled="!selectedSize || !hayStock" class="add-to-cart-btn">Agregar al carrito</button>
-    </div> 
+        <button v-if="!optionsVisible" @click="showOptions('abrir')" class="add-to-cart-btn" :disabled="!itsLogged">{{ itsLogged ? 'Agregar al carrito' : 'Iniciar sesión para comprar' }}</button>
+        <button v-if="optionsVisible" @click="showOptions('cerrar')" class="close-options-btn">Cerrar</button>
+        <div v-if="optionsVisible" class="options-container">
+          <label for="size" class="options-label">Talla:</label>
+          <select v-model="selectedSize" id="size" @change="updateQuantityLimit" class="options-select">
+            <option v-if="hayStock" :value="null" disabled>Selecciona una talla</option>
+            <option v-for="size in sizes" :key="size.size" :value="size.size">{{ size.size }}</option>
+            <option v-if="!hayStock" disabled>Este producto está agotado temporalmente :(</option>
+          </select>
+          <label for="quantity" class="options-label">Cantidad:</label>
+          <input v-model.number="selectedQuantity" type="number" id="quantity" :max="quantityLimit" min="1" class="options-input">
+          <button @click="addToCart(productDetails.product_id)" :disabled="!selectedSize || !hayStock" class="add-to-cart-btn">Agregar al carrito</button>
+        </div>
       </div>
     </div>
-
-    <!-- Productos Relacionados -->
     <div class="related-products">
       <h3>Productos Relacionados:</h3>
       <div class="related-product-list">
-        <div class="product-card-small" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id"
-          @click="goToProductDetails(relatedProduct.product_name)">
+        <div class="product-card-small" v-for="relatedProduct in filteredRelatedProducts" :key="relatedProduct.product_id" @click="goToProductDetails(relatedProduct.product_name)">
           <img :src="relatedProduct.product_image" alt="Imagen del producto">
           <div class="product-info2">
             <p class="texto-relacionado">{{ relatedProduct.product_name }}</p>
@@ -45,8 +40,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Reseñas del Producto -->
   <div>
     <div v-if="productReviews.length > 0" class="product-reviews">
       <h3 class="mb-4">Reseñas:</h3>
@@ -64,7 +57,20 @@
       </div>
     </div>
   </div>
+  <div class="dark-overlay" v-if="showAddToCartMessage"></div>
+  <div v-if="showAddToCartMessage" class="popup">
+    <p class="popup-message">¡El producto se ha añadido al carrito!</p>
+  </div>
+  <div class="cart-container">
+    <h3>Carrito de Compras</h3>
+    <ul>
+      <li v-for="item in cartItems" :key="item.productId">
+        {{ item.productName }} - {{ item.quantity }}
+      </li>
+    </ul>
+  </div>
 </template>
+
 <script>
 import Cookies from 'js-cookie';
 import NavComponent from '../components/NavComponent.vue';
@@ -90,13 +96,13 @@ export default {
       hayStock: true,
       quantityLimit: 0,
       itsLogged: false,
-
+      showAddToCartMessage: false,
+      cartItems: [],
     };
   },
   async created() {
     await this.initializeData();
-    this.checkAuthentication()
-
+    this.checkAuthentication();
   },
   methods: {
     checkAuthentication() {
@@ -104,13 +110,12 @@ export default {
 
       if (cookie) {
         try {
-          this.itsLogged=true;
+          this.itsLogged = true;
         } catch (error) {
           console.error('Error:', error);
         }
       } else {
-        // console.log('No hay cookie');
-        this.itsLogged=false
+        this.itsLogged = false;
       }
     },
     updateQuantityLimit() {
@@ -122,17 +127,14 @@ export default {
         }
       }
     },
-
     showOptions(order) {
       if (order == 'abrir') {
         this.optionsVisible = !this.optionsVisible;
-        this.getSizes(this.product_id)
+        this.getSizes(this.productDetails.product_id);
       } else {
         this.optionsVisible = !this.optionsVisible;
-
       }
     },
-
     async getSizes() {
       try {
         const response = await fetch(`${url}/api/get/tallas/${this.productDetails.product_id}`, {
@@ -141,42 +143,40 @@ export default {
         });
 
         const data = await response.json();
-        // console.log('Respuesta recibida:', data);
         this.sizes = data.result.map(item => ({
           size: item.product_size,
           stock: item.product_stock,
         }));
-        if (this.sizes.length == 0){
-          this.hayStock = false
+        if (this.sizes.length === 0) {
+          this.hayStock = false;
         }
       } catch (error) {
         console.error('Error al obtener tallas:', error);
       }
     },
-
-
-    async addToCart() {
+    async addToCart(productId) {
       try {
         const userId = JSON.parse(Cookies.get('userData')).id_user;
-        // console.log(userId);
-        // console.log(this.productDetails.product_id);
-        // console.log(this.selectedSize)
 
         fetch(`${url}/api/cart/add`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, productId: this.productDetails.product_id, size: this.selectedSize, quantity: this.selectedQuantity}),
+          body: JSON.stringify({ userId, productId: this.productDetails.product_id, size: this.selectedSize, quantity: this.selectedQuantity }),
         })
           .then(response => response.json())
           .then(data => {
             console.log(data.message);
+            this.cartItems.push({ productId, productName: this.productDetails.product_name, quantity: this.selectedQuantity });
+            this.showAddToCartMessage = true;
+            setTimeout(() => {
+              this.showAddToCartMessage = false;
+            }, 2000);
           })
           .catch(error => console.error('Error al añadir al carrito:', error));
       } catch (error) {
         console.error('Error al ejecutar addToCart:', error);
       }
     },
-
     formatDate(dateString) {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -214,20 +214,20 @@ export default {
     goToProductDetails(productName) {
       this.$router.push({ name: 'ProductDetails', params: { product_name: productName } });
     },
-
-    computed: {
-  filteredRelatedProducts() {
-    return this.relatedProducts.filter(relatedProduct => relatedProduct.product_id !== this.productDetails.product_id);
   },
-},
-
+  computed: {
+    filteredRelatedProducts() {
+      return this.relatedProducts.filter(relatedProduct => relatedProduct.product_id !== this.productDetails.product_id);
+    },
   },
   watch: {
-  $route() {
-    this.initializeData();
+    $route() {
+      this.initializeData();
+    },
   },
-},};
+};
 </script>
+
 
 <style scoped>
 /* Estilos para el contenedor principal */
@@ -330,6 +330,40 @@ export default {
   padding: 10px;
 }
 
+.dark-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 9998; 
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  z-index: 9999; 
+  text-align: center; 
+}
+
+.popup-message {
+  font-size: 2em;
+  color: #333; 
+  margin-bottom: 20px;
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.popup-content button {
+  margin-top: 10px;
+}
+
 /* Estilos para las reseñas del producto */
 .product-reviews {
   width: auto;
@@ -415,7 +449,9 @@ export default {
   transition: background-color 0.3s ease;
 }
 
+
 .buy:hover {
   background-color: #0056b3;
 }
+
 </style>
